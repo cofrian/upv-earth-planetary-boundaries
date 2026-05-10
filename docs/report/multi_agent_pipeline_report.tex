@@ -1,0 +1,490 @@
+% =====================================================================
+% UPV-EARTH — Multi-Agent Pipeline for Planetary Boundaries Classification
+% Compile with:  pdflatex -shell-escape report.tex (twice for refs)
+%   or:          latexmk -pdf report.tex
+% Required packages: amsmath, graphicx, hyperref, booktabs, listings,
+%                    xcolor, geometry, caption, subcaption, fontenc,
+%                    babel, microtype, csquotes, float
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+% --- Page geometry & typography -----------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{lmodern}
+
+% --- Floats, figures, tables --------------------------------------------
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{tabularx}
+
+% --- Colors & code ------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekey}{RGB}{30,90,170}
+\definecolor{codestr}{RGB}{160,40,40}
+\definecolor{codecmt}{RGB}{90,120,90}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codebg},
+  keywordstyle=\color{codekey}\bfseries,
+  stringstyle=\color{codestr},
+  commentstyle=\color{codecmt}\itshape,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  framerule=0.3pt,
+  framesep=4pt,
+  xleftmargin=6pt,
+  xrightmargin=6pt,
+  belowskip=8pt,
+}
+
+% --- Hyperlinks ---------------------------------------------------------
+\usepackage[hidelinks,colorlinks=true,linkcolor=blue!50!black,
+            citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% --- Quoting ------------------------------------------------------------
+\usepackage{csquotes}
+
+% --- Title block --------------------------------------------------------
+\title{\textbf{A Multi-Agent Cascade for Planetary Boundaries Classification\\of UPV Research Abstracts}\\[6pt]
+\large System architecture, validation, diagnosis and limitations}
+\author{UPV-EARTH project team\\\small \texttt{nlp/llm/runners/pipeline\_agentes.py}}
+\date{Reporting period through 2026-05-10}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent We present a four-stage multi-agent cascade for classifying research abstracts of the Universitat Polit\`ecnica de Val\`encia (UPV) corpus against the Planetary Boundaries (PBs) framework. Stages are: (i) a small structured extractor (\texttt{qwen2.5:3b}); (ii) a deterministic keyword-overlap scorer against the project's controlled vocabulary; (iii) a 14B principle-driven judge (\texttt{qwen2.5:14b}); and (iv) an asymmetric verifier critic that selectively re-examines ``None'' verdicts.
+On a 150-paper validation set drawn from \texttt{validacion\_real.csv}, the cascade reaches a top-1 accuracy of $0.653$ after the critic, versus $0.721$ for the strongest single-model baseline (few-shot v4 principle-driven prompt) and $0.633$ for the same model run zero-shot. The cascade does \emph{not} match the single-model accuracy. Through paper-level comparison we identify and document the dominant failure mode: the auxiliary signals fed to the judge anchor it to the \emph{wrong} PB on $11/15$ of the papers where the single model wins. We report these findings honestly, decompose the error budget, document every operational incident encountered during development, and propose five concrete next steps that are justified by the diagnostic data.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% =====================================================================
+\section{Executive summary}
+% =====================================================================
+
+We designed and implemented a multi-agent cascade that decomposes the PB classification task into four agents: a small extractor, a deterministic keyword scorer, a 14B-parameter judge, and an asymmetric critic. Each agent has a single, auditable responsibility, and the system produces an explanation trail per paper alongside the final label.
+
+On the 150-paper validation set, the cascade reaches a top-1 accuracy of $\mathbf{65.3\,\%}$ (after the critic), versus $\mathbf{72.1\,\%}$ for the strongest single-model baseline (\texttt{qwen2.5:14b} with the few-shot v4 principle-driven prompt) and $63.3\,\%$ for the same model run zero-shot. The cascade does \emph{not} improve raw accuracy over the strongest single-model baseline. Through paper-level analysis we identify that the gap is dominated by \emph{wrong-PB} selections, not by missed Nones, and we trace these to the auxiliary signals biasing the 14B judge toward inferior selections in 15 specific cases.
+
+This report documents the system in enough detail to defend any decision and any failure mode encountered during the project. Where the cascade underperforms a simpler approach, we treat that as a reportable result, present the diagnostic evidence, and propose concrete next steps that are justified by the data.
+
+% =====================================================================
+\section{Architecture}
+% =====================================================================
+
+The cascade is a four-stage pipeline. Each stage either reads the paper, transforms a representation produced upstream, or makes a classification decision. Figure~\ref{fig:arch} shows the block diagram and Figure~\ref{fig:flow} shows the per-paper data flow as a sequence diagram.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_architecture.png}
+\caption{Block diagram of the multi-agent cascade. The router decides between a no-LLM \texttt{fast\_skip} (when both Agent~1 and the scorer agree the paper is not biophysical) and the LLM-judged path. The critic (Agent~4) is invoked only when the judge returns ``None'' and the scorer surfaced at least one PB candidate.}
+\label{fig:arch}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig2_data_flow.png}
+\caption{Sequence diagram of a single paper traversing the cascade. Orange arrows are structured outputs returned to the orchestrator; gray arrows are non-authoritative hints passed forward to Agent~3. The critic exchange (red) only fires when the trigger condition holds.}
+\label{fig:flow}
+\end{figure}
+
+% --- Agent 1 ---
+\subsection{Agent 1 --- Structured extractor (\texttt{qwen2.5:3b}, JSON-mode)}
+
+\textbf{Role.} Read the title, journal, keywords, and abstract; emit a structured JSON object with five fields:
+\begin{itemize}\itemsep0pt
+\item \texttt{chemical\_species} (list of strings, verbatim from the abstract);
+\item \texttt{physical\_metrics} (list of strings, verbatim);
+\item \texttt{biological\_observations} (list of strings, verbatim);
+\item \texttt{methodology} $\in\{$\texttt{measured}, \texttt{modelled}, \texttt{mentioned}, \texttt{none}$\}$;
+\item \texttt{disciplinary\_frame} $\in\{$\texttt{engineering}, \texttt{earth\_sciences}, \texttt{biology}, \texttt{chemistry}, \texttt{social\_sciences}, \texttt{economics}, \texttt{law\_policy}, \texttt{education}, \texttt{other}$\}$.
+\end{itemize}
+
+\textbf{Implementation notes.}
+The prompt explicitly forbids hallucinated entries: every string must be a substring of the abstract. A post-hoc grounding filter removes any item that does not appear (loose match: substring or any 4+ character word). The model is invoked in JSON mode (\texttt{format="json"}) at temperature~0. Documented failure modes (see~\S\ref{sec:diagnosis}): the small model frequently outputs \texttt{methodology="mentioned"} for papers that do measure variables, and frequently misses chemical species not common in its training distribution (e.g.\ heavy metals).
+
+% --- Scorer ---
+\subsection{Deterministic keyword scorer (no LLM)}
+
+\textbf{Role.} For each PB, compute a non-negative score equal to the weighted sum of vocabulary matches inside \texttt{title + clean\_abstract + top\_terms\_no\_stopwords} against the curated keyword lists in \texttt{corpus\_PB/data/pb\_reference.csv}.
+
+\textbf{Weighting:}
+\texttt{core\_keywords}~$\times 3$;
+\texttt{extended\_keywords}~$\times 2$;
+\texttt{applied\_keywords\_upv}~$\times 1$.
+Each unique keyword counts at most once per paper (de-duplicated by lower-case lemma); keywords shorter than~4 characters are excluded to avoid spurious matches.
+
+\textbf{Output.} A ranked list of \texttt{(pb\_code, score, matched\_keywords)} triples; the top~4 candidates with score~$\geq 2$ are passed downstream as the \texttt{kw\_top} hint.
+
+\textbf{Strengths.} Zero cost, deterministic, fully auditable.
+
+\textbf{Documented limitation} (see \S\ref{sec:incidents}). Vocabulary gaps degrade recall on PBs whose research vocabulary diverged from the project's controlled list --- for instance, heavy metals (Cu, Pb, Mn) are not part of the PB8 vocabulary, and paleoclimate proxies (\emph{ice rafting, magnetic stratigraphy}) are not part of the PB1 vocabulary, so genuinely PB-relevant papers receive a \texttt{kw\_top} score of~0.
+
+% --- Router ---
+\subsection{Router --- consensus fast-skip}
+
+\textbf{Role.} Decide whether the paper requires the 14B judge or whether a no-LLM ``None'' verdict is safe.
+
+\textbf{Rule.} Skip to None iff:
+\begin{enumerate}\itemsep0pt
+\item Agent~1 returned \textbf{0 items} \textbf{and} a non-biophysical disciplinary frame (\texttt{social\_sciences}, \texttt{economics}, \texttt{law\_policy}, \texttt{education}); \emph{and}
+\item the keyword scorer returned no candidates with score~$\geq 2$.
+\end{enumerate}
+
+This conjunction is conservative on purpose: each agent has known false-positive modes, so we only short-circuit when both fully agree the paper is non-biophysical. On the validation set the rule fires in 5 of 150 papers ($3.3\,\%$), all~5 correctly classified --- so it does no harm but contributes negligibly to throughput.
+
+% --- Agent 3 ---
+\subsection{Agent 3 --- principle-driven judge (\texttt{qwen2.5:14b}, JSON-mode)}
+
+\textbf{Role.} Final classification decision. Reads the abstract and produces a JSON object with \texttt{reasoning\_process} (2--3 sentences), \texttt{primary\_pb}, \texttt{secondary\_pbs}, and \texttt{rejected\_pbs}.
+
+\textbf{Prompt design (current revision).}
+\begin{enumerate}\itemsep0pt
+\item \texttt{<system\_role>}: senior scientific evaluator framing.
+\item \texttt{<task>}: identify which PB is \emph{measured}, \emph{modelled}, or \emph{imposed as experimental forcing}; cleanly separate active study from background motivation.
+\item \texttt{<instructions>}: 4 numbered analytical steps emphasising the \emph{operational object} of the paper.
+\item \texttt{<reference\_framework>}: the 9 PB definitions, activation logic and exclusion notes from \texttt{pb\_reference.csv}.
+\item \texttt{<calibration\_cases>}: five worked examples (anammox / WRF / mammals / water-resources / warming-experiment) covering the four dominant decision boundaries.
+\item \texttt{<input\_data>} containing the abstract.
+\item \texttt{<constraints>} enforcing JSON-only output and forbidding phrase reuse from the calibration cases.
+\item \texttt{<auxiliary\_signals\_for\_reference\_only>}: Agent~1 fields and the keyword-scorer ranking, \emph{placed after the abstract and constraints}, with explicit warnings about each module's failure modes (see \S\ref{sec:diagnosis} for the rationale of this ordering).
+\end{enumerate}
+
+\textbf{Output schema and fallback.} If the JSON cannot be parsed, the row records \texttt{agent3\_error} and \texttt{llm\_primary\_pb=ParseError}; the row is preserved so the entire failure surface is visible in the output CSV.
+
+% --- Agent 4 ---
+\subsection{Agent 4 --- asymmetric critic (\texttt{qwen2.5:14b}, JSON-mode)}\label{subsec:agent4}
+
+\textbf{Role.} Selectively re-examine \texttt{None} verdicts when there is independent evidence that a PB is studied.
+
+\textbf{Trigger conditions.} Agent~4 fires iff:
+\begin{enumerate}\itemsep0pt
+\item Agent~3's \texttt{primary\_pb} equals \texttt{None}, \emph{and}
+\item the keyword scorer surfaced at least one PB with score~$\geq 2$.
+\end{enumerate}
+
+\textbf{Asymmetry.} The critic's allowed output set is $\{\texttt{None}\}\cup\{\texttt{kw\_top candidates with score} \geq 2\}$; it can flip $\texttt{None}\rightarrow\texttt{PBx}$ but \emph{never} $\texttt{PBx}\rightarrow\texttt{None}$ and \emph{never} to a PB outside the candidate set. This is by construction:
+\begin{itemize}\itemsep0pt
+\item the dominant pre-critic failure mode is recall (PBx~$\rightarrow$~None), not precision (None~$\rightarrow$~PBx, which is largely GT noise --- see~\S\ref{sec:incidents});
+\item restricting overrides to PBs with lexical evidence prevents the critic from inventing classifications.
+\end{itemize}
+
+\textbf{Prompt strategy.} The critic receives:
+\begin{itemize}\itemsep0pt
+\item a frame stating that a previous reviewer chose None and the scorer disagrees with one or more candidate PBs;
+\item the candidate PBs with their core definitions, activation logic, exclusion rules, and keyword matches;
+\item Agent~1's structured fields with an explicit warning that they are unreliable;
+\item the full abstract.
+\end{itemize}
+The critic must pick exactly one of $\{\texttt{None},\texttt{candidate}_1,\dots,\texttt{candidate}_k\}$ plus a confidence and a 1--2 sentence reasoning.
+
+\textbf{Empirical behaviour.} On the validation set the critic is invoked 6 times ($4\,\%$ of papers) and overrides 2 of them ($33\,\%$). Both overrides are correct upgrades (None~$\rightarrow$~PB1 and None~$\rightarrow$~PB7); the four \emph{keep-None} decisions are also correct or defensible upon manual review (see~\S\ref{sec:results}).
+
+% =====================================================================
+\section{Operational specification}
+% =====================================================================
+
+\textbf{Software entry point.} \texttt{nlp/llm/runners/pipeline\_agentes.py}.
+
+\begin{lstlisting}[language=bash,caption={Default invocation},captionpos=b]
+python3 nlp/llm/runners/pipeline_agentes.py [options]
+
+# Default behaviour:
+#   --input          data/corpus/master_corpus_mixto_1000_clean_enriched.csv
+#   --pb-reference   corpus_PB/data/pb_reference.csv
+#   --filter-by-gt   nlp/llm/outputs/ground_truth/validacion_real.csv
+#   --output         nlp/llm/outputs/pipeline_cascada/pipeline_cascada.csv
+#   --agent1-model   qwen2.5:3b
+#   --agent3-model   qwen2.5:14b   # also used by Agent 4
+#   Agent 4 is enabled by default; pass --no-critic to disable for ablation.
+\end{lstlisting}
+
+The pipeline is \textbf{resumable}: rows already present in the output CSV (matched by \texttt{doc\_id}) are skipped. Pass \texttt{--no-resume} to recompute everything from scratch.
+
+\paragraph{Pre-flight checks.} Before any inference, the pipeline:
+\begin{enumerate}\itemsep0pt
+\item verifies that Ollama is reachable at \url{http://localhost:11434/api/tags};
+\item verifies that both \texttt{agent1-model} and \texttt{agent3-model} are pulled locally;
+\item optionally warms up both models with a \texttt{ping} prompt (skip with \texttt{--no-warmup}).
+\end{enumerate}
+
+\paragraph{Logging.} A per-run log is written to \texttt{nlp/llm/outputs/pipeline\_cascada/logs/pipeline\_<timestamp>.log}. Each row processed produces a single info-level line including \texttt{route}, Agent~1 item count, \texttt{kw\_top} summary, Agent~3 latency, Agent~3 verdict, optional critic verdict, and the final \texttt{final\_primary\_pb}.
+
+\paragraph{Output schema.} 31 columns --- see \texttt{OUTPUT\_COLUMNS} at \texttt{pipeline\_agentes.py:529--543}. The final classification is the column \texttt{final\_primary\_pb}; \texttt{llm\_primary\_pb} preserves the pre-critic decision for ablation.
+
+\paragraph{Post-hoc usage.} \texttt{nlp/llm/runners/apply\_critic.py} reproduces the critic step on a previously generated CSV without re-running Agents~1--3. Useful for iterating on the critic's prompt without paying the cost of the cascade.
+
+% =====================================================================
+\section{Validation methodology}
+% =====================================================================
+
+\textbf{Ground truth.} \texttt{nlp/llm/outputs/ground\_truth/validacion\_real.csv}: 208~papers human-tagged with \texttt{1stpb}, \texttt{2ndpb}, \texttt{3rdpb} and a folder-of-origin \texttt{pb\_drive}. Empty PB columns mean the human reviewer judged that the paper does not actively study any PB (``None'').
+
+\textbf{Evaluation set.} Intersection of the GT papers with the enriched corpus $\rightarrow$ 150 papers.
+
+\textbf{Metrics.}
+\begin{itemize}\itemsep0pt
+\item \textbf{Top-1 accuracy.} \texttt{pred\_primary == gt\_pb} exact match.
+\item \textbf{Top-2 accuracy.} \texttt{gt\_pb} appears in $\{\texttt{pred\_primary}\}\cup\texttt{pred\_secondary}$.
+\item \textbf{Top-1 (excl.\ None).} Top-1 restricted to GT~$\neq$~None (recall on real PBs).
+\item \textbf{Top-1 (only None).} Top-1 restricted to GT~=~None (specificity).
+\item \textbf{Per-class precision / recall / F1} treating \texttt{1stpb} vs \texttt{pred\_primary} as a 10-way single-label problem (PB1\,..\,PB9~+ None).
+\end{itemize}
+
+Computed in \texttt{nlp/llm/analysis/pipeline\_cascada\_analysis.ipynb} and reproduced inside \texttt{pipeline\_agentes.py} itself (function \texttt{print\_gt\_summary}) so the metrics print at the end of every run when \texttt{--filter-by-gt} is used.
+
+% =====================================================================
+\section{Results}\label{sec:results}
+% =====================================================================
+
+\subsection{Headline numbers}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig3_compare_systems.png}
+\caption{Top-1 accuracy on the 150-paper validation set, broken down by GT class. Bars: blue~=~overall, orange~=~PB-only, green~=~None-only.}
+\label{fig:compare}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Top-1 accuracy and cost on the 150-paper validation set.}
+\label{tab:headline}
+\begin{tabularx}{\textwidth}{lcccc}
+\toprule
+System & top-1 & top-1 (excl.\ None) & top-1 (only None) & LLM calls / paper \\
+\midrule
+\texttt{qwen2.5:14b} zero-shot                 & 0.633 & 0.525 & \textbf{0.843} & 1 \\
+\texttt{qwen2.5:14b} few-shot v4 (single)      & \textbf{0.721} & \textbf{0.701} & 0.760 & 1 \\
+Cascade base (Agents 1+2+3)                    & 0.640 & 0.606 & 0.706 & 2 \\
+Cascade + Agent 4 critic                       & 0.653 & 0.626 & 0.706 & 2.04\,$^{*}$ \\
+\bottomrule
+\end{tabularx}
+\par\smallskip
+{\footnotesize $^{*}$The critic fires on $\sim 4\,\%$ of papers, hence average is just above 2.}
+\end{table}
+
+The cascade improves over zero-shot by~+2 points but does not match the few-shot v4 single-model baseline.
+
+\subsection{Confusion matrix}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig4_confusion_matrix.png}
+\caption{Confusion matrix of the cascade~+~critic over the 150-paper validation set. Rows: ground-truth 1st PB. Columns: predicted \texttt{final\_primary\_pb}. The dominant off-diagonal mass is in the \texttt{None} column (recall failures) and in the \texttt{None} row (false positives that classify GT-None papers as PBs).}
+\label{fig:cm}
+\end{figure}
+
+\subsection{Per-class precision / recall / F1}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig5_per_class_f1.png}
+\caption{Per-class precision/recall/F1 on the cascade~+~critic. Annotations above each group give the support count $n=k$. PB9 (atmospheric aerosols) is the strongest class because both its vocabulary and its physics are highly distinctive; PB8 (novel entities) has the worst recall because heavy metals are absent from the project's PB8 vocabulary.}
+\label{fig:f1}
+\end{figure}
+
+\subsection{Cascade vs few-shot v4 (paper-level)}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig6_pipeline_vs_v4.png}
+\caption{Per-paper agreement between the cascade and the few-shot v4 single-model baseline. Out of 147 papers shared between both runs: 91 are correct in both systems, 39 are wrong in both, 15 are correct only in few-shot v4, and 2 are correct only in the cascade. The 15-vs-2 asymmetry is the empirical evidence that the cascade introduces noise on a non-trivial subset.}
+\label{fig:vs4}
+\end{figure}
+
+The 15 papers where few-shot v4 wins decompose as in Table~\ref{tab:disagreement}.
+
+\begin{table}[H]
+\centering
+\caption{Decomposition of the 15 papers where few-shot v4 wins and the cascade loses.}
+\label{tab:disagreement}
+\begin{tabularx}{\textwidth}{Xcc}
+\toprule
+Failure pattern & Count & Mechanism \\
+\midrule
+Cascade picked the wrong PB (e.g.\ GT=PB2, cascade=PB1, v4=PB2) & 7 & \texttt{kw\_top} prefix bias: when the scorer ranks PB1 first by tied score, the 14B anchors on PB1. \\
+Cascade picked None where v4 picked the correct PB & 2 & rescued post-hoc by Agent~4. \\
+Cascade picked an incorrect PB where v4 correctly picked None & 4 & \texttt{kw\_top} and Agent~1 hints surfaced PB candidates for atmospheric / paleoclimate methodological papers. \\
+Other & 2 & mixed. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Agent~4 critic --- per-case decisions}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig7_critic_impact.png}
+\caption{The six papers on which Agent~4 fired during the validation run. Two are clean rescues (None~$\rightarrow$~PB1, None~$\rightarrow$~PB7), three are correctly kept as None, and one disagrees with the human label but the critic's reasoning (\enquote{the abstract discusses theoretical climate-governance research without active measurement}) is defensible upon manual reading.}
+\label{fig:critic}
+\end{figure}
+
+\subsection{Failure-mode taxonomy}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig8_failure_taxonomy.png}
+\caption{Decomposition of the 54 errors of the base cascade (top-1~=~96/150~=~$64.0\,\%$) into three failure modes. Wrong-PB selection is the largest category (24 errors) and is the one identified in~\S\ref{sec:diagnosis} as caused by auxiliary-signal anchoring; recall failures (15) are the target of Agent~4; the 15 false positives are mostly disputable GT labels for atmospheric instrumentation papers.}
+\label{fig:taxonomy}
+\end{figure}
+
+% =====================================================================
+\section{Diagnosis: why does the cascade not beat the single-model baseline?}\label{sec:diagnosis}
+% =====================================================================
+
+This section addresses the question directly: the cascade has \emph{more} information than the single model, yet performs worse. We considered two hypotheses and ran an explicit experiment to discriminate between them.
+
+\subsection{Hypothesis A --- auxiliary signals push the 14B toward \enquote{None}}
+
+\textbf{Predicted symptom.} The cascade's recall on PB classes would be much lower than the single model's, particularly when Agent~1 reports \texttt{methodology=mentioned}.
+
+\textbf{Test.} Re-classified the 15 cascade $\texttt{PBx}\rightarrow\texttt{None}$ failures with the few-shot v4 prompt verbatim (no Agent~1 fields, no \texttt{kw\_top}), keeping all other settings constant.
+
+\textbf{Result.} Only $\mathbf{2}$ of $\mathbf{15}$ were rescued. Most cases that the cascade classifies as None are also classified as None by the single-model few-shot v4 prompt. Hypothesis~A is therefore \emph{largely false} --- the additional signals are not the dominant cause of the recall gap.
+
+\subsection{Hypothesis B --- auxiliary signals push the 14B toward the \emph{wrong} PB}
+
+\textbf{Predicted symptom.} When \texttt{kw\_top} returns a high-scoring candidate that is \emph{not} the GT PB, the 14B would anchor on the wrong PB even when the abstract clearly indicates a different one.
+
+\textbf{Evidence.} Of the 15 papers where few-shot v4 wins and the cascade loses, $\mathbf{11/15}$ are wrong-PB selections, not None calls. Examples extracted from the comparison run:
+
+\begin{table}[H]
+\centering
+\caption{Representative wrong-PB cases caused by auxiliary-signal anchoring.}
+\label{tab:wrongpb}
+\begin{tabularx}{\textwidth}{lcccll}
+\toprule
+\texttt{doc\_id} & GT & cascade & v4 & \texttt{kw\_top\_pbs} & Misleading hint \\
+\midrule
+\texttt{8d8ab7ed834f} & PB1 & PB4 & PB1 & PB1(3) & Agent~1 listed nutrient-related terms in \texttt{physical\_metrics}. \\
+\texttt{82b2779f08ea} & PB2 & PB1 & PB2 & PB1(3); PB2(3) & tied score, cascade picked the first-listed PB1. \\
+\texttt{6d34726fa878} & PB2 & PB4 & PB2 & PB1(3) & Agent~1 over-weighted nutrient observations. \\
+\texttt{7c0bf746ba69} & PB8 & PB4 & PB8 & (none) & Agent~1 surfaced biological items that fit PB4. \\
+\texttt{4f22542e7388} & None & PB1 & None & (none) & Agent~1 reported \texttt{methodology=modelled} on a paleoclimate methods paper. \\
+\texttt{e54a64612267} & None & PB9 & None & (none) & Agent~1 reported atmospheric metrics. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The mechanism is straightforward: the 14B sees both the abstract and a structured \texttt{PB1(3); PB2(3)} or a \texttt{physical\_metrics: ['nutrient', \dots]} hint, and integrates both into its decision. When the hint is misleading or ambiguous, the 14B is \emph{more} prone to pick the wrong PB than when it reads the abstract alone. \textbf{Hypothesis~B is the operative cause.}
+
+\subsection{Mitigation that we tested}
+
+\begin{itemize}\itemsep0pt
+\item We re-ordered the Agent~3 prompt so that the auxiliary signals appear \emph{after} the abstract and the constraints, with explicit warnings (\enquote{the small extractor is prone to declaring \texttt{methodology=mentioned}}; \enquote{equal-score ties are not meaningful}). The prompt lives in \texttt{pipeline\_agentes.py:383--471}.
+\item The critic of \S\ref{subsec:agent4} attacks the residual recall failures (Hypothesis~A territory). It cannot fix the wrong-PB selections of Hypothesis~B because by construction it only flips $\texttt{None}\rightarrow\texttt{PBx}$.
+\end{itemize}
+
+\subsection{What this implies for the project}
+
+The cascade's design is sound for the goals it can satisfy:
+\begin{itemize}\itemsep0pt
+\item \textbf{Auditability.} Every classification is accompanied by Agent~1's structured extraction, the keyword-scorer evidence, the 14B's chain of reasoning, and (when invoked) the critic's chain of reasoning. The few-shot v4 single model provides only a single reasoning trace.
+\item \textbf{Modularity.} Each agent can be swapped (smaller / larger / fine-tuned model, or replaced by a deterministic component) without touching the others.
+\item \textbf{Rescuable recall.} The asymmetric critic is a sound architectural pattern (verifier / debate / Constitutional-AI style) and produces $100\,\%$ defensible decisions on the validation set.
+\end{itemize}
+It does not currently satisfy:
+\begin{itemize}\itemsep0pt
+\item \textbf{Higher accuracy than the strongest single model.} The wrong-PB selections of \S\ref{sec:diagnosis} cost more than the critic recovers.
+\end{itemize}
+
+% =====================================================================
+\section{Limitations and noted incidents}\label{sec:incidents}
+% =====================================================================
+
+\subsection{Ground-truth noise}
+Manual inspection of the 15 GT-None / pred-PBx false positives shows that several of these papers genuinely do measure or model biophysical variables (atmospheric aerosols, paleoclimate model boundary conditions, ecological diversity in bacteria--phage networks) and that a different human reviewer might have labelled them as PBs. The $70.6\,\%$ cascade specificity on None is bounded above by the inter-annotator agreement on these borderline cases, which we have not measured.
+
+\subsection{Vocabulary coverage gaps in \texttt{pb\_reference.csv}}
+Documented also in the description of the scorer. The keyword scorer returns no candidates for legitimately PB-relevant papers when their vocabulary is not in the project's controlled list. Concrete instances on this run:
+\begin{itemize}\itemsep0pt
+\item \texttt{6adf36ff1a69} (heavy metals + plant biomarkers, GT=PB8) --- \texttt{kw\_top} empty;
+\item \texttt{dbde52e667aa} (paleoclimate ice-rafting, magnetic stratigraphy, GT=PB1) --- \texttt{kw\_top} empty.
+\end{itemize}
+
+\subsection{Small-extractor unreliability}
+\texttt{qwen2.5:3b} is below the parameter scale at which structured-output reliability is high. Frequent failure modes:
+\begin{itemize}\itemsep0pt
+\item reports \texttt{methodology=mentioned} on papers that do measure variables;
+\item returns 0 items for content-rich abstracts that use unfamiliar terminology;
+\item mis-categorises the disciplinary frame for cross-disciplinary papers.
+\end{itemize}
+In the prompt revision we treat the extractor's output as advisory rather than authoritative, with explicit cautions about its known failure modes.
+
+\subsection{VRAM / scheduling}
+\texttt{qwen2.5:14b} ($\approx 9$\,GB Q4\_K\_M) and \texttt{qwen2.5:3b} ($\approx 1.9$\,GB Q4\_K\_M) coexist comfortably on a 24\,GB GPU. Other models loaded into Ollama (e.g.\ \texttt{qwen2.5vl:7b} consuming 22.7\,GB during one development session) caused the pipeline to fail with \texttt{model failed to load} (HTTP 500). Documented operational guidance: unload competing models with
+\begin{lstlisting}[language=Python,caption={Free VRAM before a long run}]
+import requests
+requests.post("http://localhost:11434/api/generate",
+              json={"model": "<name>", "keep_alive": 0})
+\end{lstlisting}
+before starting a long run.
+
+\subsection{Resumability and idempotence}
+The pipeline is resumable by \texttt{doc\_id}. If the output CSV is moved or renamed after a partial run, the new run will re-process all rows. The \texttt{--no-resume} flag explicitly clears prior output (after backing it up to \texttt{*.bak}).
+
+\subsection{Multi-label handling}
+The cascade outputs \texttt{primary\_pb}, \texttt{secondary\_pbs}, and \texttt{rejected\_pbs}, but the reported metrics are single-label (1st PB only). The validation set has 14 papers with a 2nd PB and 2 with a 3rd PB; the cascade's \texttt{secondary\_pbs} field is populated for $\geq 60\,\%$ of PB-classified papers but is not currently scored against the 2nd / 3rd GT labels. This is a deliberate scoping decision; macro-F1 multi-label evaluation is identified as the most promising next step (\S\ref{sec:next}).
+
+% =====================================================================
+\section{Defensible next steps}\label{sec:next}
+% =====================================================================
+
+\begin{enumerate}\itemsep1pt
+\item \textbf{Macro-F1 multi-label re-evaluation.} The GT carries 1st~/~2nd~/~3rd PB; the cascade already produces a candidate set per paper. Switching the metric removes part of the apparent disadvantage versus the single model and exploits a capability that is intrinsic to multi-agent designs.
+\item \textbf{Vocabulary expansion of \texttt{pb\_reference.csv}} by mining co-occurrences in the labelled subset. PB8 needs heavy-metal terms; PB1 needs paleoclimate proxy terms; PB7 needs explicit conservation-statistics terms.
+\item \textbf{Small-extractor replacement.} Either fine-tune a domain-adapted classifier (SciBERT, SPECTER) on the 150 labelled abstracts using the LLM as a weak labeller for the remaining 547 unlabelled papers, or remove Agent~1 altogether (ablation study).
+\item \textbf{Critic broadening.} Allow the critic to also fire when Agent~3 returns a low-confidence PB and disagrees with \texttt{kw\_top}. This addresses the wrong-PB selections of \S\ref{sec:diagnosis} without rebuilding Agent~3.
+\item \textbf{Calibrated abstention.} Expose the critic's confidence as an \enquote{uncertain} route for human-in-the-loop curation. This is the deployment mode where multi-agent designs are \emph{known} to outperform single models in the literature.
+\end{enumerate}
+
+% =====================================================================
+\section{Reproducibility}
+% =====================================================================
+
+All code and data referenced in this report are versioned in this repository.
+\begin{itemize}\itemsep0pt
+\item Pipeline implementation: \texttt{nlp/llm/runners/pipeline\_agentes.py}.
+\item Post-hoc critic: \texttt{nlp/llm/runners/apply\_critic.py}.
+\item Ground truth: \texttt{nlp/llm/outputs/ground\_truth/validacion\_real.csv}.
+\item Pipeline output: \texttt{nlp/llm/outputs/pipeline\_cascada/pipeline\_cascada.csv} and\\\texttt{pipeline\_cascada\_with\_critic.csv}.
+\item Single-model baselines: \texttt{nlp/llm/outputs/inferences/}.
+\item Analysis notebook: \texttt{nlp/llm/analysis/pipeline\_cascada\_analysis.ipynb}.
+\item Figure generation script: \texttt{docs/report/generate\_diagrams.py}.
+\end{itemize}
+
+To reproduce the headline numbers from a clean checkout, with Ollama running locally and \texttt{qwen2.5:3b} and \texttt{qwen2.5:14b} pulled:
+
+\begin{lstlisting}[language=bash,caption={Reproducing all headline results}]
+python3 nlp/llm/runners/pipeline_agentes.py \
+    --output nlp/llm/outputs/pipeline_cascada/pipeline_cascada.csv \
+    --no-resume
+python3 docs/report/generate_diagrams.py
+jupyter nbconvert --to notebook --execute \
+    nlp/llm/analysis/pipeline_cascada_analysis.ipynb
+\end{lstlisting}
+
+The pipeline run takes approximately 25--35 minutes on a 24\,GB GPU.
+
+\bigskip
+\hrule
+\medskip
+\noindent\emph{Prepared for the UPV-EARTH project. Pipeline implementation, validation methodology and report by the project team. This document supersedes the prior \texttt{analisis\_final\_v4.md} for matters concerning the multi-agent cascade.}
+
+\end{document}

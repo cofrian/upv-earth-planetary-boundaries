@@ -162,6 +162,69 @@ def top_keywords_by_pb(db: Session, pb_code: str, limit: int = 20) -> list[dict]
     return [{"keyword": keyword, "value": value} for keyword, value in counts.most_common(limit)]
 
 
+def pb_temporal_evolution(db: Session) -> list[dict]:
+    """Evolución temporal por Planetary Boundary.
+
+    Devuelve, para cada combinación (top_pb_code, año válido), el conteo de
+    papers en el corpus indexado.
+    """
+    rows = (
+        _papers_base_query(db)
+        .join(PBResult, PBResult.paper_id == Paper.id)
+        .with_entities(PBResult.top_pb_code, Paper.year, func.count(Paper.id))
+        .filter(Paper.year.isnot(None))
+        .filter(Paper.year.between(1900, datetime.now().year))
+        .group_by(PBResult.top_pb_code, Paper.year)
+        .all()
+    )
+    return [
+        {"pb_code": pb_code, "year": int(year), "value": int(count)}
+        for pb_code, year, count in rows
+    ]
+
+
+def pb_year_matrix(db: Session) -> dict:
+    """Matriz PB × año en formato listo para heatmap."""
+    rows = pb_temporal_evolution(db)
+    pbs = sorted({row["pb_code"] for row in rows})
+    years = sorted({row["year"] for row in rows})
+    matrix = {(row["pb_code"], row["year"]): row["value"] for row in rows}
+    cells: list[dict] = []
+    for pb in pbs:
+        for year in years:
+            cells.append({"pb_code": pb, "year": year, "value": matrix.get((pb, year), 0)})
+    return {"pbs": pbs, "years": years, "cells": cells}
+
+
+_TERM_SPLIT = re.compile(r"[;,|]")
+
+
+def _parse_paper_terms(raw: str | None) -> list[str]:
+    if not raw:
+        return []
+    items = [tok.strip().lower() for tok in _TERM_SPLIT.split(raw) if tok and tok.strip()]
+    return list(dict.fromkeys(items))
+
+
+def _paper_top_terms(doc_id: str | None) -> list[str]:
+    """Términos más repetidos del paper (precalculados, sin stopwords).
+
+    Lee la columna `top_terms_no_stopwords` del CSV maestro vía corpus_loader.
+    Si la fila no existe o está vacía, devuelve [].
+    """
+    if not doc_id:
+        return []
+    from app.services.corpus_loader.service import load_bundle
+
+    enriched = load_bundle().enriched
+    if enriched.empty or "top_terms_no_stopwords" not in enriched.columns:
+        return []
+    rows = enriched.loc[enriched["doc_id"].astype(str) == str(doc_id), "top_terms_no_stopwords"]
+    if rows.empty:
+        return []
+    return _parse_paper_terms(str(rows.iloc[0]))
+
+
 def paper_comparison(db: Session, paper_id: uuid.UUID) -> dict | None:
     paper = db.query(Paper).filter(Paper.id == paper_id).first()
     if not paper:
@@ -205,6 +268,15 @@ def paper_comparison(db: Session, paper_id: uuid.UUID) -> dict | None:
         if keyword in pb_lookup
     ]
 
+    # Términos más repetidos del paper (precalculados sin stopwords) y
+    # cuáles de ellos coinciden con keywords frecuentes del PB.
+    paper_terms = _paper_top_terms(paper.doc_id)
+    pb_terms_overlap = [
+        {"keyword": term, "value": pb_lookup[term]}
+        for term in paper_terms
+        if term in pb_lookup
+    ]
+
     return {
         "paper_id": str(paper.id),
         "title": paper.title,
@@ -216,8 +288,10 @@ def paper_comparison(db: Session, paper_id: uuid.UUID) -> dict | None:
         },
         "keyword_comparison": {
             "paper_keywords": paper_keywords,
+            "paper_terms": paper_terms,
             "global_overlap": global_overlap,
             "pb_overlap": pb_overlap,
+            "pb_terms_overlap": pb_terms_overlap,
             "global_top_keywords": global_top,
             "pb_top_keywords": pb_top,
         },

@@ -1,0 +1,1290 @@
+doc_id,route,agent1_model,agent1_chemical,agent1_physical,agent1_biological,agent1_methodology,agent1_frame,agent1_n_items,agent1_raw,agent1_time_s,agent1_parse_error,agent1_error,kw_top_pbs,kw_top_score,agent3_model,llm_primary_pb,llm_primary_conf,llm_secondary_pbs,llm_rejected_pbs,llm_reasoning,agent3_time_s,agent3_error,agent4_invoked,agent4_decision,agent4_confidence,agent4_reasoning,agent4_candidates,agent4_time_s,agent4_error,final_primary_pb,total_time_s
+b39624d6c38a,llm_judged,qwen2.5:3b,,climate; runoff,,mentioned,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""climate"", ""runoff""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.079,,,PB1(6),6,qwen2.5:14b,PB1,High,None,PB5,"The abstract focuses on the uncertainties related to hydrological models in assessing the impact of climate change on water resources at a catchment scale. The primary variable being measured and modeled is the prediction uncertainty derived from hydrological modeling, which directly relates to PB1 (Climate Change) due to its explicit focus on evaluating the impact of climate change on water resources. While the small extractor identified 'climate' as a physical metric, it did not specify that this was in the context of model uncertainties related to climate change impacts, supporting the primary PB selection.",6.774,,,,,,,,,PB1,7.859
+8581e74341ad,llm_judged,qwen2.5:3b,PM2.5; BC,AOD; fAOD; fAAOD,,none,earth_sciences,5,"{
+  ""chemical_species"": [""PM2.5"", ""BC""],
+  ""physical_metrics"": [""AOD"", ""fAOD"", ""fAAOD""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured,modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.361,,,PB9(11),11,qwen2.5:14b,PB9,High,None,"PB1, PB4, PB5, PB7","The research focuses on the correlation between surface particulate matter (PM2.5) and black carbon concentrations with aerosol optical depth (AOD) measurements, using various remote sensing techniques to improve satellite-based air quality studies. The primary variable measured is atmospheric aerosols, which directly aligns with PB9's core definition of increased atmospheric aerosol particles from human activity. The weak signals agreed with this assessment.",5.567,,,,,,,,,PB9,6.934
+03c55a425a95,llm_judged,qwen2.5:3b,,global atmospheric circulation; global warming; dry static energy; latent heat; surface warming; moistening; Clausius–Clapeyron relation; Walker circulation; poleward energy transport; poleward mass transport,,measured,earth_sciences,10,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""global atmospheric circulation"", 
+    ""global warming"", 
+    ""dry static energy"", 
+    ""latent heat"", 
+    ""surface warming"", 
+    ""moistening"", 
+    ""Clausius–Clapeyron relation"", 
+    ""Walker circulation"", 
+    ""poleward energy transport"", 
+    ""poleward mass transport""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.211,,,PB1(6),6,qwen2.5:14b,PB1,High,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The study quantifies the weakening of global atmospheric circulation by about 5% per degree of global warming through climate-model simulations. The focus is on diagnosing long-term changes in a set of climate models from the IPCC's 5th assessment report, explicitly linking anthropogenic emissions to observed climatic impacts. This operational object aligns with PB1’s core definition and activation logic regarding human-driven alteration of the climate system via greenhouse gas emissions and associated warming.",6.424,,,,,,,,,PB1,8.638
+8d8ab7ed834f,llm_judged,qwen2.5:3b,,mean annual temperature; mean annual precipitation; annual NPP; topsoil organic carbon concentration,NPP; SOC storage; climate change impact on biogeographic regions,measured,earth_sciences,7,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""mean annual temperature"", ""mean annual precipitation"", ""annual NPP"", ""topsoil organic carbon concentration""],
+  ""biological_observations"": [""NPP"", ""SOC storage"", ""climate change impact on biogeographic regions""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.6,,,PB1(3),3,qwen2.5:14b,PB1,High,None,"PB4, PB5, PB7","The abstract measures the impact of climate change on soil organic carbon (SOC) and annual net primary production (NPP) across various biogeographic regions in Australia. The variable 'mean annual temperature' is explicitly altered by 1°C, which directly activates PB1 due to its focus on human-driven alteration of the climate system through warming scenarios. While other variables like precipitation and NPP are mentioned, they do not independently activate any other Planetary Boundaries. The small extractor and keyword overlap scorer both suggest a connection to climate change, aligning with my judgment.",6.537,,,,,,,,,PB1,8.141
+ff6fb1e2be19,llm_judged,qwen2.5:3b,Saccharomyces; Metschnikowia pulcherrima; Torulaspora delbrueckii; Lachancea thermotolerans; Starmerella bacillaris; Oenococcus oeni; Lactobacillus plantarum,sugars; ethanol content; pH; perceived sensory properties; mycotoxins; biogenic amines,microbial proliferation; microorganisms isolated from grapes/musts/wines; microbes belonging to the main categories with a recognized positive role in oenological processes,measured,biology,16,"{
+  ""chemical_species"": [""Saccharomyces"", ""Metschnikowia pulcherrima"", ""Torulaspora delbrueckii"", ""Lachancea thermotolerans"", ""Starmerella bacillaris"", ""Oenococcus oeni"", ""Lactobacillus plantarum""],
+  ""physical_metrics"": [""sugars"", ""ethanol content"", ""pH"", ""perceived sensory properties"", ""mycotoxins"", ""biogenic amines""],
+  ""biological_observations"": [""microbial proliferation"", ""microorganisms isolated from grapes/musts/wines"", ""microbes belonging to the main categories with a recognized positive role in oenological processes""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",3.229,,,PB1(3),3,qwen2.5:14b,PB1,High,None,"PB2, PB4, PB5, PB7","The abstract focuses on the impacts of climate change on wine production, specifically examining microbial proliferation and changes in sugar content, ethanol levels, pH, sensory properties, and safety issues. The primary variable being analyzed is the effect of climate change on these biophysical parameters within the context of oenology. This aligns with PB1's core definition as it involves human-driven alteration of the climate system affecting wine production sustainability. While the small extractor identified physical metrics like pH and ethanol content, these are consequences of climate change rather than direct measurements or models of climate itself.",6.783,,,,,,,,,PB1,10.015
+44cb9ddc20a6,llm_judged,qwen2.5:3b,,surface air temperature (SAT); sea ice; ocean; area of arctic sea ice; summer ice coverage; anthropogenic forcing; climate-system variability,,modelled,earth_sciences,7,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""surface air temperature (SAT)"",
+    ""sea ice"",
+    ""ocean"",
+    ""area of arctic sea ice"",
+    ""summer ice coverage"",
+    ""anthropogenic forcing"",
+    ""climate-system variability""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.752,,,,0,qwen2.5:14b,PB1,High,PB9,"PB2, PB3, PB4, PB5, PB6, PB7, PB8","The abstract focuses on the measurement and modeling of surface air temperature (SAT) changes and sea ice variability in response to anthropogenic greenhouse-gas forcing over a century-scale perspective. The primary variable being analyzed is climate change, specifically how SAT and sea ice respond to human-driven emissions. This clearly aligns with PB1's core definition of human-driven alteration of the climate system through greenhouse gas emissions and associated warming. While other terms like 'sea ice' are mentioned, they serve as indicators of climate impact rather than primary variables.",7.259,,,,,,,,,PB1,9.014
+5194c7c1714e,llm_judged,qwen2.5:3b,,climate,spring-fruiting fungi; fossil bodies,measured,biology,3,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""climate"", ""thermal time""],
+  ""biological_observations"": [""spring-fruiting fungi"", ""phenology"", ""fossil bodies""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",1.27,,,PB1(3),3,qwen2.5:14b,PB1,High,None,PB7,"The abstract focuses on the impact of climate change on spring-fruiting fungi, specifically examining how changes in climatic conditions affect their fruit body production. The primary variable being studied is the response of these fungi to altered climates, which directly aligns with PB1's core definition of human-driven alteration of the climate system and its impacts. While the abstract mentions other biological observations, the central theme revolves around climate change as an active forcing.",5.251,,,,,,,,,PB1,6.523
+ff153d55d5fd,llm_judged,qwen2.5:3b,,,,mentioned,earth_sciences,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",0.861,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the concept of planetary health, emphasizing the interconnections between human health and environmental conditions. It does not measure or model any specific biophysical variable but rather focuses on the social, political, and economic factors influencing health. The weak signals from the pre-processing modules did not identify any relevant physical metrics or chemical species, confirming that this is purely a conceptual discussion without operational analysis of planetary boundaries.",5.715,,,,,,,,,None,6.578
+a3d6daa1a396,fast_skip_consensus,qwen2.5:3b,,,,mentioned,economics,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""economics""
+}",0.824,,,,0,,None,ConsensusFilter,None,None,Consensus: Agent1 (0 items + non-bio frame) AND scorer (no PB matched).,,,,,,,,,,None,0.826
+eaf6d52d5457,llm_judged,qwen2.5:3b,,925 hPa winds; low-level circulation; Caribbean low-level jet (CLLJ); mid-summer drought,,measured,earth_sciences,4,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""925 hPa winds"", ""low-level circulation"", ""Caribbean low-level jet (CLLJ)"", ""mid-summer drought""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.453,,,PB1(3),3,qwen2.5:14b,PB1,High,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the sensitivity of regional climate model simulations to domain size and position, specifically examining low-level circulation and precipitation patterns over Central America. The primary variable being measured is the impact of these changes on atmospheric processes such as 925 hPa winds and the Caribbean Low-Level Jet (CLLJ). This aligns with PB1 because it involves active climate modeling and analysis of regional climate characteristics, despite mentioning broader climate impacts in a motivational context.",6.646,,,,,,,,,PB1,8.103
+11e601dd40d6,llm_judged,qwen2.5:3b,,WRF; CMIP6; climate change; offshore wind energy potential; north coast of Tamaulipas; west coast of Yucatan; Gulf of Tehuantepec,,modelled,earth_sciences,7,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""WRF"", 
+    ""CMIP6"", 
+    ""climate change"", 
+    ""offshore wind energy potential"", 
+    ""north coast of Tamaulipas"", 
+    ""west coast of Yucatan"", 
+    ""Gulf of Tehuantepec""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.104,,,,0,qwen2.5:14b,PB1,High,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The study models the offshore wind energy potential using WRF and CMIP6 climate model data, focusing on long-term projections under changing climatic conditions. The primary variable being analyzed is the wind energy potential, which directly relates to climate change dynamics (PB1). While other terms like 'offshore wind' are mentioned, they do not independently activate any PBs without explicit reference to climate impacts or emissions.",6.206,,,,,,,,,PB1,8.313
+ca6e200d678b,llm_judged,qwen2.5:3b,H2O,speed; vertical; horizontal,,measured,earth_sciences,4,"{
+  ""chemical_species"": [""H2O""],
+  ""physical_metrics"": [
+    ""speed"",
+    ""climate"",
+    ""energy"",
+    ""flow"",
+    ""mass"",
+    ""radiation"",
+    ""geophysical processes"",
+    ""vertical"",
+    ""horizontal""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.778,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB3","The research measures the speed of the Brewer-Dobson circulation (BDC) using Aura/MLS stratospheric water vapor measurements. The focus is on quantifying vertical and horizontal speeds, which are directly related to atmospheric dynamics rather than biophysical boundaries like climate change or ozone depletion. The small extractor identified physical metrics but did not align with any specific PB vocabulary, supporting the conclusion that this study does not primarily address Planetary Boundaries.",5.125,,,,,,,,,None,6.906
+3f68844ce318,llm_judged,qwen2.5:3b,,,,mentioned,engineering,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""climate"", ""energy"", ""flow"", ""mass"", ""radiation"", ""geophysical processes""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",1.175,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the use of data mining techniques to discover and summarize knowledge from remote sensing datasets. The focus is on geospatial feature variables and their influence on spatial patterns, without quantifying or modeling any biophysical variable related to Planetary Boundaries. The small extractor and keyword overlap scorer did not identify any relevant chemical species, physical metrics, biological observations, or disciplinary frames that align with the PB framework.",5.795,,,,,,,,,None,6.972
+c21a0b99e259,llm_judged,qwen2.5:3b,,temperature; precipitation,crop yields,measured,earth_sciences,3,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""temperature"", ""precipitation""],
+  ""biological_observations"": [""crop yields""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.103,,,PB1(3),3,qwen2.5:14b,PB1,High,None,"PB2, PB4, PB5, PB7, PB8, PB9","The research focuses on validating the performance of crop models under extreme weather conditions, specifically temperature and precipitation extremes. The primary variable being measured is the simulated yield response to these climate scenarios using the EPIC model. This aligns with PB1 as it directly addresses human-driven alteration of the climate system through its impact on agricultural productivity. While keywords like 'climate impacts' are mentioned in the introduction, the core analysis involves measuring crop yields under modeled climate change conditions.",6.271,,,,,,,,,PB1,7.377
+dbde52e667aa,llm_judged,qwen2.5:3b,,weight percent of the grain size fraction; ice rafting; magnetic stratigraphy; ash falls; faunal extinctions; carbonate fluctuations; glacial; event; boundary; interglacial,,measured,earth_sciences,10,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""weight percent of the grain size fraction"",
+    ""ice rafting"",
+    ""magnetic stratigraphy"",
+    ""ash falls"",
+    ""faunal extinctions"",
+    ""carbonate fluctuations"",
+    ""glacial"",
+    ""event"",
+    ""boundary"",
+    ""interglacial""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.159,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract measures the weight percent of grain size fractions greater than 250 jj in cores from the North Pacific to infer periods of increased ice rafting and cooling trends over geological timescales. This analysis focuses on paleoclimatic indicators rather than contemporary climate change, thus it does not align with any Planetary Boundary framework that requires active measurement or modeling of current biophysical variables.",5.715,,,,,,,,,None,7.876
+01a70dbf979d,llm_judged,qwen2.5:3b,,habitat quality; dispersal distance; density-dependent dispersion rates,Emperor penguin populations; global population dynamics,none,biology,5,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""habitat quality"", ""dispersal distance"", ""density-dependent dispersion rates""],
+  ""biological_observations"": [""Emperor penguin populations"", ""global population dynamics""],
+  ""methodology"": ""measured|modelled"",
+  ""disciplinary_frame"": ""biology""
+}",1.455,,,PB1(3),3,qwen2.5:14b,PB7,High,None,PB1,"The abstract focuses on modeling the dispersal characteristics of Emperor Penguins in response to climate-driven habitat changes. The primary variable being modeled is the impact of dispersal on population dynamics, which falls under PB7 as it directly addresses biodiversity and species persistence under environmental pressures. While 'climate change' is mentioned, it serves as a background context rather than the main analytical focus.",4.885,,,,,,,,,PB7,6.343
+733ba5fc919b,llm_judged,qwen2.5:3b,,pH; O2,,measured,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""pH"", ""O2""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.02,,,PB1(3); PB4(3),3,qwen2.5:14b,PB2,High,PB4,PB1,"The abstract focuses on measuring pH and O2 levels in coastal waters of Huntington Bay, examining their relationship with hypoxia and acidification. The primary variable measured is the ocean's chemical state (pH), which directly relates to PB2 (Ocean Acidification). While 'global warming' and 'eutrophication' are mentioned as background issues prompting the study, they do not serve as the main analytical focus of the research.",5.789,,,,,,,,,PB2,6.811
+6d34726fa878,llm_judged,qwen2.5:3b,CO2; carbon,respiration rates; primary production; carbon export; pH,plankton community composition; community respiration rates; primary production; microscopy counts of plankton,measured,biology,10,"{
+  ""chemical_species"": [""CO2"", ""carbon""],
+  ""physical_metrics"": [""respiration rates"", ""primary production"", ""carbon export"", ""pH"", ""temperature"", ""oxygen concentration""],
+  ""biological_observations"": [""plankton community composition"", ""community respiration rates"", ""primary production"", ""microscopy counts of plankton""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",1.925,,,PB1(3),3,qwen2.5:14b,PB2,High,PB4,PB1,"The research measures the effects of increased CO2 levels on plankton community composition, respiration rates, primary production, and carbon export in a controlled mesocosm experiment. The focus is explicitly on ocean acidification due to anthropogenic CO2 emissions, which directly impacts pH and biogeochemical fluxes. This aligns with PB2's core definition of human-driven changes affecting marine carbonate chemistry and calcifying organisms. While the abstract mentions carbon dioxide (CO2) in relation to climate change, the primary focus is on ocean acidification effects.",6.905,,,,,,,,,PB2,8.834
+82b2779f08ea,llm_judged,qwen2.5:3b,Halimeda cuneata; Padina gymnospora; Tricleocarpa cylindrica,,photosynthesis; calcified macroalgae; coralline algae; intertidal region; quantum yield; energy dissipation mechanisms; photosynthetic performance,measured,biology,10,"{
+  ""chemical_species"": [""Halimeda cuneata"", ""Padina gymnospora"", ""Tricleocarpa cylindrica""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""photosynthesis"", ""calcified macroalgae"", ""coralline algae"", ""intertidal region"", ""quantum yield"", ""energy dissipation mechanisms"", ""photosynthetic performance""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",10.312,,,PB1(3); PB2(3),3,qwen2.5:14b,PB2,High,PB1,"PB3, PB4, PB5, PB6, PB7, PB8, PB9","The study measures the effects of CO2-driven ocean acidification and temperature increases on the photosynthesis of calcified macroalgae. The operational object is clearly the response of marine organisms to changes in pH levels and temperatures, which directly aligns with PB2 (Ocean Acidification) due to explicit experimental manipulation of these variables. While climate change is mentioned as a background threat, it does not serve as an active forcing or measurement in this study.",14.087,,,,,,,,,PB2,24.404
+23aa02497362,llm_judged,qwen2.5:3b,carbonate; nutrient,pH; aragonite saturation (arag); total alkalinity (TA); dissolved inorganic carbon (DIC),,measured,earth_sciences,6,"{
+  ""chemical_species"": [""carbonate"", ""nutrient""],
+  ""physical_metrics"": [""pH"", ""aragonite saturation (arag)"", ""total alkalinity (TA)"", ""dissolved inorganic carbon (DIC)""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",12.136,,,PB2(6); PB4(3),6,qwen2.5:14b,PB2,High,PB4,"PB1, PB7","The abstract measures carbonate chemistry, pH levels, nutrient concentrations, and metabolic processes in coral reef systems. The primary focus is on how these factors interact to influence the resilience of coral reefs under changing environmental conditions, particularly focusing on ocean acidification and nutrient loading from submarine groundwater discharge. This aligns with PB2 due to explicit measurement of pH and aragonite saturation, which are core indicators for ocean acidification. While nutrients were also measured (relevant to PB4), they did not drive the primary analysis.",15.732,,,,,,,,,PB2,27.871
+caa0f4f9200b,llm_judged,qwen2.5:3b,capelin; pteropods,,black-legged kittiwake; ptero- pods; capelin; kittiwakes' spatiotemporal distribution; adult survival rates,measured,biology,7,"{
+  ""chemical_species"": [""capelin"", ""pteropods""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""black-legged kittiwake"", ""ptero- pods"", ""capelin"", ""kittiwakes' spatiotemporal distribution"", ""adult survival rates""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",9.217,,,,0,qwen2.5:14b,PB7,High,None,PB1,"The study measures the annual adult survival rates of black-legged kittiwakes in relation to prey densities and climatic parameters across breeding and non-breeding areas. The primary focus is on ecological responses, specifically how environmental conditions impact bird survival rates, which aligns with PB7 (Biosphere Integrity). While climate parameters are mentioned, they do not constitute the main analytical focus of the study.",14.604,,,,,,,,,PB7,23.824
+958e8ae09926,llm_judged,qwen2.5:3b,,,microbial functional genes; ecosystem functioning,measured,biology,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""microbial functional genes"", ""ecosystem functioning""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",9.015,,,PB7(2),2,qwen2.5:14b,PB1,High,PB7,None,"The research focuses on the impact of warming on microbial functional gene expression, which directly influences ecosystem functioning. The primary variable being manipulated is warming, and the study measures its effects on microbial genes, aligning with PB1's core definition of human-driven climate alteration. While there are mentions of ecosystem functioning, this is a consequence of the experimental manipulation rather than the focus itself.",16.783,,,,,,,,,PB1,25.8
+d84d0ce7a4c8,llm_judged,qwen2.5:3b,,pH; CO2,Mytilus edulis; immune response; growth and development; metabolic depression,measured,biology,6,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""pH"", ""CO2""],
+  ""biological_observations"": [""Mytilus edulis"", ""immune response"", ""growth and development"", ""metabolic depression""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",3.473,,,PB2(8); PB1(7),8,qwen2.5:14b,PB2,High,PB1,"PB4, PB7","The research measures the immune response of Mytilus edulis mussels exposed to acidified seawater, focusing on changes in phagocytosis and other immuno-surveillance parameters. The primary variable is pH levels (7.8, 7.7, 7.5, 6.7), which directly relates to ocean acidification. This aligns with PB2's core definition of decreased ocean pH due to anthropogenic CO2 uptake. While the abstract mentions climate change and carbon capture in passing, these are not central to the biophysical analysis.",60.21,,,,,,,,,PB2,63.689
+ab2d096a1aaf,llm_judged,qwen2.5:3b,nitrate,,,measured,earth_sciences,1,"{
+  ""chemical_species"": [""nitrate""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""phytoplankton"", ""diatom""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",10.201,,,,0,qwen2.5:14b,PB4,High,None,"PB1, PB7","The research measures the microbial and biogeochemical responses to projected future nitrate enrichment in the California upwelling system. The primary focus is on nutrient loading, which directly pertains to PB4 (Biogeochemical Flows). This paper quantifies changes in nitrogen cycles due to human-driven nitrate enrichment, clearly indicating disruption of natural biogeochemical processes. Neither the small extractor nor keyword scorer provided relevant signals for other planetary boundaries.",7.801,,,,,,,,,PB4,18.004
+84915f5956b8,llm_judged,qwen2.5:3b,WO3; CO2,,,measured,engineering,2,"{
+  ""chemical_species"": [""WO3"", ""CO2""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""engineering""
+}",1.023,,,PB1(3); PB2(3),3,qwen2.5:14b,PB2,High,PB1,"PB3, PB4, PB5, PB6, PB7, PB8, PB9","The research focuses on the development and testing of a new potentiometric pH sensor with enhanced sensitivity for monitoring seawater pH. The abstract explicitly mentions ocean acidification due to increased atmospheric CO2, which directly impacts marine organisms and shellfish. This operational object aligns closely with PB2's core definition of anthropogenic CO2 uptake causing decreased ocean pH. While the paper also touches on climate change (PB1) in its introduction, it does not measure or model this variable explicitly.",7.106,,,,,,,,,PB2,8.133
+a31195146871,llm_judged,qwen2.5:3b,,oxygen consumption; nutrient regeneration rates; temperature; pH,Catostylus mosaicus decomposition,measured,earth_sciences,5,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""oxygen consumption"", ""nutrient regeneration rates"", ""temperature"", ""pH""],
+  ""biological_observations"": [""Catostylus mosaicus decomposition""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.309,,,PB1(3),3,qwen2.5:14b,PB2,High,PB1,"PB4, PB7","The research measures oxygen consumption and nutrient regeneration rates during the decomposition of Catostylus mosaicus jellyfish under current and projected future ocean conditions (pH 8.0, 27°C vs pH 7.8, 30°C). This study directly quantifies how changing ocean conditions affect decomposition processes, aligning with PB2's core definition of ocean acidification and warming impacts on marine systems. The abstract explicitly mentions the experimental manipulation of temperature and pH levels to assess their combined effect on jellyfish decomposition rates.",6.596,,,,,,,,,PB2,7.907
+0866b31f11c4,llm_judged,qwen2.5:3b,,,,mentioned,other,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""literature""
+}",0.828,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the use of weird fiction literature to explore anxieties related to the ecological crisis, particularly focusing on climate change. However, it does not measure or model any biophysical variables directly; instead, it uses literary analysis as a tool to reflect on societal and environmental issues. The small extractor and keyword overlap scorer did not identify any relevant physical metrics or chemical species, confirming that this is purely social commentary.",5.68,,,,,,,,,None,6.509
+9480a86811a3,llm_judged,qwen2.5:3b,,reef; village; qoliqoli; fishery,"species; understanding of reef dynamics; support and expectations for a proposed conservation program; Lethrinus harak (Forsska˚l, 1775; Lethrinidae)",measured,biology,8,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""reef"", ""village"", ""qoliqoli"", ""fishery""],
+  ""biological_observations"": [""species"", ""understanding of reef dynamics"", ""support and expectations for a proposed conservation program"", ""Lethrinus harak (Forsska˚l, 1775; Lethrinidae)""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",2.076,,,,0,qwen2.5:14b,PB7,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB8, PB9","The research measures the ecological status and conservation needs of a reef system in Fiji, focusing on fishery-independent species surveys and interviews with local fishermen. The primary variable being analyzed is biodiversity and habitat management, which aligns with PB7 due to its focus on ecosystem integrity and species monitoring. The abstract does not mention any biophysical variables related to the other Planetary Boundaries.",5.969,,,,,,,,,PB7,8.05
+66c76ad14a95,llm_judged,qwen2.5:3b,,climate,aquatic species,measured,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""climate""],
+  ""biological_observations"": [""aquatic species"", ""finﬁsh"", ""molluscs""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.203,,,PB1(3),3,qwen2.5:14b,PB1,Medium,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses research on climate change's impact on major aquatic species production, focusing on the measurement of how climate variables affect these species. The term 'climate change' is central to the analysis and indicates a direct focus on human-driven alterations in the climate system. This aligns with PB1's core definition and activation logic. While the small extractor flagged 'climate', it did not specify any quantification or modeling, which is necessary for a definitive PB1 assignment. The keyword scorer also suggested PB1 due to overlap with 'climate change'.",7.041,,,,,,,,,PB1,8.247
+06cdb4126b53,llm_judged,qwen2.5:3b,,,life; earth; deep; ocean; subseafloor; drilling; scientific; oceanography,mentioned,earth_sciences,8,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""life"", ""earth"", ""deep"", ""ocean"", ""subseafloor"", ""drilling"", ""scientific"", ""oceanography""],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.429,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the discovery and implications of deep microbial life beneath the ocean floor, suggesting a long-term interrelationship between subseafloor ecosystems and Earth dynamics. This research focuses on understanding planetary habitability and sustainability through scientific drilling methods. The primary variable being studied is not quantified or modeled but rather discussed in terms of its broader ecological and geological significance. Therefore, this abstract does not measure, model, or experimentally manipulate any specific Planetary Boundary variables.",6.055,,,,,,,,,None,7.485
+a60e993db94a,llm_judged,qwen2.5:3b,,"CO2 partial pressures; pH scenarios; *180–425 latm; *550–800, *1,300, *2,000 latm; *550–800, *1,300, *2,000 latm",fertilization success; polyspermy; embryo formation; intracellular pH changes,measured,earth_sciences,9,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""CO2 partial pressures"", ""pH scenarios"", ""*180–425 latm"", ""*550–800, *1,300, *2,000 latm"", ""*550–800, *1,300, *2,000 latm""],
+  ""biological_observations"": [""fertilization success"", ""polyspermy"", ""embryo formation"", ""intracellular pH changes""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.598,,,,0,qwen2.5:14b,PB2,High,None,"PB1, PB7","The study measures the effects of varying pH levels on fertilization success in sea urchins, explicitly manipulating CO2 partial pressures to simulate different ocean acidification scenarios. This directly aligns with PB2's core definition and activation logic concerning anthropogenic CO2 uptake and its impact on marine organisms. The biological observations and physical metrics related to pH changes are central to the analysis, not merely background context.",5.217,,,,,,,,,PB2,7.817
+bdf5eac988ad,llm_judged,qwen2.5:3b,polylactide,,,mentioned,engineering,1,"{
+  ""chemical_species"": [""polylactide""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",0.886,,,PB8(4),4,qwen2.5:14b,PB8,High,None,"PB1, PB4, PB5, PB6, PB7","The abstract focuses on reviewing research and technologies related to polylactide (PLA), a bioplastic, and its waste management strategies. The primary variable discussed is the material itself and its environmental impact through waste accumulation. This aligns with PB8 due to the mention of synthetic chemicals and their potential harmful effects in the environment. The abstract does not measure or model any specific biophysical variables but discusses novel entities like PLA within a circular economy context.",5.932,,,,,,,,,PB8,6.82
+aac5539aa27b,llm_judged,qwen2.5:3b,N2O,pH; NO3- reduction rate; N2 production rate; N2O production rate; N2O:N2 production ratio,denitriﬁcation process; N2O emissions; soil pH variability,measured,earth_sciences,9,"{
+  ""chemical_species"": [""N2O""],
+  ""physical_metrics"": [""pH"", ""NO3- reduction rate"", ""N2 production rate"", ""N2O production rate"", ""N2O:N2 production ratio""],
+  ""biological_observations"": [""denitriﬁcation process"", ""N2O emissions"", ""soil pH variability""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.89,,,,0,qwen2.5:14b,PB4,High,None,"PB1, PB5","The research quantifies the effects of soil pH on N2O emissions and production rates through controlled incubation experiments and field measurements. The primary focus is on biogeochemical flows, specifically nitrogen cycling processes that are directly linked to nutrient loading and eutrophication risks. This aligns with PB4's core definition of disrupting nitrogen cycles due to human activity. While the abstract mentions soil pH variability and its impact on N2O emissions, it does not delve into broader climate impacts or water use issues, ruling out PB1 and PB5 respectively.",6.28,,,,,,,,,PB4,8.173
+ed3a2e5f0c07,llm_judged,qwen2.5:3b,nutrient; sponge; microbial; coral; temperature,,sponge-microbe associations; health and microbial community dynamics; eukaryotic community; archaeal associations,measured,biology,9,"{
+  ""chemical_species"": [""nutrient"", ""sponge"", ""microbial"", ""coral"", ""temperature""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""sponge-microbe associations"", ""health and microbial community dynamics"", ""eukaryotic community"", ""archaeal associations""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",1.711,,,PB2(3); PB4(3),3,qwen2.5:14b,PB4,High,PB2,PB1,"The research measures the impact of elevated nutrients and seawater temperature on microbial community dynamics in marine sponges. The primary focus is on nutrient loading (eutrophication) and temperature changes, which directly relate to PB4 and PB1 respectively. However, while eutrophication is explicitly measured, climate change aspects are only mentioned as background context without active measurement or modeling of warming effects.",5.57,,,,,,,,,PB4,7.285
+080e222eec5e,llm_judged,qwen2.5:3b,CFCs; N2O; SF6; CH4; CO; H2,O3; H2O,,measured,engineering,8,"{
+  ""chemical_species"": [""CFCs"", ""N2O"", ""SF6"", ""CH4"", ""CO"", ""H2""],
+  ""physical_metrics"": [""O3"", ""H2O""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""engineering""
+}",1.398,,,PB1(6); PB3(6),6,qwen2.5:14b,PB3,High,PB9,PB1,"The abstract describes the design and deployment of UCATS, a device for measuring atmospheric trace gases including chlorofluorocarbons (CFCs), nitrous oxide (N2O), sulfur hexafluoride (SF6), methane (CH4), carbon monoxide (CO), molecular hydrogen (H2), ozone (O3), and water vapor (H2O). The primary focus is on the measurement of these gases, particularly CFCs which are linked to stratospheric ozone depletion. While there is mention of greenhouse gases like CH4, this does not activate PB1 as it lacks explicit climate impact language.",7.32,,,,,,,,,PB3,8.721
+074d00932720,llm_judged,qwen2.5:3b,HCl; ClO,temperature; air mass; trajectory; chlorine activation; PSCs composition classes; NAT; STS; ice clouds; frost point,,none,chemistry,11,"{
+  ""chemical_species"": [""HCl"", ""ClO""],
+  ""physical_metrics"": [""temperature"", ""air mass"", ""trajectory"", ""chlorine activation"", ""PSCs composition classes"", ""NAT"", ""STS"", ""ice clouds"", ""frost point""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured|modelled"",
+  ""disciplinary_frame"": ""chemistry""
+}",1.694,,,,0,qwen2.5:14b,PB3,High,None,"PB1, PB4, PB5, PB6, PB7, PB8, PB9","The research focuses on the composition of polar stratospheric clouds (PSCs) and chlorine activation levels based on temperature history. The study measures PSC composition classes, NAT, STS, ice cloud formation, and chlorine activation thresholds in relation to temperature changes. This aligns with PB3's core definition concerning ozone-depleting substances and their impact on the stratospheric ozone layer. The abstract explicitly discusses HCl and ClO measurements along air mass trajectories, which are directly related to ozone depletion processes.",6.718,,,,,,,,,PB3,8.415
+5b69b4b177c8,llm_judged,qwen2.5:3b,,ozone; latitude; pressure,,modelled,earth_sciences,3,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""ozone"", ""latitude"", ""pressure""],
+  ""biological_observations"": [],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.102,,,,0,qwen2.5:14b,PB3,High,None,"PB1, PB2, PB4, PB5, PB6, PB7, PB8, PB9","The abstract describes the development of a high-resolution ozone database using satellite and ozonesonde data, focusing on stratospheric ozone levels. The methodology involves merging sparse measurements with regression models to provide global coverage. This work directly addresses the core definition of PB3 by dealing explicitly with stratospheric ozone layer monitoring and assessment. The small extractor's indication of 'methodology: modelled' aligns with this interpretation, while the keyword overlap scorer did not identify any specific Planetary Boundary terms.",6.731,,,,,,,,,PB3,7.837
+c8b475531d7e,llm_judged,qwen2.5:3b,,tropopause temperature; total ozone,,measured,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""tropopause temperature"", ""total ozone""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.049,,,,0,qwen2.5:14b,PB3,High,None,"PB1, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the measurement of total ozone levels and their asymmetry over Antarctica during spring, using TOMS data from 1979 to 2005. The study quantifies zonal anomalies in total ozone distribution and discusses tropopause temperature shifts. This operational object aligns with PB3's core definition concerning stratospheric ozone depletion, as it directly measures changes in the ozone layer. While the small extractor correctly identified 'total ozone' as a physical metric, it did not detect any chemical species or methodologies related to other PBs.",7.185,,,,,,,,,PB3,8.238
+7d15d84ce20e,llm_judged,qwen2.5:3b,,photosynthetically active radiation (PAR); photosynthetically active radiation (PAR+UV-A radiation (UV-A); photosynthetically active radiation (PAR+ UV-A+UV-B radiation (UV-B),photoinhibition of photosynthesis; kinetics of recovery in zoospores; ultraviolet radiation (UVR) effectively delays photosynthetic recovery,measured,biology,6,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""photosynthetically active radiation (PAR)"",
+    ""photosynthetically active radiation (PAR+UV-A radiation (UV-A)"",
+    ""photosynthetically active radiation (PAR+ UV-A+UV-B radiation (UV-B)""
+  ],
+  ""biological_observations"": [
+    ""photoinhibition of photosynthesis"",
+    ""kinetics of recovery in zoospores"",
+    ""ultraviolet radiation (UVR) effectively delays photosynthetic recovery""
+  ],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",2.494,,,PB3(6),6,qwen2.5:14b,PB3,High,None,"PB1, PB7","The research measures the impact of different radiation spectra, including UV-B radiation due to stratospheric ozone depletion, on photosynthetic recovery in zoospores of Arctic kelp species. The study quantifies how these species respond to varying levels of PAR, UV-A, and UV-B radiation, focusing explicitly on photoinhibition and recovery kinetics under conditions that simulate increased ultraviolet exposure from ozone layer thinning. This aligns with PB3's core definition of stratospheric ozone depletion affecting surface-level UV radiation. The small extractor model's physical_metrics and biological_observations support this focus, while the keyword scorer correctly identified a connection to ozone depletion.",7.088,,,,,,,,,PB3,9.586
+fc1441e078b0,llm_judged,qwen2.5:3b,CO; CH4,,,measured,earth_sciences,2,"{
+  ""chemical_species"": [""CO"", ""CH4""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.0,,,PB1(6),6,qwen2.5:14b,PB9,High,PB1,"PB2, PB3, PB4, PB5, PB6, PB7, PB8","The abstract focuses on the measurement of atmospheric carbon monoxide (CO) and methane (CH4) using satellite data from TROPOMI. The retrieval algorithm WFM-DOAS is used to determine column-averaged dry air mole fractions XCO and XCH4, which are crucial for assessing their impact on climate change and air quality. While the abstract mentions CH4 as a greenhouse gas contributing to human-induced climate change, it does not model or measure climate variables directly but rather focuses on atmospheric constituents. The small extractor and keyword overlap scorer suggested potential relevance to PB1 due to methane's role in climate change, but this is overridden by the focus on chemical species measurement.",8.626,,,,,,,,,PB9,9.631
+50137c06d495,llm_judged,qwen2.5:3b,BrO; CaCO3; HNO3; H2SO4; ikaite; calcite,alkalinity; Cl/Br ratio,,modelled,chemistry,8,"{
+  ""chemical_species"": [""BrO"", ""CaCO3"", ""HNO3"", ""H2SO4"", ""ikaite"", ""calcite""],
+  ""physical_metrics"": [""temperature"", ""alkalinity"", ""Cl/Br ratio""],
+  ""biological_observations"": [],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""chemistry""
+}",1.586,,,PB3(3),3,qwen2.5:14b,PB3,High,None,"PB1, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the simulation of ozone depletion events (ODEs) in polar marine boundary layers using the FREZCHEM model, which examines the role of calcium carbonate precipitation and its impact on alkalinity. The core variable being modeled is the chemical process leading to ODEs, directly related to stratospheric ozone depletion. This aligns with PB3's Core Definition and UPV Context regarding ozone-layer terms. While the small extractor identified methodology as modelled and chemicals relevant to PB3, it did not capture the broader context of ozone depletion explicitly mentioned in the abstract.",7.221,,,,,,,,,PB3,8.81
+3159c4d063f0,llm_judged,qwen2.5:3b,,oxygen; wind,productivity; OMZ,modelled,earth_sciences,4,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""oxygen"", ""wind""],
+  ""biological_observations"": [""productivity"", ""OMZ"", ""denitrification""],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.305,,,PB1(6),6,qwen2.5:14b,PB1,High,"PB5, PB7","PB2, PB3, PB4, PB6, PB8, PB9","The research models the impact of changes in Indian monsoon wind intensity on oxygen minimum zones (OMZs) and productivity in the Arabian Sea. The primary variable being modelled is the response of OMZs to climate-driven wind perturbations, which directly relates to biogeochemical cycles and ocean deoxygenation under changing climatic conditions. This aligns with PB1's focus on human-induced climate change affecting marine systems. While there are mentions of productivity and OMZ expansion, these are secondary ecological responses to the primary forcing of climate-driven wind changes.",8.186,,,,,,,,,PB1,9.495
+da697160487b,llm_judged,qwen2.5:3b,surface tracers; stratosphere,resolution; model resolution; meridional transport; vertical mixing; tracer lifetime; ERA40 simulation; interannual variability,,measured,earth_sciences,9,"{
+  ""chemical_species"": [""surface tracers"", ""stratosphere""],
+  ""physical_metrics"": [""resolution"", ""model resolution"", ""meridional transport"", ""vertical mixing"", ""tracer lifetime"", ""ERA40 simulation"", ""interannual variability""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.637,,,PB9(3),3,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The research measures the transport of idealized tracers in different model resolutions and meteorological conditions, focusing on meridional transport and vertical mixing. This operational object aligns with PB9 due to its focus on atmospheric aerosol loading and tracer transport mechanisms. The small extractor's physical_metrics and keyword overlap scorer's indication towards PB9 corroborate this choice.",5.815,,,,,,,,,PB9,7.456
+f89be8cffe97,llm_judged,qwen2.5:3b,,latitude; vortex,,mentioned,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""latitude"", ""vortex""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",0.985,,,,0,qwen2.5:14b,PB3,High,None,"PB1, PB2, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the measurement and comparison of ozone quantities in polar regions, specifically addressing the reliability of different measures for assessing chemical ozone loss. The primary variable under investigation is total column ozone and its correlation with actual chemical ozone loss within the polar vortex. This aligns directly with PB3's core definition concerning stratospheric ozone depletion.",5.642,,,,,,,,,PB3,6.631
+cab713fe6b41,llm_judged,qwen2.5:3b,,,,mentioned,engineering,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",0.837,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the healthiness of built environments and their impact on human well-being, comparing various building certification systems. The primary focus is on user-centered design and environmental quality certifications that aim to improve occupants' health and well-being. This research does not measure or model any biophysical variables related to Planetary Boundaries but rather discusses social and governance aspects. Therefore, it falls outside the scope of PBs.",5.863,,,,,,,,,None,6.702
+9ba110d31936,llm_judged,qwen2.5:3b,volcanic ash,cloud; aerosol layer; wind; attenuated backscatter profile; AOD; optical depth; aerosol size distribution; aerosol extinction profile,,none,earth_sciences,9,"{
+  ""chemical_species"": [""volcanic ash""],
+  ""physical_metrics"": [
+    ""cloud"",
+    ""aerosol layer"",
+    ""radiation"",
+    ""temperature"",
+    ""pressure"",
+    ""wind"",
+    ""atmospheric pressure"",
+    ""atmospheric temperature"",
+    ""atmospheric humidity"",
+    ""atmospheric density"",
+    ""attenuated backscatter profile"",
+    ""AOD"",
+    ""optical depth"",
+    ""aerosol size distribution"",
+    ""aerosol extinction profile""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured|modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.867,,,PB9(6),6,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The abstract focuses on the measurement and tracking of volcanic aerosol layers injected into the atmosphere by the Calbuco volcano eruption. The study uses satellite data, lidar systems, and sunphotometers to monitor the spatial and temporal distribution of these aerosols over a large geographical area. This operational object aligns with PB9's core definition of atmospheric aerosol loading due to human activity or natural events like volcanic eruptions.",6.413,,,,,,,,,PB9,9.285
+c95e30752adf,llm_judged,qwen2.5:3b,N2O,,,measured,earth_sciences,1,"{
+  ""chemical_species"": [""N2O""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",0.974,,,,0,qwen2.5:14b,PB1,High,PB4,PB3,"The abstract focuses on measuring the mitigation potential of various agricultural practices to reduce N2O emissions from soils, a potent greenhouse gas. The primary variable being quantified is N2O emissions and their reduction through different practices. This aligns with PB1 (Climate Change) due to its direct relation to greenhouse gases and climate impacts. While the abstract mentions ozone-depleting substances, it does not delve into stratospheric ozone depletion mechanisms or CFC substitution, thus excluding PB3.",6.261,,,,,,,,,PB1,7.238
+9153f4dcf3d6,llm_judged,qwen2.5:3b,,precise simulations; initial and boundary conditions; high-resolution simulations; surface data; radar data; extreme precipitation; wind gusts,,measured,earth_sciences,7,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""precise simulations"", 
+    ""initial and boundary conditions"", 
+    ""high-resolution simulations"", 
+    ""surface data"", 
+    ""radar data"", 
+    ""extreme precipitation"", 
+    ""wind gusts""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",9.363,,,,0,qwen2.5:14b,None,N/A,None,PB1,"The paper focuses on verifying the accuracy of simulations performed using the Weather Research and Forecasting Model (WRF) for a severe weather event. While climate change is mentioned in the introduction, it does not play an active role in the methodology or results. The primary focus is on improving simulation techniques rather than analyzing climate impacts directly. The small extractor identified physical metrics related to simulations but did not indicate any direct measurement of climate variables.",11.767,,,,,,,,,None,21.132
+7c0bf746ba69,llm_judged,qwen2.5:3b,lead; arsenic; zinc,,,measured,earth_sciences,3,"{
+  ""chemical_species"": [""lead"", ""arsenic"", ""zinc""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",11.523,,,,0,qwen2.5:14b,PB8,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7","The abstract describes the measurement of heavy metal pollution in sediment samples from Deception Bay, focusing on enrichment factors and contamination indices for lead, arsenic, zinc, and other metals. This analysis falls under PB8 due to the release of synthetic chemicals (heavy metals) into the environment with potential harmful effects. The small extractor identified chemical species but did not detect any physical metrics or biological observations, aligning with the focus on pollution from novel entities.",15.374,,,,,,,,,PB8,26.9
+670ceeb7641d,llm_judged,qwen2.5:3b,,global occurrence; geographic distribution of karst; karst in various topographic settings and coastal areas; karst in different climatic zones; populations living on karst,,measured,earth_sciences,5,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""global occurrence"", ""geographic distribution of karst"", ""karst in various topographic settings and coastal areas"", ""karst in different climatic zones"", ""populations living on karst""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",9.216,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The study measures the global occurrence and geographic distribution of karst regions, including their topographic settings, climatic zones, and populations. The focus is on describing the spatial extent and characteristics of karst areas rather than any direct biophysical impact or forcing related to Planetary Boundaries. The small extractor identified physical metrics but no chemical species or biological observations, aligning with the abstract's content.",14.693,,,,,,,,,None,23.912
+fa215acb1461,llm_judged,qwen2.5:3b,Cd; Cu; Ni; Zn; Fe; Pb; Cr; Mn,salinity; temperature; turbidity; pH; dissolved oxygen,,measured,earth_sciences,13,"{
+  ""chemical_species"": [""Cd"", ""Cu"", ""Ni"", ""Zn"", ""Fe"", ""Pb"", ""Cr"", ""Mn""],
+  ""physical_metrics"": [
+    ""salinity"",
+    ""temperature"",
+    ""turbidity"",
+    ""pH"",
+    ""dissolved oxygen""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",9.879,,,PB9(3),3,qwen2.5:14b,PB8,Medium,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB9","The study measures the distribution and geochemical behavior of heavy metals in the dissolved phase and suspended particulate matter within Mar Chiquita Coastal Lagoon. The focus is on environmental contamination by these metals, which are linked to intensive agriculture practices in the drainage basin. This aligns with PB8's core definition concerning synthetic chemicals and persistent substances released into the environment. While there was no explicit mention of novel entities or engineered materials, heavy metal pollution fits within the broader context of harmful Earth-system effects.",18.919,,,,,,,,,PB8,28.801
+4b96859cedec,llm_judged,qwen2.5:3b,,,,mentioned,social_sciences,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""social_sciences""
+}",2.732,,,PB1(3),3,qwen2.5:14b,None,N/A,None,PB1,"The abstract discusses the social and economic impacts of climate change through progressive protests and mobilizations. However, it does not measure or model any biophysical variables related to climate change; instead, it uses climate change as a motivational context for broader discussions on industrial civilization's burden. The small extractor and keyword overlap scorer did not identify any relevant physical metrics or chemical species, supporting the conclusion that this is purely social science without direct measurement of planetary boundaries.",56.294,,True,None,High,"The abstract discusses climate change in a social and economic context but does not measure, model, or impose scenarios related to it. The focus is on the societal response to industrial civilization's impacts rather than an active study of climate variables.",PB1,12.168,,None,71.197
+437469852fd9,llm_judged,qwen2.5:3b,,climate; Earth system models,,mentioned,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""climate"", ""Earth system models""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.051,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the use of climate and Earth system models to reconstruct past climatic events, emphasizing the epistemological blurring between data and model in paleoclimatology. The focus is on the methodology and theoretical framework rather than direct measurement or modeling of specific biophysical variables within Planetary Boundaries. Therefore, this research does not measure, model, or experimentally manipulate any operational objects that align with a specific PB.",6.676,,,,,,,,,None,8.729
+e07e1529f98b,llm_judged,qwen2.5:3b,,,deep roots,measured,earth_sciences,1,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""deep roots""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",0.955,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the study of deep roots in plants and their ecological significance. The focus is on understanding the biological observations related to plant root systems, which does not align with any specific Planetary Boundary framework as it pertains more to fundamental biology than direct environmental impact or biophysical measurement.",4.854,,,,,,,,,None,5.81
+35031d18c0c9,llm_judged,qwen2.5:3b,,mesoscale eddy,prokaryotic activity; community structure; microbial activity,measured,earth_sciences,4,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""mesoscale eddy""],
+  ""biological_observations"": [""prokaryotic activity"", ""community structure"", ""microbial activity""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.306,,,,0,qwen2.5:14b,PB7,High,None,"PB1, PB2, PB4, PB5, PB6, PB8, PB9","The research measures the effects of mesoscale eddies on prokaryotic assemblage structure and activity in oceanic environments. The focus is clearly on biological observations within a marine context, specifically examining microbial community dynamics. This aligns with PB7 due to its emphasis on biodiversity and ecosystem responses. Neither chemical species nor physical metrics indicative of other planetary boundaries are quantified or modeled.",5.82,,,,,,,,,PB7,7.127
+b9e1bf330baf,llm_judged,qwen2.5:3b,stuttgartiensis; acetate; formate,,Kuenenia stuttgartiensis; anammox bacteria; carbon metabolism; metabolic networks; central carbon metabolism; aerobic ammonium-oxidizing (anammox) bacteria; energy-efﬁcient removal of nitrogen from wastewater,measured,biology,10,"{
+  ""chemical_species"": [""stuttgartiensis"", ""acetate"", ""formate""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""Kuenenia stuttgartiensis"", ""anammox bacteria"", ""carbon metabolism"", ""metabolic networks"", ""central carbon metabolism"", ""aerobic ammonium-oxidizing (anammox) bacteria"", ""energy-efﬁcient removal of nitrogen from wastewater""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",2.106,,,PB4(3),3,qwen2.5:14b,PB4,High,None,"PB1, PB7","The research measures the central carbon metabolism of anammox bacteria using 13C and 2H isotope tracing, metabolomics, and metabolic flux analysis. This study focuses on nitrogen biogeochemistry by resolving metabolic pathways involved in CO2 fixation and amino acid biosynthesis. The primary focus aligns with PB4 due to its direct relation to the nitrogen cycle and nutrient flows disrupted by human activity.",5.26,,,,,,,,,PB4,7.369
+730088fdf1e2,llm_judged,qwen2.5:3b,NH4 +; soluble reactive P (SRP),,streams; nutrient spiraling; release; uptake; nitrogen; phosphorus,measured,earth_sciences,8,"{
+  ""chemical_species"": [""NH4 +"", ""soluble reactive P (SRP)""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""streams"", ""nutrient spiraling"", ""release"", ""uptake"", ""nitrogen"", ""phosphorus""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.626,,,,0,qwen2.5:14b,PB4,High,None,"PB1, PB5, PB7","The research measures the net and gross uptake of nutrients (NH4+ and SRP) in streams, focusing on release processes that counterbalance nutrient uptake. This biogeochemical analysis directly addresses disruptions to nitrogen and phosphorus cycles due to human activity, aligning with PB4's core definition. The abstract clearly quantifies these nutrient flows, distinguishing it from mere background context.",5.243,,,,,,,,,PB4,6.874
+00050f80240e,llm_judged,qwen2.5:3b,NH3,,,modelled,engineering,1,"{
+  ""chemical_species"": [""NH3""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""engineering""
+}",0.988,,,,0,qwen2.5:14b,PB4,High,PB1,"PB2, PB3, PB5, PB6, PB7, PB8, PB9","The abstract describes a modeling framework that integrates the EPIC model with an air quality model to estimate ammonia (NH3) emissions from agricultural soils in the United States. The focus is on quantifying NH3 emissions, which are directly linked to nitrogen biogeochemical flows and their environmental impacts. This aligns clearly with PB4's core definition of disrupting nitrogen cycles due to human activity. While climate change is mentioned as a future consideration for policy evaluation, it does not constitute the primary analytical focus.",7.178,,,,,,,,,PB4,8.169
+6039788ff154,llm_judged,qwen2.5:3b,,environmental,ecological responses,measured,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""environmental""],
+  ""biological_observations"": [""ecological responses"", ""organisms"", ""populations"", ""ecosystems""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.19,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses environmental mutagenesis during the end-Permian ecological crisis, focusing on biological observations of ecological responses to a past environmental stress event. The primary variable being studied is the impact of environmental changes on biodiversity and ecosystem integrity rather than any direct measurement or modeling of current biophysical boundaries. Therefore, this research does not align with the operational definitions provided for Planetary Boundaries in the context of contemporary environmental issues.",5.82,,,,,,,,,None,7.011
+3c0c667b5363,llm_judged,qwen2.5:3b,MTTCs,,,measured,earth_sciences,1,"{
+  ""chemical_species"": [""MTTCs""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",0.957,,,,0,qwen2.5:14b,PB2,High,None,"PB1, PB4, PB5, PB6, PB7, PB8, PB9","The paper measures the relative abundances of methyltrimethyltridecylchromans (MTTCs) as a proxy for riverine freshwater incursions into marine environments under anoxic conditions. This study focuses on sedimentary organic matter preservation and stratification, which is directly related to oceanic processes but does not explicitly address current climate change or anthropogenic impacts relevant to PB1. The abstract discusses historical events and uses biomarker parameters without quantifying modern biophysical variables that would activate other PBs.",6.62,,,,,,,,,PB2,7.579
+cf94a74b8764,llm_judged,qwen2.5:3b,,DOC; phytoplankton biomass,Bacteroidetes; Roseobacter; SAR86 cluster; Crenarchaea; Euryarchaea,measured,biology,7,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""DOC"", ""phytoplankton biomass""],
+  ""biological_observations"": [""Bacteroidetes"", ""Roseobacter"", ""SAR86 cluster"", ""Crenarchaea"", ""Euryarchaea""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",1.649,,,,0,qwen2.5:14b,PB4,High,None,"PB1, PB2, PB3, PB5, PB6, PB7, PB8, PB9","The research measures the abundance and activity of specific prokaryotic groups in the coastal North Sea during a Phaeocystis globosa bloom. The study focuses on marine biogeochemical processes, particularly the role of heterotrophic bacteria and archaea in carbon cycling and organic matter degradation. This aligns with PB4 (Biogeochemical Flows) due to its focus on nutrient cycles and ecosystem dynamics involving nitrogen and phosphorus. Neither small extractor nor keyword scorer provided relevant signals for other PBs.",7.433,,,,,,,,,PB4,9.09
+f191a837275d,llm_judged,qwen2.5:3b,,salinity; DIC concentrations; carbon; water; inorganic; seasonal; NCP; primary production; calcium carbonate formation,production; ecosystem functioning; nutrient-rich basin water; iron-rich shelf water; Green Belt,measured,earth_sciences,14,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""salinity"",
+    ""DIC concentrations"",
+    ""carbon"",
+    ""water"",
+    ""inorganic"",
+    ""seasonal"",
+    ""NCP"",
+    ""primary production"",
+    ""calcium carbonate formation""
+  ],
+  ""biological_observations"": [
+    ""production"",
+    ""ecosystem functioning"",
+    ""nutrient-rich basin water"",
+    ""iron-rich shelf water"",
+    ""Green Belt""
+  ],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.467,,,,0,qwen2.5:14b,PB4,High,None,"PB1, PB5, PB6, PB7, PB8, PB9","The research measures the spatio-temporal distribution and controls of dissolved inorganic carbon (DIC) concentrations, which are directly tied to net community production (NCP). This biogeochemical focus on DIC and NCP aligns with PB4's core definition of disrupting nitrogen and phosphorus cycles. The abstract does not mention any direct climate impacts or land-use changes that would suggest other planetary boundaries.",5.828,,,,,,,,,PB4,8.298
+c882a9731d06,llm_judged,qwen2.5:3b,,carbon; nutritional quality,ecosystem trophic structure; consumer productivity; energy recycling; carbon accumulation,measured,biology,6,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""carbon"", ""nutritional quality""],
+  ""biological_observations"": [""ecosystem trophic structure"", ""consumer productivity"", ""energy recycling"", ""carbon accumulation""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",1.368,,,,0,qwen2.5:14b,PB4,High,None,"PB1, PB5, PB7","The research measures the nutritional quality of primary producers and its impact on ecosystem trophic structure, which directly influences carbon cycling and nutrient storage. This aligns with PB4 as it involves biogeochemical flows specifically related to nutrient cycles disrupted by changes in producer nutritional quality. The abstract does not mention any direct measurement or modeling relevant to other planetary boundaries.",5.063,,,,,,,,,PB4,6.435
+1a4300b95a49,llm_judged,qwen2.5:3b,Ce; Fe,,,measured,earth_sciences,2,"{
+  ""chemical_species"": [""Ce"", ""Fe""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.04,,,,0,qwen2.5:14b,PB4,Medium,None,"PB1, PB5, PB7","The study measures the chemical variations in soils at catchment and hillslope scales, focusing on elements like Fe, Ce, and organic C. The primary variable of interest is the redistribution of these elements via vertical and lateral podzolization processes, which impacts soil chemistry and water dynamics. This biogeochemical focus aligns with PB4's core definition of disrupting nitrogen and phosphorus cycles due to human activity, although no direct mention of N or P was found in the abstract. The small extractor model did not identify any physical metrics but correctly noted that chemical species were measured, supporting this judgment.",6.838,,,,,,,,,PB4,7.881
+2ea3de6be731,llm_judged,qwen2.5:3b,,δ15N; δ13C; nitrate concentration,phytoplankton; primary production; phytoplankton degradation,measured,biology,6,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""δ15N"", ""δ13C"", ""nitrate concentration""],
+  ""biological_observations"": [""phytoplankton"", ""primary production"", ""phytoplankton degradation""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",1.505,,,,0,qwen2.5:14b,PB4,High,None,"PB1, PB2, PB7","The research measures δ15N and δ13C in spring particulate organic matter (POM) to understand the mechanisms controlling nitrogen and carbon isotopes in a coastal ecosystem. The study focuses on nutrient utilization by phytoplankton, which directly relates to biogeochemical flows of nitrogen and phosphorus. This operational object aligns with PB4's core definition of disrupting nitrogen cycles due to human activity. The small extractor identified δ15N and δ13C as physical metrics, supporting the primary PB choice.",6.528,,,,,,,,,PB4,8.038
+b1fb9424d9f7,llm_judged,qwen2.5:3b,,compressive; tensile; bending strength,,measured,engineering,3,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""compressive"", ""tensile"", ""bending strength""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""engineering""
+}",1.122,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The research focuses on the physical properties and construction parameters of reinforced ice structures, specifically measuring compressive, tensile, and bending strength. The study does not engage with any biophysical processes or environmental boundaries directly related to the Planetary Boundaries framework. The small extractor identified physical metrics but no chemical species or biological observations, aligning with the abstract's content.",5.368,,,,,,,,,None,6.491
+491cd02d01cd,llm_judged,qwen2.5:3b,,SiO2; Y; Nb,,mentioned,earth_sciences,3,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""SiO2"", ""Y"", ""Nb""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.181,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on geological mapping and chemical analysis of rock formations in New Brunswick, specifically the Blacks Harbour Granodiorite and Ragged Falls Intrusive-Volcanic Suite. The study measures SiO2, K2O, Rb, Nb, and Zr concentrations to understand tectonic history and igneous processes. This is purely geological research without direct measurement or modeling of any planetary boundary variables.",6.446,,,,,,,,,None,7.636
+a8f8fca16a7f,llm_judged,qwen2.5:3b,,,suessiacean dinoflagellates,measured,biology,1,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""suessiacean dinoflagellates"", ""bloom""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",1.099,,,,0,qwen2.5:14b,PB7,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB8, PB9","The abstract focuses on the assessment of biodiversity, global distribution, and ecological niches of suessiacean dinoflagellates using DNA metabarcoding. This study directly measures biological observations related to species diversity and habitat distribution, which aligns with PB7's core definition concerning human pressure on genetic, species, and ecosystem diversity. The methodology involves direct measurement of biodiversity rather than background context or theoretical discussion.",6.067,,,,,,,,,PB7,7.168
+81a2071c7d3b,llm_judged,qwen2.5:3b,,atmospheric correction; hyperspectral,,mentioned,engineering,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""atmospheric correction"", ""hyperspectral"", ""multispectral""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",1.053,,,PB9(3),3,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The abstract focuses on the atmospheric correction of satellite-based multi- and hyper-spectral sensors to obtain water properties. It discusses challenges related to turbid waters and strongly-absorbing aerosols, emphasizing new sensor technologies and algorithms for addressing these issues. The primary focus is on atmospheric correction methods rather than direct measurement or modeling of climate change impacts or other planetary boundaries.",5.214,,True,PB9,High,"The abstract explicitly mentions 'strongly-absorbing aerosols' and discusses the development of aerosol models, indicating an active study of atmospheric aerosol loading (PB9).",PB9,2.554,,PB9,8.825
+7f70ba66f24a,llm_judged,qwen2.5:3b,,precipitation; climate; greenhouse gas emission; resolution; orography resolution; convection parameterization; dry static energy flux divergence; vertical velocity; boundary layer height,,modelled,earth_sciences,9,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""precipitation"",
+    ""extremes"",
+    ""climate"",
+    ""greenhouse gas emission"",
+    ""resolution"",
+    ""orography resolution"",
+    ""convection parameterization"",
+    ""dry static energy flux divergence"",
+    ""vertical velocity"",
+    ""boundary layer height""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.103,,,,0,qwen2.5:14b,PB1,High,None,"PB2, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the downscaling of global climate models to regional scales for precipitation projections under future high greenhouse gas emission scenarios. The primary variable being modelled is 'precipitation', which directly relates to changes in climate patterns and their impacts on regional water availability, thus aligning with PB1 (Climate Change). While other physical metrics like convection parameterization are mentioned, they support the core analysis of precipitation under future climate conditions rather than constituting a separate focus. The small extractor and keyword overlap scorer did not provide relevant signals to contradict this interpretation.",7.782,,,,,,,,,PB1,9.888
+ab931c264219,llm_judged,qwen2.5:3b,,,,mentioned,engineering,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",0.763,,,PB5(3),3,qwen2.5:14b,PB5,High,None,"PB1, PB7","The abstract focuses on the development of impact assessment methodology for agricultural water scarcity, specifically quantifying midpoint and endpoint characterization factors related to freshwater consumption. This aligns with PB5 (Freshwater Use) as it directly addresses human withdrawal and consumption of freshwater in agriculture, which impacts ecological and human water availability. The small extractor's methodological mention and keyword scorer's alignment with 'water scarcity' support this classification.",5.052,,,,,,,,,PB5,5.816
+e94f3a3a8624,llm_judged,qwen2.5:3b,,energy; food groups; nutrients; maximum limits for foods with a high environmental impact,,mentioned,other,4,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""energy"", ""food groups"", ""nutrients"", ""maximum limits for foods with a high environmental impact""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""other""
+}",1.205,,,,0,qwen2.5:14b,PB5,High,None,"PB1, PB4, PB7","The abstract focuses on deriving healthy and sustainable dietary guidelines for different age groups in the Netherlands, optimizing food patterns based on nutritional requirements and environmental impact. The primary variable being optimized is the consumption of foods with high environmental impact, which aligns closely with PB5 (Freshwater Use) due to its emphasis on resource use efficiency and sustainability. However, there are no explicit measurements or models related to climate change, biodiversity loss, or other planetary boundaries beyond water usage.",5.824,,,,,,,,,PB5,7.032
+e9722863b198,llm_judged,qwen2.5:3b,,electricity; hydrology; environment; livelihood; diversity,fisheries; agriculture; biodiversity; capture fisheries; sediment or nutrients,measured,earth_sciences,10,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""electricity"", ""hydrology"", ""environment"", ""livelihood"", ""diversity""],
+  ""biological_observations"": [""fisheries"", ""agriculture"", ""biodiversity"", ""capture fisheries"", ""sediment or nutrients""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.717,,,PB1(3),3,qwen2.5:14b,PB7,High,PB5,PB1,"The abstract measures the impacts of hydropower dam construction on fisheries, agriculture, and biodiversity in the Lower Mekong Basin. The primary focus is on the loss of fishery yields and agricultural productivity due to dam-induced changes rather than direct climate change effects. While 'climate change' is mentioned, it is not quantified or modeled as a variable; instead, the study centers on the socioeconomic impacts of hydropower development. The small extractor's physical_metrics list includes 'hydrology', 'environment', and 'diversity', but these are more background context than operational objects.",14.587,,,,,,,,,PB7,17.308
+2cca03b7a82b,llm_judged,qwen2.5:3b,,precipitation; temperature,,measured,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""precipitation"",
+    ""temperature"",
+    ""evaporation""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",6.309,,,PB1(6),6,qwen2.5:14b,PB1,High,PB5,"PB2, PB3, PB4, PB6, PB7, PB8, PB9","The study measures the effects of climate change on water availability in a semi-arid region using LARS-WG6.0 to forecast variations in precipitation and temperature under different RCP scenarios. The primary focus is on quantifying changes in daily climate variables, which directly aligns with PB1's core definition of human-driven alteration of the climate system through greenhouse gas emissions and associated warming. While the abstract mentions water management implications, these are secondary to the direct measurement of climatic impacts.",17.181,,,,,,,,,PB1,23.493
+61c5ef71efb6,fast_skip_consensus,qwen2.5:3b,,,,mentioned,law_policy,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""law_policy""
+}",7.663,,,,0,,None,ConsensusFilter,None,None,Consensus: Agent1 (0 items + non-bio frame) AND scorer (no PB matched).,,,,,,,,,,None,7.666
+9275249d37b1,llm_judged,qwen2.5:3b,,,Crassostrea gigas; Ostrea edulis,mentioned,biology,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""Crassostrea gigas"", ""Ostrea edulis""],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""biology""
+}",1.042,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the history and current state of French oyster culture, focusing on species used for production. It mentions specific oyster species but does not quantify or model any biophysical variables related to Planetary Boundaries. The focus is purely historical and biological without any measurement or modeling of environmental metrics.",12.876,,,,,,,,,None,13.92
+c36b323b0cc5,llm_judged,qwen2.5:3b,,entropy; climate; oceanic; earth; production; mean; atmospheric; global; near-surface; temperature; equator-to-pole; tropics; Hadley; Ferrel; diabatic heating; friction,,measured,earth_sciences,16,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""ohtmax"",
+    ""entropy"",
+    ""climate"",
+    ""oceanic"",
+    ""earth"",
+    ""production"",
+    ""mean"",
+    ""atmospheric"",
+    ""global"",
+    ""near-surface"",
+    ""temperature"",
+    ""equator-to-pole"",
+    ""tropics"",
+    ""Hadley"",
+    ""Ferrel"",
+    ""diabatic heating"",
+    ""friction""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",9.531,,,,0,qwen2.5:14b,PB1,High,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the impact of changes in oceanic heat transport on global atmospheric circulation using a general circulation model. The primary variable being measured is the climate system's response to altered oceanic heat transport, which directly involves the Earth's climate dynamics and warming patterns. This aligns with PB1 (Climate Change) as it explicitly models how changes in oceanic conditions affect global temperature gradients and atmospheric circulation patterns. While other terms like entropy production are mentioned, they do not constitute a primary focus on another Planetary Boundary.",14.887,,,,,,,,,PB1,24.421
+3e713b4c8d88,llm_judged,qwen2.5:3b,,water footprint; yield; soil texture; application rates; environmental factors,crop operations; precision map,measured,earth_sciences,7,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""water footprint"", ""yield"", ""soil texture"", ""application rates"", ""environmental factors""],
+  ""biological_observations"": [""crop operations"", ""precision map""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",8.144,,,PB1(3); PB8(2),3,qwen2.5:14b,PB5,High,PB8,PB1,"The abstract focuses on measuring the grey water footprint and yield impacts of different agricultural practices in a field study. The primary variable being quantified is the grey water footprint, which directly relates to freshwater use and pollution. This aligns with PB5's core definition concerning human withdrawal and consumption of freshwater for agriculture, including its impact on water quality and pollution. While climate change is mentioned as a background context, it does not actively measure or model climatic variables, thus excluding PB1. The small extractor and keyword scorer did not provide conflicting signals but were not necessary to determine the primary focus.",64.611,,,,,,,,,PB5,72.757
+efb1b08a09c7,llm_judged,qwen2.5:3b,,wind stress; turbulent heat flux; evaporation; surface temperature; saturation humidity; skin temperature; neutral drag coefficient,,measured,earth_sciences,7,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""wind stress"", 
+    ""turbulent heat flux"", 
+    ""evaporation"", 
+    ""surface temperature"", 
+    ""saturation humidity"", 
+    ""skin temperature"", 
+    ""neutral drag coefficient""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",9.46,,,,0,qwen2.5:14b,PB1,High,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The paper quantifies the impacts of parameterization approximations on ocean-atmosphere exchanges, focusing specifically on wind stress, turbulent heat flux, and evaporation. These variables are central to understanding climate dynamics, thus aligning with PB1's core definition of human-driven alteration of the climate system through greenhouse gas emissions and associated warming. The abstract does not mention any other biophysical processes that would suggest a secondary or rejected planetary boundary.",8.649,,,,,,,,,PB1,18.112
+b2e0093480c9,llm_judged,qwen2.5:3b,,salt crystallisation; sand dispersal; sedimentation; water flow,,mentioned,engineering,4,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""salt crystallisation"", ""sand dispersal"", ""sedimentation"", ""water flow""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",1.118,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB4, PB5, PB7, PB9","The abstract discusses the use of entropy in landscape architecture, particularly focusing on physical models involving salt crystallization, sand dispersal, sedimentation, and water flow. These processes are mentioned as part of a design technique but not quantified or modeled analytically. The primary focus is on the conceptual application rather than biophysical measurement or modeling. Neither the small extractor nor keyword scorer identified any relevant biophysical variables.",5.227,,,,,,,,,None,6.347
+e54a64612267,llm_judged,qwen2.5:3b,,rainfall; intensity; regimes; signal,,measured,earth_sciences,4,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""rainfall"", ""intensity"", ""regimes"", ""signal""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",7.414,,,,0,qwen2.5:14b,PB1,High,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The research measures the intermittency properties of rainfall in Sardinia using high-resolution data and various analytical techniques. The primary focus is on quantifying how dry-wet intervals and intensity fluctuations contribute to overall rainfall variability, which falls under PB1 due to its direct relation to climate patterns and variability. While the abstract mentions climate forecasting models, it does not explicitly model or measure greenhouse gases or warming processes that would activate other boundaries like PB4 or PB5.",12.561,,,,,,,,,PB1,19.98
+a4fb643800d7,llm_judged,qwen2.5:3b,222Rn; 220Rn; a5Kr; 4C; 37Ar; 7Be; 210Pb,activity concentrations; average activity concentrations; surface air over Europe; atmospheric layer; meters above ground; decay product; long-lived decay product of radon,,measured,earth_sciences,14,"{
+  ""chemical_species"": [""222Rn"", ""220Rn"", ""a5Kr"", ""4C"", ""37Ar"", ""7Be"", ""210Pb""],
+  ""physical_metrics"": [""activity concentrations"", ""average activity concentrations"", ""surface air over Europe"", ""atmospheric layer"", ""meters above ground"", ""particles"", ""decay product"", ""long-lived decay product of radon""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",10.924,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on measuring the activity concentrations of various atmospheric radionuclides, particularly 222Rn and its decay products. This analysis does not directly relate to any of the Planetary Boundaries as defined by their core definitions or activation logic. The primary focus is on environmental monitoring rather than biophysical impacts that would activate a specific PB.",13.472,,,,,,,,,None,24.397
+6f65d7f2f5f8,llm_judged,qwen2.5:3b,,discharge; flood depth; flood extents,,none,earth_sciences,3,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""discharge"",
+    ""flood depth"",
+    ""flood extents""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured|modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",8.116,,,PB6(2),2,qwen2.5:14b,PB6,High,PB5,"PB1, PB7","The study measures the impacts of land-cover changes on hydrological and hydraulic processes in the Agusan River Basin, including discharge, flood depth, and extent. The primary variable being analyzed is land cover change, which directly affects these hydrological parameters. This aligns with PB6's core definition of conversion of natural land cover into human-modified systems. While there are mentions of water-related impacts, they do not constitute the primary focus or measurement.",14.031,,,,,,,,,PB6,22.151
+662818aff829,llm_judged,qwen2.5:3b,,bioregions; place-specific duties,,mentioned,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""bioregions"", ""place-specific duties""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",7.324,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the challenges and opportunities of transboundary environmental management, focusing on ecoregions and bioregional planning across political borders. It emphasizes the need for new paradigms to address shared natural resources and interdependent human-environment systems but does not measure or model any specific planetary boundary variable directly. The weak signals did not identify any relevant chemical species or physical metrics that align with a specific PB.",16.364,,,,,,,,,None,23.694
+d418cdcbdedd,llm_judged,qwen2.5:3b,,surface; heat; land; sebs; sensible; measurements; cover; energy; footprint; earth; balance,,measured,earth_sciences,11,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""surface"", 
+    ""heat"", 
+    ""land"", 
+    ""sebs"", 
+    ""sensible"", 
+    ""measurements"", 
+    ""cover"", 
+    ""energy"", 
+    ""footprint"", 
+    ""earth"", 
+    ""balance""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",4.317,,,,0,qwen2.5:14b,PB1,Medium,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The study evaluates the Surface Energy Balance System (SEBS) model using tower-based flux measurements to estimate turbulent surface energy fluxes. The focus is on the sensitivity of sensible heat flux to aerodynamic parameters, which directly relates to PB1 due to its emphasis on climate-related variables and their impact on energy fluxes. The abstract does not mention any biophysical terms that would suggest other planetary boundaries.",57.016,,,,,,,,,PB1,61.336
+70f693b8a76e,llm_judged,qwen2.5:3b,water; hydroxyl,,,mentioned,earth_sciences,2,"{
+  ""chemical_species"": [""water"", ""hydroxyl""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",8.067,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the presence and behavior of water ice and hydroxyl species in the inner solar system, particularly Mercury, the Moon, and Ceres. The study measures exospheric populations and surface reactions involving water-related compounds but does not quantify or model any Earth-based Planetary Boundary variables. The small extractor's chemical_species list aligns with this focus on water and hydroxyl, while the keyword overlap scorer did not find relevant PB vocabulary.",8.47,,,,,,,,,None,16.54
+d002a922aec5,llm_judged,qwen2.5:3b,,urban and agricultural land cover; wetland; hardened shoreline; submerged aquatic vegetation; total nitrogen,estuarine fauna; species abundances; bottom-oriented species; prey and refuge habitat,measured,earth_sciences,9,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""urban and agricultural land cover"", ""wetland"", ""hardened shoreline"", ""submerged aquatic vegetation"", ""total nitrogen""],
+  ""biological_observations"": [""estuarine fauna"", ""species abundances"", ""bottom-oriented species"", ""prey and refuge habitat""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.134,,,,0,qwen2.5:14b,PB6,High,PB4,"PB1, PB7","The research measures the effects of urban and agricultural land cover, shoreline hardening, and wetland coverage on estuarine fauna abundance patterns. The primary focus is on how these land-use changes impact faunal populations at both local and system scales. This aligns with PB6 due to explicit descriptions of land-cover conversion and habitat alteration. Weak signals did not identify any specific PB, which agrees with my analysis focusing on land-system change.",6.966,,,,,,,,,PB6,9.107
+fd5e38820a05,llm_judged,qwen2.5:3b,,forest-dwelling species; agricultural expansion; commodity-driven deforestation; forest patches; core area; landscape characteristics,species traits; dispersive species; sedentary animals; forest-dwelling species responses to forest fragmentation,measured,earth_sciences,10,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""forest-dwelling species"", ""agricultural expansion"", ""commodity-driven deforestation"", ""forest patches"", ""core area"", ""landscape characteristics""],
+  ""biological_observations"": [""species traits"", ""dispersive species"", ""sedentary animals"", ""forest-dwelling species responses to forest fragmentation""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.934,,,PB6(5),5,qwen2.5:14b,PB6,High,PB7,"PB1, PB4, PB5","The study measures the effects of agricultural expansion and commodity-driven deforestation on forest fragmentation characteristics, which in turn affect specific species traits. The primary focus is on land cover changes and their ecological impacts, aligning with PB6's core definition of land-system change due to human activities. While biodiversity responses are discussed, they do not constitute the main analytical focus.",5.549,,,,,,,,,PB6,7.487
+3bbd6f08b6ac,llm_judged,qwen2.5:3b,,climate,,mentioned,engineering,1,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""climate"", ""energy"", ""flow"", ""mass"", ""radiation""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",1.163,,,PB1(3),3,qwen2.5:14b,None,N/A,None,PB1,"The abstract discusses the complexity and uncertainty in water resources management due to global change, including climate destabilization. However, it primarily focuses on methodological approaches for managing these systems rather than directly measuring or modeling any biophysical variables related to Planetary Boundaries. The mention of 'climate destabilization' is used as motivational context but does not indicate an active measurement or model of the climate system itself.",4.526,,True,PB1,High,"The abstract explicitly mentions 'global warming' and discusses its impact on water resources management under changing conditions, indicating an active study of climate change (PB1).",PB1,2.4,,PB1,8.094
+697b132b1c14,llm_judged,qwen2.5:3b,,immersion; drip; Dynamic Vapour Sorption (DVS); compressive strength,,measured,engineering,4,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""immersion"", ""drip"", ""Dynamic Vapour Sorption (DVS)"", ""compressive strength""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""engineering""
+}",1.276,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The paper measures the mechanical performance and durability of compressed earth bricks under various stabilizing conditions, focusing on their recyclability and water resistance. The primary focus is on material science and engineering properties rather than any direct biophysical planetary boundary variables. No clear overlap with specific PBs was found in the abstract's content.",5.826,,,,,,,,,None,7.106
+bbf5ed8cca66,llm_judged,qwen2.5:3b,,,,mentioned,biology,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""biology""
+}",0.875,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the evolutionary history and classification of lycophytes, a group of vascular plants. It does not measure or model any biophysical variables related to Planetary Boundaries but rather provides historical context and taxonomic information about these plants. The small extractor and keyword overlap scorer did not identify any relevant terms for Planetary Boundaries.",5.492,,,,,,,,,None,6.371
+8e0c39744cf1,llm_judged,qwen2.5:3b,,,,mentioned,other,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""literature""
+}",0.806,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the literary and intermedial aspects of 'The Three-Body Problem' by Cixin Liu, focusing on how virtual reality is used as a narrative tool. There are no measurements or models of any biophysical variables; all content pertains to literature and digital representation techniques. The small extractor and keyword overlap scorer confirm there are no relevant physical metrics, biological observations, or chemical species mentioned.",5.809,,,,,,,,,None,6.617
+362e76793312,llm_judged,qwen2.5:3b,,,,mentioned,earth_sciences,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",0.907,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the relevance of global environmental change (GEC) and emerging infectious diseases (EIDs), emphasizing factors such as under-nutrition and governance that could impact public health. However, it does not measure or model any specific biophysical variable related to Planetary Boundaries. The focus is on social and epidemiological aspects without quantification or modeling of environmental variables.",5.621,,,,,,,,,None,6.531
+888d4516378f,llm_judged,qwen2.5:3b,,layer; boundary; meteorol,,mentioned,earth_sciences,3,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""layer"", ""boundary"", ""model"", ""urban"", ""meteorol"", ""scheme"", ""models"", ""eddy"", ""surface"", ""vertical"", ""turbulence""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.633,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses commentaries on top-cited Boundary-Layer Meteorology articles, focusing on the methodology and discussion of boundary-layer processes. There is no explicit measurement or modeling of any biophysical variable that aligns with the Planetary Boundaries framework. The mention of meteorological terms does not indicate an active focus on climate change, ocean acidification, ozone depletion, nutrient flows, freshwater use, land-system changes, biosphere integrity, novel entities, or atmospheric aerosol loading. The small extractor and keyword overlap scorer did not identify any relevant biophysical variables.",6.9,,,,,,,,,None,8.534
+f21bc832abc6,llm_judged,qwen2.5:3b,,human; footprint,mammal; species; footprint; presence; activity levels; occurrence,measured,biology,8,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""human"", ""footprint""],
+  ""biological_observations"": [
+    ""mammal"",
+    ""species"",
+    ""camera"",
+    ""footprint"",
+    ""presence"",
+    ""activity levels"",
+    ""occurrence""
+  ],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",1.629,,,,0,qwen2.5:14b,PB7,High,None,"PB1, PB5","The research quantifies the effects of human presence and footprint on mammal occurrence and activity levels across North America. The study measures ecological responses to anthropogenic disturbances, focusing on species traits that predict success in human-dominated landscapes. This biophysical analysis aligns with PB7 as it directly assesses biodiversity integrity and ecosystem response to human pressure.",4.765,,,,,,,,,PB7,6.403
+bc0e0fcc32f5,llm_judged,qwen2.5:3b,,energy; heat; surface; measurements; source; uxes; earth; area; hydrol,,measured,earth_sciences,9,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""energy"",
+    ""heat"",
+    ""surface"",
+    ""measurements"",
+    ""source"",
+    ""data"",
+    ""uxes"",
+    ""hlas"",
+    ""earth"",
+    ""area"",
+    ""soil"",
+    ""hydrol""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.985,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The research measures the seasonal variations of energy balance components over different surfaces using eddy covariance systems and large aperture scintillometers. The study focuses on physical metrics such as sensible heat flux, latent heat flux, and surface characteristics without explicitly addressing climate change or other planetary boundaries directly. The small extractor identified 'energy' and 'heat' metrics but did not suggest any specific PBs, aligning with the abstract's focus.",6.035,,,,,,,,,None,8.023
+9e1320ce502d,llm_judged,qwen2.5:3b,,track; intensity,,measured,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""track"", ""intensity""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.004,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the performance evaluation of mesoscale models for hurricane track and intensity forecasts. The primary variable being measured is forecast accuracy, specifically in terms of storm tracks and intensities over multiple years. This does not directly measure or model any core Planetary Boundary variables but rather uses climate as a background context for evaluating modeling techniques. Neither chemical species nor biological observations are mentioned, and the methodology focuses on model performance metrics without addressing biophysical boundaries.",6.141,,,,,,,,,None,7.148
+9c540c6b7af5,llm_judged,qwen2.5:3b,sand; limestone powder,temperature; thermal diffusivity; heat transfer; convection; diffusion-convection model; diffusivity-only model,,none,earth_sciences,8,"{
+  ""chemical_species"": [""sand"", ""limestone powder""],
+  ""physical_metrics"": [
+    ""temperature"",
+    ""thermal diffusivity"",
+    ""heat transfer"",
+    ""convection"",
+    ""diffusion-convection model"",
+    ""diffusivity-only model""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured,modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.852,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract describes the development and testing of a penetrator device for measuring temperature and thermal diffusivity in planetary regoliths. The focus is on understanding heat transfer mechanisms, particularly convection, which is crucial for interpreting surface energy balance and atmospheric interactions. This work does not directly measure or model any variables related to Planetary Boundaries as defined by the framework.",8.705,,,,,,,,,None,10.56
+3e5fff353a4c,llm_judged,qwen2.5:3b,,climate conditions,emergence; long-distance dispersal; mountain pine beetle,measured,earth_sciences,4,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""climate conditions""],
+  ""biological_observations"": [""emergence"", ""long-distance dispersal"", ""mountain pine beetle""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.491,,,,0,qwen2.5:14b,PB1,High,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on measuring the climatic conditions that influence the emergence and flight of mountain pine beetles, which directly impacts their long-distance dispersal. This operational object aligns with PB1 (Climate Change) because it involves climate-driven biological responses affecting ecosystem dynamics. The small_extractor's physical_metrics identified 'climate conditions,' supporting this choice. No other Planetary Boundaries are explicitly addressed in the measurement or modeling.",13.08,,,,,,,,,PB1,15.573
+0f84341d7e44,llm_judged,qwen2.5:3b,,,Nature's Strongholds; ecological,mentioned,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""Nature's Strongholds"", ""ecological""],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.102,,,,0,qwen2.5:14b,PB7,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB8, PB9","The abstract focuses on the characteristics and scaling up of protected and conserved areas (PCAs) to achieve biodiversity conservation goals under the Global Biodiversity Framework. The emphasis is on ecological integrity, interconnectedness, and effective management of these areas, which directly relates to maintaining ecosystem health and species diversity. This aligns with PB7's core definition of human pressure on genetic, species, and ecosystem diversity. While there are no explicit measurements or models of biophysical variables, the abstract clearly discusses biodiversity conservation efforts that impact biosphere integrity.",14.999,,,,,,,,,PB7,17.103
+8a3d4a75e493,llm_judged,qwen2.5:3b,,,,mentioned,earth_sciences,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.813,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the concept of planetary sustainability in the context of space mining and environmental protection, but does not measure or model any specific biophysical variable. The focus is on political, philosophical, and ethical considerations rather than empirical analysis. Neither chemical species nor physical metrics are quantified or modeled; thus, this paper falls outside the Planetary Boundaries framework.",11.738,,,,,,,,,None,13.556
+691e52606885,llm_judged,qwen2.5:3b,,,bacteria; bacteriophage,measured,biology,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""bacteria"", ""bacteriophage""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",2.03,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the impact of resource availability, dispersal and infection genetics on the coevolutionary dynamics between bacteria and bacteriophage. The focus is on biological observations rather than any specific biophysical variable that aligns with the Planetary Boundaries framework. There are no explicit measurements or models related to climate change, ocean acidification, ozone depletion, nutrient flows, freshwater use, land-system changes, biosphere integrity, novel entities, or atmospheric aerosol loading. The small extractor and keyword overlap scorer did not identify any relevant terms.",14.374,,,,,,,,,None,16.406
+915bef103e53,llm_judged,qwen2.5:3b,,,ecosystems; landscape-zonal systems; ecological responses,modelled,earth_sciences,3,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""climate"", ""energy"", ""flow"", ""mass"", ""radiation""],
+  ""biological_observations"": [""ecosystems"", ""landscape-zonal systems"", ""population"", ""ecological responses""],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",3.099,,,PB1(3),3,qwen2.5:14b,PB1,High,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract describes the construction and application of empirical-statistical models to predict ecosystem transformations based on expected climatic changes derived from global climate models. The primary focus is on evaluating how contemporary ecosystems will change under future warming scenarios, which directly aligns with PB1's core definition of human-driven alteration of the climate system through greenhouse gas emissions and associated warming. While other ecological terms are mentioned, they do not serve as the main analytical focus.",13.754,,,,,,,,,PB1,16.857
+b04f1061de65,fast_skip_consensus,qwen2.5:3b,,,,mentioned,social_sciences,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""social_sciences""
+}",1.715,,,,0,,None,ConsensusFilter,None,None,Consensus: Agent1 (0 items + non-bio frame) AND scorer (no PB matched).,,,,,,,,,,None,1.717
+1abd6b3d8d8b,llm_judged,qwen2.5:3b,,,,mentioned,other,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""other""
+}",1.694,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The paper focuses on a transdisciplinary scenario planning workshop aimed at improving stakeholder integration and exploring regional planning scenarios. The primary activity involves evaluating the effectiveness of this process through surveys and interviews, without any direct measurement or modeling of biophysical variables related to Planetary Boundaries. Therefore, it does not qualify as addressing any specific PB.",11.174,,,,,,,,,None,12.87
+763c5ac1d0cb,fast_skip_consensus,qwen2.5:3b,,,,mentioned,economics,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""economics""
+}",3.335,,,,0,,None,ConsensusFilter,None,None,Consensus: Agent1 (0 items + non-bio frame) AND scorer (no PB matched).,,,,,,,,,,None,3.336
+42c958306230,llm_judged,qwen2.5:3b,,particle size; bulk density; organic carbon; slope of the relief,,mentioned,earth_sciences,4,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""particle size"", ""bulk density"", ""organic carbon"", ""slope of the relief""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",12.733,,,,0,qwen2.5:14b,PB5,High,None,"PB1, PB4","The abstract focuses on the development of a model to estimate soil water retention capacity using readily available physical parameters such as particle size, bulk density, and organic carbon content. This work is directly related to PB5 (Freshwater Use) because it deals with the management and understanding of water resources within soils, which impacts freshwater availability and use.",19.608,,,,,,,,,PB5,32.346
+6adf36ff1a69,llm_judged,qwen2.5:3b,copper; lead; manganese,,tomato; kidney bean; plant height; chlorophyll a; chlorophyll b; fresh weight per plant; fruit number per plant; total fruit yield per feddan; weight loss; decay percent; acidity; lycopene content; firmness; vitamin C; T.S.S,measured,earth_sciences,18,"{
+  ""chemical_species"": [""copper"", ""lead"", ""manganese""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [
+    ""tomato"",
+    ""kidney bean"",
+    ""plant height"",
+    ""chlorophyll a"",
+    ""chlorophyll b"",
+    ""fresh weight per plant"",
+    ""fruit number per plant"",
+    ""total fruit yield per feddan"",
+    ""weight loss"",
+    ""decay percent"",
+    ""acidity"",
+    ""lycopene content"",
+    ""firmness"",
+    ""vitamin C"",
+    ""T.S.S""
+  ],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",27.083,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The research measures the effects of heavy metals (copper, lead, manganese) on tomato and kidney bean plants using natural antioxidants. The primary focus is on plant growth parameters, fruit quality, and heavy metal content in different organs. This study does not directly measure or model any biophysical variables related to Planetary Boundaries but rather focuses on the biological impact of pollution. The small extractor identified chemical species and physical metrics relevant to the study's context, while the keyword overlap scorer did not find matching PB vocabulary.",31.553,,,,,,,,,None,58.64
+21ecc353ac74,llm_judged,qwen2.5:3b,,,biodiversity; rights,mentioned,law_policy,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""biodiversity"", ""rights""],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""law_policy""
+}",14.992,,,PB1(3); PB7(3),3,qwen2.5:14b,PB7,High,None,PB1,"The abstract focuses on the legal and institutional frameworks surrounding rights-based biodiversity lawsuits, quantifying antecedents and characterizing early cases. The primary variable of interest is biodiversity loss framed as a rights issue, which aligns with PB7's core definition of human pressure on genetic, species, and ecosystem diversity. While climate change is mentioned in the context of legal challenges, it does not constitute an active measurement or modeling of climatic variables. The small extractor and keyword overlap scorer both suggest potential relevance to biodiversity but do not provide strong signals for other planetary boundaries.",13.876,,,,,,,,,PB7,28.87
+cb831c750a69,llm_judged,qwen2.5:3b,,,dodo; thylacine,mentioned,biology,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""dodo"", ""thylacine""],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""biology""
+}",2.33,,,,0,qwen2.5:14b,PB7,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB8, PB9","The abstract focuses on the use of extinct species as conservation flagships to raise awareness and funding for threatened vertebrates. The primary variable being addressed is biodiversity conservation, specifically through public engagement strategies. This aligns with PB7's core definition concerning human pressure on genetic, species, and ecosystem diversity. There are no explicit measurements or models related to biophysical variables that would activate other Planetary Boundaries.",13.654,,,,,,,,,PB7,15.986
+78dc23f39924,llm_judged,qwen2.5:3b,,,CAS; ecosystem functioning,mentioned,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""CAS"", ""ecosystem functioning""],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",5.757,,,PB7(5),5,qwen2.5:14b,PB7,High,None,PB1,"The abstract focuses on the relationship between biodiversity and ecosystem functioning (BEF) across scales, considering it within complex adaptive systems (CAS). The primary analytical focus is on how biodiversity supports multifunctionality in ecosystems. This aligns with PB7 as it directly addresses species diversity and its impact on ecological processes. While climate is mentioned, it does not serve as an active forcing or measurement relevant to PB1.",15.066,,,,,,,,,PB7,20.826
+5d9cbb3d18a7,llm_judged,qwen2.5:3b,,microplastics,ecosystems,measured,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""microplastics"", ""climate"", ""energy"", ""flow"", ""mass"", ""radiation""],
+  ""biological_observations"": [""organisms"", ""populations"", ""ecosystems"", ""physiology"", ""ecological responses""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",8.001,,,PB8(5),5,qwen2.5:14b,PB8,High,None,PB7,"The abstract focuses on the examination of microplastics, their sources, fate, and effects across various environmental reservoirs. The primary variable being studied is microplastics, which are synthetic entities released into the environment with potential harmful impacts. This aligns directly with PB8's core definition of novel entities. While the paper mentions ecological systems, it does not quantify or model biodiversity loss or ecosystem integrity as a primary focus.",12.609,,,,,,,,,PB8,20.613
+fd7c9736c65e,llm_judged,qwen2.5:3b,,,hepatitis C virus,mentioned,biology,1,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""hepatitis C virus"", ""RNA-RNA""],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""biology""
+}",7.396,,,PB7(2),2,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the structural analysis of RNA molecules and their roles in viral infections, specifically hepatitis C virus (HCV). The primary analytical focus is on RNA folding and its functional implications for viral propagation. This does not align with any specific Planetary Boundary as it pertains to biological processes rather than environmental or ecological systems.",12.735,,True,None,High,"The abstract discusses RNA functional diversity and its role in viral infections, but it does not measure or model biodiversity, species decline, habitat loss, or ecosystem integrity. The focus is on molecular virology and structural analysis of RNA, which do not align with the core definition of PB7.",PB7,11.149,,None,31.284
+bb758b998875,llm_judged,qwen2.5:3b,aerosol; cloud,ice water content (IWC); concentration of very small crystals; large ice crystals; water-subsaturated conditions; het-erogeneous ice nucleation; microphysics scheme,,measured,earth_sciences,8,"{
+  ""chemical_species"": [""aerosol"", ""cloud""],
+  ""physical_metrics"": [""ice water content (IWC)"", ""concentration of very small crystals"", ""large ice crystals"", ""water-subsaturated conditions"", ""het-erogeneous ice nucleation"", ""microphysics scheme""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",4.018,,,PB9(3),3,qwen2.5:14b,PB9,High,None,PB1,"The research focuses on the parameterization of ice crystal formation in WRF-Chem, a meteorological and climate model. The study measures ice water content (IWC) under various conditions to improve the representation of ice clouds, which is directly related to atmospheric processes. This aligns with PB9 due to its focus on aerosol and cloud interactions, despite the abstract mentioning broader climate impacts in passing.",58.684,,,,,,,,,PB9,62.705
+12b645b93197,llm_judged,qwen2.5:3b,resveratrol; lipoic acid,,neuroprotection; ischemia; reperfusion; infarct volume; blood flow; transient ischemia; permanent ischemia,measured,biology,9,"{
+  ""chemical_species"": [""resveratrol"", ""lipoic acid""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""neuroprotection"", ""ischemia"", ""reperfusion"", ""infarct volume"", ""blood flow"", ""transient ischemia"", ""permanent ischemia""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",8.92,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The study measures the neuroprotective effects of resveratrol and lipoic acid in a rat model of ischemia/reperfusion. The primary focus is on biological observations related to stroke treatment, with no quantification or modeling of biophysical variables relevant to Planetary Boundaries. Neither chemical species nor physical metrics overlap with any PB definitions.",7.998,,,,,,,,,None,16.923
+eac718b2695f,llm_judged,qwen2.5:3b,,OLAP; data mining processing primitives; scanning and ﬁltering the data,,mentioned,engineering,3,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""OLAP"", ""data mining processing primitives"", ""scanning and ﬁltering the data""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",1.236,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the implementation and evaluation of data mining algorithms using graphic card processor technology within a business intelligence system. The paper does not measure, model or experimentally manipulate any biophysical variables related to Planetary Boundaries. It is purely methodological and falls under engineering without any environmental context.",5.017,,,,,,,,,None,6.255
+aa624c008b5e,llm_judged,qwen2.5:3b,aircraft; NOx; ozone; methane,climate; air quality; global model performance; aerosol emissions; troposphere; stratosphere; sulfate-nitrate-ammonium cycle,,modelled,engineering,11,"{
+  ""chemical_species"": [""aircraft"", ""NOx"", ""ozone"", ""methane""],
+  ""physical_metrics"": [""climate"", ""air quality"", ""global model performance"", ""aerosol emissions"", ""troposphere"", ""stratosphere"", ""sulfate-nitrate-ammonium cycle""],
+  ""biological_observations"": [],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""engineering""
+}",1.88,,,PB1(3),3,qwen2.5:14b,PB1,High,PB9,"PB2, PB4, PB5, PB6, PB7, PB8","The abstract focuses on the impact of aircraft NOx emissions on climate through a global model that includes tropospheric and stratospheric chemistry. The primary variable being modeled is the effect of NOx emissions on ozone and methane levels, which directly influences climate change. This aligns with PB1's core definition of human-driven alteration of the climate system via greenhouse gas emissions and associated warming. While aerosol emissions are mentioned, they do not constitute the main focus of the biophysical analysis.",6.932,,,,,,,,,PB1,8.814
+b98dbc59db77,fast_skip_consensus,qwen2.5:3b,,,,mentioned,social_sciences,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""social_sciences""
+}",0.894,,,,0,,None,ConsensusFilter,None,None,Consensus: Agent1 (0 items + non-bio frame) AND scorer (no PB matched).,,,,,,,,,,None,0.898
+86f81d458b73,llm_judged,qwen2.5:3b,,,,mentioned,engineering,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",0.827,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the development of a novel framework for knowledge graph completion, REFORM, which addresses issues related to incomplete KGs and errors in automatically constructed KGs. The paper does not measure or model any biophysical variables but rather deals with artificial intelligence systems and data processing methodologies. Therefore, it falls outside the scope of Planetary Boundaries analysis.",5.449,,,,,,,,,None,6.279
+6f01ecadd134,llm_judged,qwen2.5:3b,,,,mentioned,engineering,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",0.849,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract describes a bioinformatic workflow construction using social-aware knowledge graphs, focusing on reusing and repurposing fragments to avoid errors and save effort. There is no quantification or modeling of any biophysical variables related to the Planetary Boundaries framework. The small extractor and keyword overlap scorer confirm there are no relevant physical metrics, biological observations, or chemical species mentioned.",5.583,,,,,,,,,None,6.434
+920f794e4330,llm_judged,qwen2.5:3b,,,,mentioned,engineering,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",0.866,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the introduction and formalization of a new concept called 'Conditional Heavy Hitters' in data analysis, particularly for network monitoring and Markov chain modeling. The work does not measure or model any biophysical variables related to Planetary Boundaries but rather deals with algorithmic efficiency and analytical methods. Neither chemical species nor physical metrics are quantified or modeled; the methodology is mentioned only as a background context without specific application to environmental systems.",13.177,,,,,,,,,None,14.045
+5aaab1fa33a3,llm_judged,qwen2.5:3b,mineral dust; nitrate; sulfate; ammonium; elemental carbon; primary organic matter,"AOD; Ångström exponent; PM2.5; PM10; surface concentrations of particulate matter PM2.5, PM10 and inorganic species (nitrate, sulfate and ammonium); mean temporal correlation; spatial correlation",,modelled,earth_sciences,13,"{
+  ""chemical_species"": [""mineral dust"", ""nitrate"", ""sulfate"", ""ammonium"", ""elemental carbon"", ""primary organic matter""],
+  ""physical_metrics"": [""AOD"", ""Ångström exponent"", ""PM2.5"", ""PM10"", ""surface concentrations of particulate matter PM2.5, PM10 and inorganic species (nitrate, sulfate and ammonium)"", ""mean temporal correlation"", ""spatial correlation""],
+  ""biological_observations"": [],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",7.393,,,PB9(10),10,qwen2.5:14b,PB9,High,None,"PB4, PB7","The abstract focuses on modeling the speciation and size distribution of aerosols over a large geographical area, comparing model outputs with measurements from AERONET and EMEP networks. The primary variable being analyzed is atmospheric aerosol particles, which directly aligns with PB9's core definition. While other biophysical variables are mentioned (e.g., PM2.5, PM10), they serve to validate the aerosol modeling rather than being the main focus.",18.691,,,,,,,,,PB9,26.088
+366136a3d081,llm_judged,qwen2.5:3b,,,,mentioned,engineering,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",9.096,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the development and simulation of a trust model (ACO-BTM) for cloud computing environments, using ant colony optimization algorithms. The primary variable analyzed is the dynamic behavior trust between entities in cloud systems, which does not correspond to any biophysical planetary boundary variables or processes. The small extractor and keyword overlap scorer did not identify any relevant physical metrics, biological observations, or chemical species related to Planetary Boundaries.",16.139,,,,,,,,,None,25.238
+8319c3cdd2d2,llm_judged,qwen2.5:3b,,optical properties; intensive parameters; smoke travel time; land cover type; effective predominant vegetation type,,measured,earth_sciences,5,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""optical properties"", 
+    ""intensive parameters"", 
+    ""smoke travel time"", 
+    ""land cover type"", 
+    ""effective predominant vegetation type""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",9.802,,,,0,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The abstract focuses on Lidar measurements of smoke layers and their optical properties, intensive parameters, and travel times. The analysis involves estimating the origin of aerosol pollution using HYSPLIT dispersion models and correlating these with land cover types derived from satellite data. This operational object aligns directly with PB9's focus on atmospheric aerosols and particulate matter. While there is no explicit mention of climate change impacts or other planetary boundaries, the core analysis centers on aerosol loading and its environmental implications.",16.342,,,,,,,,,PB9,26.146
+e727426383d4,llm_judged,qwen2.5:3b,pollutant,synoptic-scale flows; thermally-driven mesoscale winds; turbulent fluxes; meteorological variables; surface measurements of meteorological variables; particulate matter of less than 10 µm in diameter; nitrogen dioxide,,none,earth_sciences,8,"{
+  ""chemical_species"": [""pollutant""],
+  ""physical_metrics"": [
+    ""synoptic-scale flows"",
+    ""thermally-driven mesoscale winds"",
+    ""turbulent fluxes"",
+    ""meteorological variables"",
+    ""surface measurements of meteorological variables"",
+    ""particulate matter of less than 10 µm in diameter"",
+    ""nitrogen dioxide""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured|modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",11.521,,,PB9(3),3,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The research focuses on modeling atmospheric circulation and pollutant dispersion in mountainous regions using high-resolution meteorological models. The primary variable of interest is particulate matter (PM10) and nitrogen dioxide concentrations, which are directly measured and compared with model outputs to assess air quality impacts. This aligns closely with PB9 due to the explicit focus on aerosol loading and its effects on regional pollution levels. While other signals suggested a connection to PB9 based on chemical species like particulate matter, they did not provide additional context for other potential planetary boundaries.",61.212,,,,,,,,,PB9,72.737
+bb87293d7644,llm_judged,qwen2.5:3b,,,,mentioned,earth_sciences,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",10.522,,,PB1(3),3,qwen2.5:14b,None,N/A,None,PB1,"The abstract discusses theoretical and empirical aspects of global climate change governance, focusing on the interactions between public and private sectors. It does not measure or model any biophysical variables related to climate change but rather examines governance structures and normative questions around effective and legitimate climate action. The small extractor's methodological mention is likely due to the abstract's discussion of theoretical frameworks and empirical findings in climate governance, which do not involve actual measurement or modeling of physical metrics.",7.051,,True,None,High,"The abstract discusses theoretical and conceptual aspects of climate governance without engaging in active measurement, modeling, or imposing scenarios related to climate change. It focuses on scholarly debates rather than empirical studies or simulations.",PB1,3.142,,None,20.719
+3d6573117d0b,llm_judged,qwen2.5:3b,,,,mentioned,earth_sciences,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.423,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses rethinking societal positions and values to better address global environmental threats. It emphasizes the importance of reconnecting with natural ecosystems but does not measure, model or experimentally manipulate any biophysical variables related to Planetary Boundaries. The small extractor and keyword overlap scorer did not identify any relevant physical metrics or chemical species.",6.448,,,,,,,,,None,7.875
+788da8b73d1d,llm_judged,qwen2.5:3b,ionic liquid; switchgrass,,,measured,engineering,2,"{
+  ""chemical_species"": [""ionic liquid"", ""switchgrass""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""engineering""
+}",1.534,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the scale-up and evaluation of ionic liquid pretreatment for switchgrass to produce fermentable sugars, which is a process related to biofuel production. This does not directly measure or model any biophysical planetary boundary variables but rather discusses an engineering method for biomass processing. The small extractor and keyword overlap scorer did not identify any relevant PB terms.",6.358,,,,,,,,,None,7.895
+73261bea95b6,llm_judged,qwen2.5:3b,titin,,sudden cardiac death; cardiomyopathies; channelopathies; anatomical healthy hearts; non-conclusive causes of death after comprehensive autopsy,measured,biology,6,"{
+  ""chemical_species"": [""titin""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""sudden cardiac death"", ""cardiomyopathies"", ""channelopathies"", ""anatomical healthy hearts"", ""non-conclusive causes of death after comprehensive autopsy""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",2.464,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The research focuses on identifying potentially pathogenic genetic variants in titin associated with sudden cardiac death. The study measures rare and novel genetic variants but does not engage with any biophysical processes or environmental variables related to the Planetary Boundaries framework. Therefore, this paper falls outside the scope of PBs.",6.474,,,,,,,,,None,8.943
+455162266eca,llm_judged,qwen2.5:3b,,Matrix Factorization,,mentioned,engineering,1,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""Matrix Factorization""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",1.415,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract describes a novel hybrid recommendation strategy that refines Collaborative Filtering (CF) by capturing non-linear user-resource dynamics. The focus is on improving the recommendation system's performance through data mining and information filtering techniques, without any direct measurement or modeling of biophysical variables related to Planetary Boundaries. Neither chemical species nor physical metrics relevant to PBs are mentioned in a way that would indicate an operational object being measured or modeled.",7.341,,,,,,,,,None,8.758
+f13c652030d7,llm_judged,qwen2.5:3b,carbon; black; fires; fire; residue; savanna; fraction; formation,volatilization; sulfur; nitrogen,black carbon formation; nutrient cycling; carbon exposure; fire emissions; biospheric carbon,measured,earth_sciences,16,"{
+  ""chemical_species"": [""carbon"", ""black"", ""fires"", ""fire"", ""residue"", ""savanna"", ""fraction"", ""formation""],
+  ""physical_metrics"": [""volatilization"", ""sulfur"", ""hydrogen"", ""nitrogen"", ""mass"", ""radiation"", ""geophysical processes""],
+  ""biological_observations"": [""black carbon formation"", ""nutrient cycling"", ""carbon exposure"", ""fire emissions"", ""biospheric carbon"", ""atmospheric CO2""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",4.024,,,PB9(3),3,qwen2.5:14b,PB9,High,"PB4, PB1","PB2, PB3, PB5, PB6, PB7, PB8","The abstract measures the formation of black carbon in savanna fires and its correlation with volatilization ratios of C, H, N, and S. The primary focus is on quantifying black carbon production and its impact on nutrient cycling and atmospheric CO2. This aligns closely with PB9's core definition involving atmospheric aerosol loading from human activity. While the abstract mentions nutrients (PB4) and carbon emissions (PB1), these are not the main analytical focus.",8.581,,,,,,,,,PB9,12.61
+ec09b2719157,llm_judged,qwen2.5:3b,dust; aerosol,46.3%; 78.4%; 21.6%,,modelled,earth_sciences,5,"{
+  ""chemical_species"": [""dust"", ""aerosol""],
+  ""physical_metrics"": [
+    ""-138.9 Wm−2"",
+    ""69.1 Wm−2"",
+    ""-69.7 Wm−2"",
+    ""46.3%"",
+    ""78.4%"",
+    ""21.6%""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",3.496,,,PB1(3); PB9(3),3,qwen2.5:14b,PB9,High,None,PB1,"The abstract focuses on the impact of Asian dust on cloud radiative forcing, using satellite data and a radiative transfer model to quantify aerosol effects. The primary variable measured is the direct and indirect influence of dust aerosols on cloud properties and radiation balance, which aligns with PB9's core definition of atmospheric aerosol loading. While there are mentions of climate-related terms like 'radiative forcing', these do not constitute an active measurement or modeling of climate change itself, thus excluding PB1.",7.212,,,,,,,,,PB9,10.711
+683e518543a2,llm_judged,qwen2.5:3b,brown carbon,,,measured,chemistry,1,"{
+  ""chemical_species"": [""brown carbon""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""chemistry""
+}",1.541,,,,0,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB4, PB5, PB6, PB7, PB8","The abstract focuses on the measurement and calibration of organic carbon (OC) and elemental carbon (EC) using multi-wavelength reflectance and transmittance values. The primary variable being measured is atmospheric aerosol loading, specifically particulate matter like black and brown carbon. This aligns with PB9's core definition involving human-generated aerosols affecting air quality and climate patterns. While the small extractor identified 'brown carbon' as a chemical species and suggested methodology=measured, it did not provide additional conflicting information.",8.249,,,,,,,,,PB9,9.796
+496666e9b6da,llm_judged,qwen2.5:3b,aerosol; cloud; activation; cdnc; schemes,CDNC; global-scale cloud droplet number concentration (CDNC); satellite-derived/cloud optical thickness; liquid water path; column CDNC; shortwave cloud forcing,,measured,earth_sciences,11,"{
+  ""chemical_species"": [""aerosol"", ""cloud"", ""activation"", ""cdnc"", ""schemes""],
+  ""physical_metrics"": [""CDNC"", ""global-scale cloud droplet number concentration (CDNC)"", ""satellite-derived/cloud optical thickness"", ""liquid water path"", ""column CDNC"", ""shortwave cloud forcing""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",9.22,,,PB1(6); PB9(5),6,qwen2.5:14b,PB9,High,PB1,"PB2, PB3, PB4, PB5, PB6, PB7, PB8","The research focuses on the incorporation of various aerosol activation schemes into a climate model to better predict cloud droplet number concentration (CDNC) and its impact on radiative forcing. The primary variable being measured is CDNC, which directly relates to atmospheric aerosols and their interaction with clouds. This aligns closely with PB9's core definition concerning atmospheric aerosol loading and its effects on regional climate patterns. While the abstract mentions 'climate change' terms, these are used in a broader context rather than as an active variable being modeled.",17.778,,,,,,,,,PB9,27.007
+4f22542e7388,llm_judged,qwen2.5:3b,,topography; bathymetry; tidal dissipation; vegetation; aerosol distributions; river runoff,vegetation,modelled,earth_sciences,7,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""topography"", ""bathymetry"", ""tidal dissipation"", ""vegetation"", ""aerosol distributions"", ""river runoff""],
+  ""biological_observations"": [""vegetation""],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",16.369,,,,0,qwen2.5:14b,PB9,Medium,PB3,"PB1, PB2, PB4, PB5, PB6, PB7, PB8","The abstract describes the construction of climate model boundary conditions for the early Eocene period, including topography, bathymetry, tidal dissipation, vegetation, aerosol distributions, and river runoff. The primary focus is on modeling these variables to facilitate high-resolution climate simulations. While the term 'climate' is mentioned, it does not indicate an active measurement or modeling of climatic conditions but rather serves as a background context for the boundary condition development. The small extractor identified physical metrics related to aerosol distributions and tidal dissipation, which are relevant to PB9 and PB3 respectively, but these do not constitute the primary focus of the research.",31.89,,,,,,,,,PB9,48.263
+83a1b1987b47,llm_judged,qwen2.5:3b,,TROPOMI; oxygen A-band; radiative transfer model (RTM); neural networks; iterative optimal estimation technique; cloud-free scenes; ocean; land; aerosols; UVAI,,modelled,engineering,10,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""TROPOMI"", ""oxygen A-band"", ""radiative transfer model (RTM)"", ""neural networks"", ""iterative optimal estimation technique"", ""cloud-free scenes"", ""ocean"", ""land"", ""aerosols"", ""UVAI""],
+  ""biological_observations"": [],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""engineering""
+}",13.271,,,PB9(3),3,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The abstract focuses on the TROPOMI ALH product, which measures aerosol layer height over cloud-free scenes using oxygen A-band measurements and radiative transfer models. This directly aligns with PB9's core definition of atmospheric aerosol loading. The methodology involves modeling and retrieving aerosol data explicitly, confirming it is not mere background context.",30.314,,,,,,,,,PB9,43.59
+89c5bea6f4b6,llm_judged,qwen2.5:3b,,Knudsen flow; reaction mechanism,,measured,engineering,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""Knudsen flow"", ""reaction mechanism""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""engineering""
+}",10.088,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract describes Knudsen flow experiments to reveal interfacial reactions on a molecular level, focusing on adsorption/desorption kinetics and quantitative uptake. This is purely experimental methodology without any direct measurement or modeling of variables related to the Planetary Boundaries framework. The small extractor identified physical metrics but no chemical species or biological observations, aligning with the abstract's content.",18.385,,,,,,,,,None,28.476
+ad9445fe976c,llm_judged,qwen2.5:3b,,GF; RH; dry diameter; number fraction of different hygroscopic groups; atmospheric mixing layer; boundary layer,,measured,earth_sciences,6,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""GF"", 
+    ""RH"", 
+    ""dry diameter"", 
+    ""number fraction of different hygroscopic groups"", 
+    ""atmospheric mixing layer"", 
+    ""boundary layer""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",5.914,,,,0,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The abstract measures the hygroscopic growth factor (GF) of submicron aerosol particles at various relative humidities, focusing on their physical properties and diurnal variations. This aligns with PB9's core definition concerning atmospheric aerosols and particulate matter. The methodology involves detailed measurements using HH-TDMA and simulations with PartMC-MOSAIC, confirming the operational object is explicitly quantified. Neither small extractor nor keyword scorer provided relevant signals for other PBs.",59.018,,,,,,,,,PB9,64.938
+83964a920703,llm_judged,qwen2.5:3b,aerosol; cloud,cloud effective radius; cloud droplet number concentration; liquid water path; cloud fraction; cloud albedo; ice crystal concentrations; ice water content,,none,earth_sciences,9,"{
+  ""chemical_species"": [""aerosol"", ""cloud""],
+  ""physical_metrics"": [
+    ""cloud effective radius"",
+    ""cloud droplet number concentration"",
+    ""liquid water path"",
+    ""cloud fraction"",
+    ""cloud albedo"",
+    ""ice crystal concentrations"",
+    ""ice water content""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured|modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",12.108,,,PB9(3),3,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The research measures the effects of volcanic aerosol emissions on cloud properties and climate interactions during specific degassing events at Kilauea volcano. The study focuses on quantifying changes in cloud effective radius, droplet number concentration, albedo, ice crystal concentrations, and other related metrics due to aerosols. This aligns with PB9's core definition of atmospheric aerosol loading affecting regional climate patterns. While the small extractor model identified relevant physical metrics but did not indicate methodology as 'measured', it supports the primary focus on aerosol-cloud interactions.",8.123,,,,,,,,,PB9,20.235
+9164ad05c489,llm_judged,qwen2.5:3b,,aerosol; optical depth (AOD); spectral solar radiation; background conditions; fire characteristics,,measured,earth_sciences,5,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""aerosol"", ""optical depth (AOD)"", ""spectral solar radiation"", ""background conditions"", ""fire characteristics""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.274,,,PB9(3),3,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB4, PB5, PB6, PB7, PB8","The abstract focuses on the measurement of aerosol optical depth (AOD) and other microphysical properties during a mega-fire event in Siberia. The study compares these measurements with background conditions, clearly indicating an analysis of atmospheric particles under varying fire intensities. This aligns directly with PB9's core definition concerning human-induced changes to atmospheric aerosols. While the small extractor and keyword scorer both point towards PB9, they do not provide additional insights beyond what is explicitly stated in the abstract.",7.798,,,,,,,,,PB9,10.076
+260cc6707374,llm_judged,qwen2.5:3b,DOM; DOC; DOP; DON,atmospheric ﬂuxes; dissolved organic matter (DOM); dissolved organic carbon (DOC); dissolved organic phosphorus (DOP); dissolved organic nitrogen (DON),,measured,earth_sciences,9,"{
+  ""chemical_species"": [""DOM"", ""DOC"", ""DOP"", ""DON""],
+  ""physical_metrics"": [""atmospheric ﬂuxes"", ""dissolved organic matter (DOM)"", ""dissolved organic carbon (DOC)"", ""dissolved organic phosphorus (DOP)"", ""dissolved organic nitrogen (DON)""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",3.391,,,PB1(3),3,qwen2.5:14b,PB4,High,PB9,PB1,"The study measures atmospheric fluxes of dissolved organic matter (DOM) and its components, including DOC, DOP, and DON. The primary focus is on quantifying the impact of Saharan dust deposition on DOM dynamics in surface waters of the Mediterranean Sea. While climate change is mentioned as a potential driver for future research, it does not constitute the main analytical focus of this study. The small extractor correctly identified the measured variables but did not activate any specific PB due to its limited scope, while the keyword scorer suggested a weak link to PB1 which was misleading.",7.592,,,,,,,,,PB4,10.991
+0672168600bf,llm_judged,qwen2.5:3b,sulfate; organics; ammonium; nitrate; methanesulfonic acid (MSA); dimethyl sulﬁde (DMS),non-refractory submicrometer aerosol mass loading; trace reactive gases methanol and acetone; average non-refractory portion of the background CCN budget; CCN concentrations; aerosol associated with ocean productivity; biomass burning aerosol; remote trans- port,particulate methanesulfonic acid (MSA); dimethyl sulﬁte (DMS),measured,earth_sciences,15,"{
+  ""chemical_species"": [""sulfate"", ""organics"", ""ammonium"", ""nitrate"", ""methanesulfonic acid (MSA)"", ""dimethyl sulﬁde (DMS)""],
+  ""physical_metrics"": [""non-refractory submicrometer aerosol mass loading"", ""trace reactive gases methanol and acetone"", ""average non-refractory portion of the background CCN budget"", ""CCN concentrations"", ""aerosol associated with ocean productivity"", ""biomass burning aerosol"", ""remote trans- port""],
+  ""biological_observations"": [""particulate methanesulfonic acid (MSA)"", ""dimethyl sulﬁte (DMS)""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",5.371,,,PB9(5),5,qwen2.5:14b,PB9,High,None,"PB1, PB4","The abstract focuses on measuring the composition and sources of marine boundary layer clouds' cloud condensation nuclei (CCN) in the eastern North Atlantic. The study quantifies aerosol mass loading, trace gases, and CCN concentrations, which directly relate to atmospheric aerosols and their impact on regional climate patterns. This aligns with PB9's core definition of increased atmospheric aerosol particles affecting air quality and cloud processes. While chemical species like sulfate and organics are mentioned, they do not dominate the analysis as primary variables.",7.691,,,,,,,,,PB9,13.069
+7e7db277fd49,llm_judged,qwen2.5:3b,SO2,,,measured,earth_sciences,1,"{
+  ""chemical_species"": [""SO2""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.895,,,PB9(4); PB1(2),4,qwen2.5:14b,PB9,High,None,PB1,"The abstract focuses on measuring SO2 emissions using satellite retrievals and a hybrid 4D‐Var/mass balance emission inversion model. The primary variable of interest is the quantification of SO2 emissions, which directly impacts air quality and particulate matter formation (PM2.5). This aligns with PB9's focus on atmospheric aerosol loading due to human activity. While there are mentions of climate effects in the introduction, they do not constitute the core analytical focus of the paper.",7.894,,,,,,,,,PB9,9.806
+edcffe92f4f7,llm_judged,qwen2.5:3b,Zn; Pb; Mn; Sn; Ni; Cr; Cu; As; Cd; Hg; Ti; V; Ba,PM10; PM2.5; ΣTM10; ΣTM2.5; Zn; Pb; Mn; Sn; Ni; Cr; Cu; As; Cd; Hg; Ti; V; Ba,respiratory health effects on resident populations,measured,earth_sciences,31,"{
+  ""chemical_species"": [""Zn"", ""Pb"", ""Mn"", ""Sn"", ""Ni"", ""Cr"", ""Cu"", ""As"", ""Cd"", ""Hg"", ""Ti"", ""V"", ""Ba""],
+  ""physical_metrics"": [""PM10"", ""PM2.5"", ""ΣTM10"", ""ΣTM2.5"", ""Zn"", ""Pb"", ""Mn"", ""Sn"", ""Ni"", ""Cr"", ""Cu"", ""As"", ""Cd"", ""Hg"", ""Ti"", ""V"", ""Ba""],
+  ""biological_observations"": [""respiratory health effects on resident populations""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",5.106,,,PB9(8),8,qwen2.5:14b,PB9,High,None,"PB1, PB4, PB7","The research measures the trace metal content of airborne PM10 and PM2.5 particles in six Spanish towns over a year, focusing on particulate matter concentrations and their chemical composition. This aligns with PB9's focus on atmospheric aerosol loading due to explicit measurement of particulates (PM10 and PM2.5) and their health implications. The small extractor and keyword overlap scorer both support this classification.",6.285,,,,,,,,,PB9,11.396
+b9283c8bb52e,llm_judged,qwen2.5:3b,AOD; absorbing aerosol,MODIS (AOD); Ozone Monitoring Instrument; Cloud-Aerosol Lidar and Infrared Pathﬁnder Satellite Observations (CALIPSO) products; Mass concentration of PM10; VFM,,none,earth_sciences,7,"{
+  ""chemical_species"": [""AOD"", ""absorbing aerosol""],
+  ""physical_metrics"": [""MODIS (AOD)"", ""Ozone Monitoring Instrument"", ""Cloud-Aerosol Lidar and Infrared Pathﬁnder Satellite Observations (CALIPSO) products"", ""Mass concentration of PM10"", ""VFM""],
+  ""biological_observations"": [],
+  ""methodology"": ""measured|modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",3.417,,,PB9(8),8,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The study focuses on the spatial distribution of aerosols and particulate matter (PM) during fog episodes in Pakistan, using satellite data and ground monitoring. The primary variable measured is PM10 concentration, which directly relates to atmospheric aerosol loading. This clearly activates PB9 as it involves explicit measurement of particulates and their types under specific weather conditions. While the study mentions broader environmental impacts, these are not quantified or modeled in a way that would activate other Planetary Boundaries.",7.679,,,,,,,,,PB9,11.103
+d1fc7e47a220,llm_judged,qwen2.5:3b,α-pinene; organic material,,,measured,chemistry,2,"{
+  ""chemical_species"": [""α-pinene"", ""organic material""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""chemistry""
+}",1.703,,,PB9(3),3,qwen2.5:14b,PB9,High,None,"PB1, PB4","The abstract focuses on the chemical composition of secondary organic aerosol (SOA) particles formed by dark ozonolysis of α-pinene, measured using a high-resolution time-of-flight aerosol mass spectrometer. The study quantifies particle mass loading and chemical composition changes over several days under varying conditions. This operational object aligns with PB9's core definition concerning atmospheric aerosols and their effects on air quality and regional climate patterns. The small extractor and keyword overlap scorer both point towards PB9, supporting the conclusion.",7.003,,,,,,,,,PB9,8.713
+56c7d6d62d7c,llm_judged,qwen2.5:3b,dust aerosol; single scattering albedo,short- wave radiative forcing; surface radiation quantities; aerosol shortwave direct radiative forcing (ARF); monthly averaged ARFEs (ARFs per unit aerosol optical depth at 500 nm (AOD500)); diurnal ARFs at the surface and top of the atmosphere (TOA); aerosol optical depth at 500 nm (AOD500),,none,earth_sciences,8,"{
+  ""chemical_species"": [""dust aerosol"", ""single scattering albedo""],
+  ""physical_metrics"": [
+    ""short- wave radiative forcing"",
+    ""surface radiation quantities"",
+    ""aerosol shortwave direct radiative forcing (ARF)"",
+    ""monthly averaged ARFEs (ARFs per unit aerosol optical depth at 500 nm (AOD500))"",
+    ""diurnal ARFs at the surface and top of the atmosphere (TOA)"",
+    ""aerosol optical depth at 500 nm (AOD500)""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured|modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",4.268,,,PB9(6); PB1(3),6,qwen2.5:14b,PB9,High,None,PB1,"The research measures and models dust aerosol characteristics, including their optical features and radiative impact on regional climate. The primary focus is on the short-wave direct radiative forcing (ARF) at both surface and top of atmosphere levels, which directly relates to atmospheric aerosol loading. This aligns with PB9's core definition involving particulate matter affecting air quality and regional climate patterns. While there are mentions of climate impacts, they do not constitute an active measurement or modeling of the climate system itself, thus excluding PB1.",13.475,,,,,,,,,PB9,17.749
+6c517c5bda80,llm_judged,qwen2.5:3b,,,,mentioned,earth_sciences,0,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",5.936,,,,0,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The abstract focuses on proxies and measurement techniques for mineral dust in Antarctic ice cores. The primary variable being measured is mineral dust, which falls under atmospheric aerosol loading. This aligns with PB9's core definition of human-induced changes to atmospheric particles. There are no explicit mentions of climate change, ocean acidification, ozone depletion, biogeochemical flows, freshwater use, land-system change, biosphere integrity, or novel entities that would suggest a different primary planetary boundary.",18.718,,,,,,,,,PB9,24.658
+08f457a29ab7,llm_judged,qwen2.5:3b,NO; O3; black carbon,,,measured,earth_sciences,3,"{
+  ""chemical_species"": [""NO"", ""O3"", ""black carbon""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",8.12,,,PB9(3),3,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The abstract describes measurements of reactive halogen species, trace gases, and aerosols in the marine boundary layer. The focus is on characterizing atmospheric components and their vertical distribution using multiple platforms. While black carbon is mentioned, it does not dominate the analysis or serve as a primary variable being measured or modeled. The core measurement activities align with PB9 due to the emphasis on aerosol and particulate species.",16.562,,,,,,,,,PB9,24.687

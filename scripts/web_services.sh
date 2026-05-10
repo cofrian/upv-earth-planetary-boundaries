@@ -61,10 +61,17 @@ start_backend() {
       DATABASE_URL="sqlite:////home/sortmon/UPV_EARTH_PROYECTOIII/mockup/data/seed/upvearth_local.db" \
       UPLOAD_DIR="/home/sortmon/UPV_EARTH_PROYECTOIII/mockup/data/uploads" \
       PB_REFERENCE_CSV="/home/sortmon/UPV_EARTH_PROYECTOIII/corpus_PB/data/pb_reference.csv" \
+      EMBEDDINGS_MODEL_NAME="sentence-transformers/allenai-specter" \
       LLM_ENABLED="true" \
       OLLAMA_URL="http://127.0.0.1:11434/api/generate" \
       OLLAMA_MODEL_NAME="qwen2.5:14b" \
       LLM_TEMPERATURE="0.0" \
+      LLM_BASE_URL="http://127.0.0.1:11434/v1" \
+      LLM_MODEL="qwen2.5:14b" \
+      LLM_API_KEY="ollama" \
+      LLM_REQUEST_TIMEOUT="180" \
+      LLM_MAX_TOKENS="512" \
+      CHAT_TEMPERATURE="0.2" \
       "$VENV_PYTHON" -m uvicorn app.main:app --host 0.0.0.0 --port 8000 \
       >>"$LOG_DIR/backend.log" 2>&1 &
     echo $! > "$BACKEND_PID_FILE"

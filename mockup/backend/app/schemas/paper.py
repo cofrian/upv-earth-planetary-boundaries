@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
 
@@ -24,6 +26,8 @@ class PaperOut(BaseModel):
     keywords: str | None
     created_at: datetime | None
     pb_result: PBResultOut | None = None
+    abstract_char_len: int = 0
+    is_valid_for_embedding: bool = False
 
 
 class PaperListResponse(BaseModel):

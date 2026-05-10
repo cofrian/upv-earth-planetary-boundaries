@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Guion — Parte LLM &amp; Agente</title>
+<style>
+  @page { size: A4; margin: 1.8cm 2cm; }
+  html, body {
+    font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+    color: #181818;
+    line-height: 1.42;
+    font-size: 10.5pt;
+  }
+  h1 {
+    font-size: 19pt;
+    margin: 0 0 4pt 0;
+    border-bottom: 2px solid #333;
+    padding-bottom: 5pt;
+  }
+  h1 .sub {
+    display: block;
+    font-size: 11pt;
+    font-weight: normal;
+    color: #555;
+    margin-top: 3pt;
+  }
+  h2 {
+    font-size: 12.5pt;
+    margin: 16pt 0 4pt 0;
+    color: #102a4d;
+    border-left: 4px solid #2a5db0;
+    padding-left: 8pt;
+  }
+  h3 {
+    font-size: 10.5pt;
+    margin: 8pt 0 2pt 0;
+    color: #2a5db0;
+    text-transform: uppercase;
+    letter-spacing: 0.4pt;
+  }
+  .meta {
+    font-size: 9.5pt;
+    color: #555;
+    margin-bottom: 12pt;
+  }
+  .timing {
+    display: inline-block;
+    background: #f0f4fa;
+    border: 1px solid #c3d3ec;
+    color: #2a5db0;
+    padding: 1pt 6pt;
+    font-size: 9pt;
+    border-radius: 3pt;
+    margin-left: 6pt;
+    vertical-align: middle;
+  }
+  blockquote {
+    margin: 6pt 0 8pt 0;
+    padding: 7pt 12pt;
+    background: #fafaf6;
+    border-left: 3px solid #b89a3a;
+    color: #1a1a1a;
+  }
+  blockquote p { margin: 4pt 0; }
+  ul, ol { margin: 4pt 0 4pt 18pt; padding: 0; }
+  li { margin-bottom: 2pt; }
+  code, .mono {
+    font-family: "JetBrains Mono", "Fira Mono", Consolas, monospace;
+    font-size: 9pt;
+    background: #f3f3f0;
+    padding: 0 3pt;
+    border-radius: 2pt;
+  }
+  pre {
+    background: #1f2330;
+    color: #e8eaed;
+    font-family: "JetBrains Mono", "Fira Mono", Consolas, monospace;
+    font-size: 8.5pt;
+    line-height: 1.32;
+    padding: 8pt 10pt;
+    border-radius: 4pt;
+    overflow-x: auto;
+    margin: 4pt 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  pre .tag { color: #f9b56b; }
+  pre .com { color: #8aa1b8; font-style: italic; }
+  pre .key { color: #6cb6ff; }
+  pre .str { color: #f5d76e; }
+  pre .ok { color: #7be0ad; font-weight: bold; }
+  pre .bad { color: #ff7878; font-weight: bold; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 6pt 0;
+    font-size: 9.5pt;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 3pt 5pt;
+    text-align: left;
+  }
+  th { background: #eef2f8; color: #102a4d; }
+  .hl { background: #fff7d1; }
+  .num-r { text-align: right; font-variant-numeric: tabular-nums; }
+  .center { text-align: center; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 14pt 0; }
+  .note-box {
+    border: 1px solid #c3d3ec;
+    background: #f4f8fd;
+    padding: 8pt 10pt;
+    border-radius: 4pt;
+    font-size: 9.5pt;
+  }
+  .note-box h3 { margin-top: 0; color: #102a4d; }
+  .total {
+    margin-top: 6pt;
+    font-size: 10pt;
+    color: #555;
+  }
+  strong { color: #0d2347; }
+  .stage-flow {
+    display: flex;
+    justify-content: space-between;
+    gap: 6pt;
+    margin: 6pt 0;
+    font-size: 8.5pt;
+  }
+  .stage-flow .stage {
+    flex: 1;
+    background: #eef2f8;
+    border: 1px solid #c3d3ec;
+    border-radius: 4pt;
+    padding: 5pt;
+    text-align: center;
+  }
+  .stage-flow .stage strong {
+    display: block;
+    color: #102a4d;
+    font-size: 9pt;
+    margin-bottom: 2pt;
+  }
+  .pagebreak { page-break-before: always; }
+  .ascii {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8.5pt;
+    background: #fafaf6;
+    border: 1px solid #ddd;
+    padding: 8pt;
+    line-height: 1.3;
+    white-space: pre;
+    margin: 4pt 0;
+    border-radius: 3pt;
+  }
+  .pause {
+    display: inline-block;
+    color: #b85c00;
+    font-style: italic;
+    font-size: 9pt;
+  }
+</style>
+</head>
+<body>
+
+<h1>
+  Guion — Parte LLM &amp; Agente
+  <span class="sub">UPV-EARTH · Clasificación de abstracts contra Planetary Boundaries</span>
+</h1>
+<div class="meta">
+  Duración objetivo: <strong>5:00 min</strong> · Tono natural, hablado en primera persona ·
+  Las llaves <span class="pause">[pausa]</span> marcan momentos para respirar y mirar al público.
+</div>
+
+<!-- ==================== SECCIÓN 1 ==================== -->
+<h2>1. De qué va mi parte <span class="timing">≈ 0:25</span></h2>
+<blockquote>
+  <p>"La parte que me tocó a mí es <strong>la cabeza pensante del sistema</strong>: leer un abstract de la UPV y decir, vale, este paper toca el cambio climático, este otro habla de aerosoles atmosféricos, este otro de biodiversidad, este simplemente no estudia ninguna de las nueve <em>Planetary Boundaries</em>. <span class="pause">[pausa]</span> Y eso lo hicimos <strong>sin tirar de OpenAI ni APIs externas</strong>: todo en local, con Ollama, en una GPU de 24 GB. Tres razones: el dato no sale del laboratorio, los resultados son reproducibles bit a bit, y el coste por inferencia es cero."</p>
+</blockquote>
+
+<!-- ==================== SECCIÓN 2 ==================== -->
+<h2>2. El stack — qué modelos elegimos y por qué <span class="timing">≈ 0:35</span></h2>
+<blockquote>
+  <p>"Probamos tres familias open-source: Llama 3, Gemma 3 y Qwen 2.5. <strong>Qwen ganó</strong> por dos motivos muy prácticos:
+  uno, era el más fiable cuando le pides salida en JSON estricto — los otros se inventaban llaves o metían markdown.
+  Y dos, manejaba español e inglés mezclados sin perder calidad, que es justo el caso del corpus UPV."</p>
+  <p>"Acabamos con dos modelos: <span class="mono">qwen2.5:14b</span> como juez principal — unos 9 GB en cuantización Q4 — y <span class="mono">qwen2.5:3b</span> como extractor rápido para tareas estructuradas. Las dos llamadas siempre con <strong>temperature 0 y JSON-mode</strong>, para que el mismo input dé siempre el mismo output. Si hay aleatoriedad, no hay ciencia."</p>
+</blockquote>
+
+<!-- ==================== SECCIÓN 3 ==================== -->
+<h2>3. Los prompts — del loro al principio <span class="timing">≈ 1:30</span></h2>
+<blockquote>
+  <p>"Voy a contar lo que más aprendí en este proyecto: <strong>el modelo era el mismo en las cuatro versiones, lo que cambiaba era cómo le hablábamos</strong>. Y la diferencia entre la peor y la mejor versión son <strong>13 puntos de accuracy</strong>. Sin tocar pesos, sin fine-tuning."</p>
+</blockquote>
+
+<h3>v1 — Few-Shot contrastivo · "imita estos ejemplos"</h3>
+<blockquote>
+  <p>"Le metíamos diez pares pregunta-respuesta dentro del prompt. <strong>Resultado: efecto loro.</strong> El modelo aprendió a copiar literalmente las frases de los ejemplos en sus razonamientos. Y peor: aprendió una <strong>regla espuria</strong>. PB7 (biodiversidad) recall <strong>cayó del 23 % al 0 %</strong> porque uno de los ejemplos tenía un patrón que el modelo generalizó como 'esto NO es PB7'. Top-1 estricto: <strong>58.5 %</strong>."</p>
+</blockquote>
+
+<h3>v2 — Zero-Shot Chain-of-Thought · "razona paso a paso"</h3>
+<blockquote>
+  <p>"Quitamos los ejemplos. En su lugar, un <strong>algoritmo deductivo de cinco pasos</strong> obligatorio:"</p>
+</blockquote>
+<pre><span class="tag">### YOUR ANALYTICAL ALGORITHM (mandatory deductive checklist)</span>
+Step 1 — BIOPHYSICAL EXTRACTION    list every metric quoted from the abstract
+Step 2 — CANDIDATE MAPPING         map each metric to the PB it triggers
+Step 3 — BACKGROUND vs FOCUS       discard metrics that are only motivation
+Step 4 — RANKING                   pick primary, secondaries, rejected
+Step 5 — JSON OUTPUT</pre>
+<blockquote>
+  <p>"Funcionó para que <em>encontrara</em> los PBs: el Hit@K subió del 50 % al 72 %. Pero se pasó al lado contrario: <strong>46 % de positivity bias</strong>. En 23 de los 50 papers que el humano había marcado como 'no toca ninguna PB', el modelo se inventaba una. Inutilizable en producción."</p>
+</blockquote>
+
+<h3>v3 — añadimos un filtro background-vs-focus</h3>
+<blockquote>
+  <p>"Reforzamos la regla de exclusión: si el paper menciona aerosoles solo en la introducción como contexto, no cuenta. <strong>Bajamos el delirio del 46 al 22 %</strong>. Pero el modelo se acobardó: 29 % de falsos negativos. <em>Nada</em> está bien calibrado todavía."</p>
+</blockquote>
+
+<h3>v4_principle — Principle-Driven con etiquetas XML</h3>
+<blockquote>
+  <p>"La versión que finalmente desplegamos. La idea: <strong>no le des respuestas, dale principios y casos de calibración</strong>. Estructura del prompt:"</p>
+</blockquote>
+<pre><span class="tag">&lt;system_role&gt;</span> expert scientific evaluator (UPV abstracts vs PB framework)
+<span class="tag">&lt;task&gt;</span>      identify PBs that the paper MEASURES, MODELS or treats
+              as EXPERIMENTAL FORCING. separate analysis from background.
+
+<span class="tag">&lt;instructions&gt;</span>
+  1. Identify the *operational object* — the variable being measured.
+  2. Match with PB definition.
+  3. Apply EXCLUSION RULES (purely social/legal/governance → "None").
+  4. <span class="key">Common confusions:</span>
+     - Aerosols / PM / AOD belong to <span class="ok">PB9</span>, not PB1.
+     - Nutrients (N, P) point to <span class="ok">PB4</span>.
+     - Water-resources management with climate as motivation → <span class="ok">PB5</span>.
+
+<span class="tag">&lt;reference_framework&gt;</span> 9 PB canonical definitions
+<span class="tag">&lt;calibration_cases&gt;</span>  5 worked examples (Cases A–E)
+<span class="tag">&lt;abstract&gt;</span>            the actual paper to classify
+<span class="tag">&lt;constraints&gt;</span>         JSON only, no markdown, no phrase reuse</pre>
+<blockquote>
+  <p>"Tres detalles que parecen pequeños pero son los que <strong>marcan la diferencia</strong>:
+  primero, los casos de calibración van <strong>antes</strong> del abstract pero el modelo tiene <strong>prohibido reutilizar sus frases</strong>;
+  segundo, las instrucciones explicitan los errores típicos — 'aerosoles son PB9, no PB1' — porque las versiones anteriores los cometían sistemáticamente;
+  tercero, le damos al modelo <strong>permiso para juzgar</strong>: «<em>your judgment matters more than rigid rule-following</em>»."</p>
+</blockquote>
+
+<!-- ==================== SECCIÓN 4 ==================== -->
+<h2>4. La firma de una mejora real <span class="timing">≈ 0:40</span></h2>
+<blockquote>
+  <p>"Cuando comparamos las cuatro versiones sobre 147 abstracts validados a mano, <strong>v4_principle gana las seis métricas de acierto</strong>:"</p>
+</blockquote>
+<table>
+  <thead>
+    <tr><th>Métrica</th><th class="num-r">v1</th><th class="num-r">v2</th><th class="num-r">v3</th><th class="num-r hl">v4</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Top-1 estricto ↑</td><td class="num-r">58.5</td><td class="num-r">63.9</td><td class="num-r">64.6</td><td class="num-r hl"><strong>72.1</strong></td></tr>
+    <tr><td>Top-1 relajado ↑</td><td class="num-r">62.6</td><td class="num-r">67.3</td><td class="num-r">66.7</td><td class="num-r hl"><strong>76.2</strong></td></tr>
+    <tr><td>Hit@K ↑</td><td class="num-r">50.5</td><td class="num-r">72.2</td><td class="num-r">61.9</td><td class="num-r hl"><strong>74.2</strong></td></tr>
+    <tr><td>Jaccard ↑</td><td class="num-r">0.58</td><td class="num-r">0.59</td><td class="num-r">0.60</td><td class="num-r hl"><strong>0.69</strong></td></tr>
+    <tr><td>True Negative ↑</td><td class="num-r"><strong>84.0</strong></td><td class="num-r">54.0</td><td class="num-r">78.0</td><td class="num-r hl">76.0</td></tr>
+    <tr><td>Positivity Bias ↓</td><td class="num-r"><strong>16.0</strong></td><td class="num-r">46.0</td><td class="num-r">22.0</td><td class="num-r hl">24.0</td></tr>
+    <tr><td>Falsos Negativos ↓</td><td class="num-r">41.2</td><td class="num-r"><strong>12.4</strong></td><td class="num-r">28.9</td><td class="num-r hl">14.4</td></tr>
+  </tbody>
+</table>
+<blockquote>
+  <p>"Lo importante <strong>no es solo que gane</strong>, es que <strong>v4 es la única versión que no compra precisión a costa de cobertura ni al revés</strong>. v1 era rigorosa pero se acobardaba (41 % de falsos negativos); v2 pescaba todo pero deliraba; v3 estaba en tierra de nadie. v4 mantiene 76 % de True Negative <em>y</em> baja los falsos negativos al 14 %. <strong>Ese cuadrante 'no inventa y no se acobarda' es lo que hace que sea desplegable</strong>."</p>
+  <p>"Y para descartar suerte: cara a cara contra v3, hay <strong>15 papers donde v4 acierta y v3 falla</strong>, contra solo 4 al revés. La mejora es real."</p>
+</blockquote>
+
+<!-- ==================== SECCIÓN 5 (NUEVA) ==================== -->
+<h2>5. Dónde sigue fallando — la matriz de confusión <span class="timing">≈ 0:35</span></h2>
+<blockquote>
+  <p>"Quería enseñar también <strong>dónde no llegamos</strong>, porque es informativo. La confusión cruzada que más se repite, incluso con v4, es esta:"</p>
+</blockquote>
+<div class="ascii">
+                    LLM dijo
+                ┌──────────────────────────┐
+   humano dijo  │  PB1   PB4   PB5   PB9   │   leyenda
+   ─────────────┼──────────────────────────┤   PB1 = clima
+   PB1          │   ·     1     ·    <span style="color:#c00">3</span>    │   PB4 = nutrientes
+   PB7          │   1     ·     1     1    │   PB5 = agua
+   PB8          │   ·     1     ·     ·    │   PB7 = biodiversidad
+   None         │   3     1     1     1    │   PB9 = aerosoles atmosféricos
+                └──────────────────────────┘
+</div>
+<blockquote>
+  <p>"El patrón dominante es <strong>PB1 → PB9</strong>: tres papers de cambio climático que el modelo etiqueta como aerosoles atmosféricos. Es justo el caso que <em>tenemos avisado en el prompt</em> ('Aerosols / PM / AOD belong to PB9, not PB1') y aun así sigue colándose <strong>cuando el abstract mide aerosoles para inferir clima</strong>. Es un caso ambiguo de verdad — el modelo elige el objeto medido y el humano la motivación. <span class="pause">[pausa]</span> Esto nos dice que el siguiente paso no es más prompt-engineering, es <strong>multi-etiqueta</strong>: dejar que el modelo diga 'PB9 primario, PB1 secundario' y evaluar con macro-F1, no con Top-1 estricto."</p>
+</blockquote>
+
+<!-- ==================== SECCIÓN 6 ==================== -->
+<h2>6. La arquitectura del agente — el truco asimétrico <span class="timing">≈ 1:15</span></h2>
+<blockquote>
+  <p>"Sobre el v4_principle montamos un <strong>agente en cascada de cuatro etapas</strong>. La idea: en lugar de pedirle todo a un modelo, descomponemos la tarea en piezas auditables."</p>
+</blockquote>
+<div class="stage-flow">
+  <div class="stage"><strong>① Extractor</strong>qwen2.5:3b<br>JSON estructurado</div>
+  <div class="stage"><strong>② Scorer</strong>determinista<br>sin LLM</div>
+  <div class="stage"><strong>③ Juez</strong>qwen2.5:14b<br>v4_principle</div>
+  <div class="stage"><strong>④ Crítico</strong>qwen2.5:14b<br>asimétrico</div>
+</div>
+
+<h3>① Extractor con anti-alucinación</h3>
+<blockquote>
+  <p>"El modelo pequeño extrae cinco campos: especies químicas, métricas físicas, observaciones biológicas, metodología y marco disciplinar. Y aquí hicimos algo defensivo que me parece importante: <strong>un filtro post-hoc que tira cualquier término extraído que no aparezca literalmente en el abstract</strong>. <span class="mono">_grounding_filter()</span> hace match por substring. Si el modelo se inventa 'CO2' y la palabra no está en el texto, fuera. Cero alucinaciones por construcción."</p>
+</blockquote>
+
+<h3>② Scorer determinista — el ancla léxica</h3>
+<blockquote>
+  <p>"Cuenta coincidencias contra el vocabulario de <span class="mono">pb_reference.csv</span>. Pondera <em>core × 3, extended × 2, applied × 1</em>. <strong>Sin LLM, coste cero, totalmente reproducible.</strong> Sirve de ancla léxica al juez y, sobre todo, de gatillo para el crítico."</p>
+</blockquote>
+
+<h3>③ Juez 14B con tres bloques de contexto</h3>
+<blockquote>
+  <p>"El v4_principle pero <strong>enriquecido con las salidas del extractor y del scorer</strong>. Atención al orden: las señales auxiliares van <strong>después del abstract</strong> y con un aviso explícito:"</p>
+</blockquote>
+<pre><span class="tag">&lt;auxiliary_signals_for_reference_only&gt;</span>
+  These have <span class="bad">known failure modes</span> and are NOT authoritative.
+  Read the abstract first and form your judgment;
+  only consult these if you are genuinely uncertain.
+  NEVER let these signals override what the abstract clearly says.</pre>
+
+<h3>④ Crítico asimétrico — la pieza que más me gusta</h3>
+<blockquote>
+  <p>"El crítico es la pieza arquitectónica más interesante. Solo se dispara si el juez dijo <em>None</em> <strong>y</strong> el scorer encontró un PB candidato con score ≥ 2. Y aquí está el truco:"</p>
+  <ul>
+    <li><strong>Solo puede flipar <span class="mono">None → PBx</span></strong>, nunca al revés.</li>
+    <li><strong>Solo puede elegir entre los candidatos del scorer</strong>, no puede inventar PBs.</li>
+  </ul>
+  <p>"Por construcción, no puede degradar una clasificación correcta ni alucinar una etiqueta. <strong>Es un verificador con downside cero.</strong> En validación se invocó 6 veces, hizo 2 rescates limpios (None → PB1 y None → PB7), y los 4 'mantener None' son defendibles. Cero daño."</p>
+</blockquote>
+
+<!-- ==================== SECCIÓN 7 ==================== -->
+<h2>7. Lo que no funcionó — y por qué lo cuento <span class="timing">≈ 0:25</span></h2>
+<blockquote>
+  <p>"Hay una cosa que <strong>no oculto en el report</strong>: la cascada llega al <strong>65.3 %</strong>, <em>menos</em> que el v4_principle a pelo (72.1 %). Diagnostiqué por qué con un experimento controlado: re-clasifiqué los 15 papers donde la cascada pierde y encontré que <strong>11 de 15 son selecciones de PB equivocado</strong>, no de None. Las señales auxiliares anclan al juez en el PB equivocado cuando el scorer empata o el extractor sobre-pesa términos secundarios. <span class="pause">[pausa]</span> Lo que la cascada sí da, y un solo modelo no, es <strong>auditabilidad y un crítico verificador con cero alucinaciones</strong>. Para deployment con humano en el loop, eso pesa más que dos puntos de accuracy. Gracias."</p>
+</blockquote>
+
+<hr>
+
+<div class="note-box">
+  <h3>Notas de entrega</h3>
+  <ul>
+    <li><strong>Cifras críticas:</strong> 72.1 % v4_principle · 65.3 % cascada · 11 de 15 errores son <em>wrong-PB</em> · 3 confusiones PB1↔PB9 son la huella dactilar del modelo.</li>
+    <li><strong>Si vas justo de tiempo:</strong> recorta la sección 5 (matriz de confusión, 35 s). Aporta color pero no es central.</li>
+    <li><strong>"¿Por qué Ollama y no OpenAI?"</strong> Soberanía del dato + reproducibilidad bit a bit (temperature 0 + seed) + coste cero + GPU disponible.</li>
+    <li><strong>"¿Por qué Qwen y no Llama/Gemma?"</strong> Probamos los tres (<span class="mono">runners/{gemma,llama}_zeroshot.py</span>). Qwen ganó en JSON-mode reliability y en multilingüe (corpus ES+EN).</li>
+    <li><strong>"¿Por qué un cascada si rinde menos?"</strong> Auditabilidad por construcción: cada decisión viene con la traza de extractor + scorer + razonamiento + (si aplica) crítico. Un solo prompt te da un número, no una explicación.</li>
+    <li><strong>"¿Cuánto tarda?"</strong> Pipeline completo sobre 150 papers: <strong>25–35 minutos</strong> en GPU de 24 GB.</li>
+    <li><strong>Siguientes pasos:</strong> macro-F1 multi-etiqueta (resuelve PB1↔PB9), expansión del vocabulario PB (PB8 metales pesados, PB1 paleoclimático), abstención calibrada para <em>human-in-the-loop</em>.</li>
+  </ul>
+  <div class="total">Total cronometrado: 0:25 + 0:35 + 1:30 + 0:40 + 0:35 + 1:15 + 0:25 = <strong>5:05 min</strong>. Margen para respirar.</div>
+</div>
+
+</body>
+</html>

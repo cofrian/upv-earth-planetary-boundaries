@@ -9,15 +9,15 @@ from app.db.models.paper import Paper
 from app.db.models.pb_result import PBResult
 from app.db.session import SessionLocal, engine
 
-csv.field_size_limit(10**7)
+csv.field_size_limit(10**8)
 
 CLEAN_PATH = os.getenv(
     "SEED_CLEAN_PATH",
-    "/app/data/corpus/master_corpus_mixto_1000_clean_enriched.csv",
+    "/app/data/corpus/master_corpus_mixto_clean_enriched.csv",
 )
 TRACE_PATH = os.getenv(
     "SEED_TRACE_PATH",
-    "/app/data/corpus/master_corpus_mixto_1000_traceability.csv",
+    "/app/data/corpus/master_corpus_mixto_traceability.csv",
 )
 
 

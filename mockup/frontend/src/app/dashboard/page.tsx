@@ -1,173 +1,219 @@
+import { CorpusLayersCard } from "@/components/CorpusLayersCard";
+import { CorpusQualityPanel } from "@/components/CorpusQualityPanel";
+import { KpiCard } from "@/components/KpiCard";
+import { MethodologyCallout } from "@/components/MethodologyCallout";
+import { PbFocusCard } from "@/components/PbFocusCard";
+import {
+  DistBarChart,
+  DistPieChart,
+  HorizontalKeywordBars,
+  TemporalQualityChart,
+} from "@/components/charts/analytics-charts";
+import { formatPercent, friendlyRule, modelLabel } from "@/components/format";
 import { apiGet } from "@/lib/api";
-import { DistBarChart, DistLineChart, DistPieChart, KeywordBars } from "@/components/charts/analytics-charts";
-import Link from "next/link";
+import {
+  AbstractLengthDistribution,
+  CorpusKPIs,
+  DistributionResponse,
+  EmbeddingCoverage,
+  IndexStatus,
+  KeywordItem,
+  TemporalEvolutionItem,
+} from "@/lib/types";
 
-import { DistributionResponse, KeywordItem, Overview, PaperListResponse } from "@/lib/types";
-
-async function Kpis() {
-  const data = await apiGet<Overview>("/analytics/overview");
-  const items = [
-    ["Papers totales", data.total_papers],
-    ["Abstracts validos", data.abstracts_valid],
-    ["Clasificados PB", data.papers_classified],
-    ["Longitud media abstract", Math.round(data.avg_abstract_length)],
-  ];
-
-  return (
-    <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {items.map(([label, value]) => (
-        <article key={label as string} className="card">
-          <p className="muted text-sm">{label as string}</p>
-          <p className="kpi-value">{value as number}</p>
-        </article>
-      ))}
-    </section>
-  );
+async function safe<T>(path: string, fallback: T): Promise<T> {
+  try {
+    return await apiGet<T>(path);
+  } catch {
+    return fallback;
+  }
 }
 
-async function DistCard({
-  title,
-  path,
-  chart,
-  className,
-}: {
-  title: string;
-  path: string;
-  chart: "bar" | "line" | "pie";
-  className?: string;
-}) {
-  const data = await apiGet<DistributionResponse>(path);
-  const effectiveChart = path === "/analytics/distribution/year" && data.items.length <= 2 ? "bar" : chart;
+export default async function DashboardPage() {
+  const [
+    summary,
+    coverage,
+    indexStatus,
+    abstractLengths,
+    pbDistribution,
+    temporal,
+    keywords,
+  ] = await Promise.all([
+    safe<CorpusKPIs>("/analytics/summary", {
+      total_raw: 0,
+      with_abstract: 0,
+      valid: 0,
+      for_embeddings: 0,
+      indexed: 0,
+      valid_pct: 0,
+      embedding_pct: 0,
+      embedding_pct_of_valid: 0,
+      avg_abstract_length: 0,
+      median_abstract_length: 0,
+      p90_abstract_length: 0,
+      unique_journals: 0,
+      papers_with_doi: 0,
+      papers_with_keywords: 0,
+      min_year: null,
+      max_year: null,
+      filter_rule: "abstract limpio > 500 caracteres",
+      embedding_text_rule: "título + abstract limpio",
+    }),
+    safe<EmbeddingCoverage>("/analytics/embedding-coverage", {
+      valid_total: 0,
+      embedding_total: 0,
+      discarded_short_abstract: 0,
+      embedding_text_length_stats: { mean: 0, median: 0, p25: 0, p75: 0, p90: 0, min: 0, max: 0 },
+      abstract_length_stats: { mean: 0, median: 0, p25: 0, p75: 0, p90: 0, min: 0, max: 0 },
+      approx_token_buckets: [],
+      indexed_total: 0,
+      coverage_vs_valid_pct: 0,
+      filter_rule: "abstract limpio > 500 caracteres",
+      embedding_text_rule: "título + abstract limpio",
+    }),
+    safe<IndexStatus>("/analytics/index-status", {
+      model_id: "—",
+      embedding_dim: 0,
+      vectors: 0,
+      candidates: 0,
+      indexed_total: 0,
+      is_built: false,
+      is_specter: false,
+      fallback_used: false,
+      is_precomputed: false,
+      source: "computed",
+      embedding_text_rule: "título + abstract limpio",
+      filter_rule: "abstract limpio > 500 caracteres",
+    }),
+    safe<AbstractLengthDistribution>("/analytics/abstract-lengths", {
+      items: [],
+      stats: { mean: 0, median: 0, p25: 0, p75: 0, p90: 0, min: 0, max: 0 },
+    }),
+    safe<DistributionResponse>("/analytics/distribution/pb", { items: [] }),
+    safe<TemporalEvolutionItem[]>("/analytics/papers-by-year/temporal-quality", []),
+    safe<KeywordItem[]>("/analytics/top-keywords?limit=10", []),
+  ]);
 
-  const chartNode =
-    effectiveChart === "pie" ? (
-      <DistPieChart data={data.items} />
-    ) : effectiveChart === "line" ? (
-      <DistLineChart data={data.items} />
-    ) : (
-      <DistBarChart data={data.items} />
-    );
-
-  return (
-    <article className={`card ${className ?? ""}`}>
-      <h3 className="mb-3 text-lg font-semibold">{title}</h3>
-      {chartNode}
-    </article>
-  );
-}
-
-async function KeywordsCard() {
-  const data = await apiGet<KeywordItem[]>("/analytics/keywords/global?limit=12");
-
-  return (
-    <article className="card lg:col-span-2">
-      <h3 className="mb-3 text-lg font-semibold">Keywords mas frecuentes en UPV</h3>
-      <KeywordBars data={data} />
-    </article>
-  );
-}
-
-async function PbFocusCard({ pbFocus }: { pbFocus: string | null }) {
-  const pbDistribution = await apiGet<DistributionResponse>("/analytics/distribution/pb");
-  const options = pbDistribution.items.map((item) => item.label).filter(Boolean);
-  const activePb = pbFocus && options.includes(pbFocus) ? pbFocus : options[0] || "PB-UNK";
-  const pbKeywords = await apiGet<KeywordItem[]>(`/analytics/keywords/pb/${encodeURIComponent(activePb)}?limit=12`);
-
-  return (
-    <article className="card lg:col-span-2 space-y-3">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h3 className="text-lg font-semibold">Foco por Planetary Boundary</h3>
-          <p className="muted text-sm">Selecciona un PB para ver su perfil de keywords en UPV.</p>
-        </div>
-        <form className="flex items-center gap-2">
-          <select
-            name="pb_focus"
-            defaultValue={activePb}
-            className="rounded-md border border-line bg-panelSoft px-3 py-2 text-sm"
-          >
-            {options.map((pb) => (
-              <option key={pb} value={pb}>
-                {pb}
-              </option>
-            ))}
-          </select>
-          <button className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-black">Ver</button>
-        </form>
-      </div>
-      <KeywordBars data={pbKeywords} />
-      <div>
-        <Link href={`/papers?pb=${encodeURIComponent(activePb)}`} className="text-sm text-accent hover:underline">
-          Explorar papers de {activePb}
-        </Link>
-      </div>
-    </article>
-  );
-}
-
-async function PapersQuickView() {
-  const papers = await apiGet<PaperListResponse>("/papers?page=1&page_size=8&sort=year_desc&max_year=2024");
-
-  return (
-    <article className="card lg:col-span-2">
-      <h3 className="mb-3 text-lg font-semibold">Papers recientes para analisis rapido</h3>
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm">
-          <thead>
-            <tr className="border-b border-line text-left text-textMuted">
-              <th className="px-3 py-2">Paper</th>
-              <th className="px-3 py-2">Anio</th>
-              <th className="px-3 py-2">PB top</th>
-              <th className="px-3 py-2">Accion</th>
-            </tr>
-          </thead>
-          <tbody>
-            {papers.items.map((paper) => (
-              <tr key={paper.id} className="border-b border-line/60">
-                <td className="px-3 py-3">{paper.title}</td>
-                <td className="px-3 py-3">{paper.year ?? "-"}</td>
-                <td className="px-3 py-3">{paper.pb_result?.top_pb_code ?? "N/A"}</td>
-                <td className="px-3 py-3">
-                  <Link href={`/papers/${paper.id}`} className="text-accent hover:underline">
-                    Abrir analisis
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </article>
-  );
-}
-
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const params = await searchParams;
-  const pbFocus = typeof params.pb_focus === "string" ? params.pb_focus : null;
+  const cleanSummary: CorpusKPIs = {
+    ...summary,
+    filter_rule: friendlyRule(summary.filter_rule),
+    embedding_text_rule: friendlyRule(summary.embedding_text_rule),
+  };
+  const cleanCoverage: EmbeddingCoverage = {
+    ...coverage,
+    filter_rule: friendlyRule(coverage.filter_rule),
+    embedding_text_rule: friendlyRule(coverage.embedding_text_rule),
+  };
+  const cleanIndex: IndexStatus = {
+    ...indexStatus,
+    model_id: modelLabel(indexStatus.model_id),
+    embedding_text_rule: friendlyRule(indexStatus.embedding_text_rule),
+    filter_rule: friendlyRule(indexStatus.filter_rule),
+  };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-semibold">Corpus UPV</h2>
-        <p className="muted">Panel analitico del corpus procesado y su cobertura PB.</p>
-      </div>
-      <Kpis />
-      <section className="grid gap-4 lg:grid-cols-2">
-        <DistCard title="Distribucion por Planetary Boundary" path="/analytics/distribution/pb" chart="pie" />
-        <DistCard title="Publicaciones por anio" path="/analytics/distribution/year" chart="line" />
-        <DistCard
-          title="Longitud de abstracts"
-          path="/analytics/distribution/abstract-length"
-          chart="bar"
-          className="lg:col-span-2 lg:mx-auto lg:max-w-3xl w-full"
+    <div className="space-y-8">
+      <section className="space-y-3 animate-fade-up">
+        <span className="chip-accent">Producto científico · Entrega final</span>
+        <h2 className="text-3xl font-semibold tracking-tight text-balance lg:text-4xl">
+          Plataforma analítica del corpus UPV-EARTH
+        </h2>
+        <p className="max-w-3xl text-base leading-relaxed text-textSubtle">
+          Pipeline reproducible con cinco capas explícitas: del corpus bruto al índice de similitud. El corpus
+          válido del producto exige que el abstract limpio supere 500 caracteres y representa cada paper como
+          título + abstract limpio antes de generar el embedding SPECTER2.
+        </p>
+      </section>
+
+      <MethodologyCallout
+        modelId={modelLabel(indexStatus.model_id)}
+        isSpecter={indexStatus.is_specter}
+        fallbackUsed={indexStatus.fallback_used}
+      />
+
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5 animate-fade-up">
+        <KpiCard label="Corpus bruto" value={summary.total_raw} helperBadge="bruto" helper="Papers procesados sin filtros." />
+        <KpiCard
+          label="Con abstract"
+          value={summary.with_abstract}
+          helperBadge={`${formatPercent((summary.with_abstract / Math.max(1, summary.total_raw)) * 100)} del bruto`}
+          helper="Algún abstract identificable tras parsing."
         />
-        <KeywordsCard />
-        <PbFocusCard pbFocus={pbFocus} />
-        <PapersQuickView />
+        <KpiCard
+          label="Pasa filtros pipeline"
+          value={summary.valid}
+          helperBadge={formatPercent(summary.valid_pct)}
+          helper="Idioma comprobado, sin duplicados y abstract original suficiente."
+        />
+        <KpiCard
+          label="Corpus válido SPECTER2"
+          value={summary.for_embeddings}
+          helperBadge={`${formatPercent(summary.embedding_pct_of_valid)} sobre filtros`}
+          helperTone="accent"
+          helper="Abstract limpio con más de 500 caracteres. Es el corpus del producto."
+          highlight
+        />
+        <KpiCard
+          label="Indexado en SPECTER2"
+          value={summary.indexed}
+          helperBadge="similitud lista"
+          helperTone="accent"
+          helper="Embeddings generados y disponibles para búsqueda."
+        />
+      </section>
+
+      <CorpusLayersCard data={cleanSummary} />
+
+      <article className="card space-y-4">
+        <header className="flex flex-wrap items-baseline justify-between gap-2">
+          <div>
+            <p className="section-title">Calidad temporal del corpus</p>
+            <h3 className="text-lg font-semibold">Evolución por año: válido vs apto para embeddings</h3>
+          </div>
+          <span className="chip-accent">criterio: abstract &gt; 500</span>
+        </header>
+        <TemporalQualityChart data={temporal} />
+        <p className="help-text">
+          Las áreas comparan el conteo anual del corpus que pasa filtros contra el subconjunto que entra al índice
+          SPECTER2.
+        </p>
+      </article>
+
+      <CorpusQualityPanel coverage={cleanCoverage} index={cleanIndex} />
+
+      <section className="grid gap-4 lg:grid-cols-5">
+        <article className="card lg:col-span-3 space-y-3">
+          <header className="flex items-center justify-between">
+            <div>
+              <p className="section-title">Distribución de longitud de abstract</p>
+              <h3 className="text-lg font-semibold">Apto para embeddings cuando supera 500 caracteres</h3>
+            </div>
+            <span className="chip">corpus que pasa filtros</span>
+          </header>
+          <DistBarChart data={abstractLengths.items} />
+          <p className="help-text">
+            Histograma de longitud del abstract limpio. Los buckets a la izquierda del umbral de 500 caracteres
+            quedan fuera del corpus SPECTER2.
+          </p>
+        </article>
+        <article className="card lg:col-span-2 space-y-3">
+          <header>
+            <p className="section-title">Planetary Boundaries</p>
+            <h3 className="text-lg font-semibold">Distribución del top-PB</h3>
+          </header>
+          <DistPieChart data={pbDistribution.items} />
+          <p className="help-text">Asignación por similitud SPECTER2 contra los catálogos PB de UPV.</p>
+        </article>
+      </section>
+
+      <PbFocusCard />
+
+      <section className="card space-y-3">
+        <header>
+          <p className="section-title">Top keywords del corpus</p>
+          <h3 className="text-lg font-semibold">Términos más frecuentes en el corpus</h3>
+        </header>
+        <HorizontalKeywordBars data={keywords} />
       </section>
     </div>
   );

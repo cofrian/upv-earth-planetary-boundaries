@@ -4,25 +4,199 @@
 
 :root {
   color-scheme: dark;
+  --color-emerald: 210 10 85;
+  --color-magenta: 210 10 85;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
-  @apply bg-bg text-textMain antialiased;
+  @apply bg-bg text-textMain antialiased font-sans;
+  font-feature-settings: "ss01", "cv11";
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(56,165,122,0.15), transparent 35%),
-    radial-gradient(circle at 80% 10%, rgba(31,105,78,0.2), transparent 40%),
-    linear-gradient(180deg, #040807 0%, #070e0c 100%);
+    radial-gradient(circle at 12% 8%, rgba(210, 10, 85, 0.14), transparent 38%),
+    radial-gradient(circle at 88% 4%, rgba(168, 5, 68, 0.16), transparent 42%),
+    linear-gradient(180deg, #110308 0%, #080406 60%, #100309 100%);
   min-height: 100vh;
+  letter-spacing: -0.005em;
 }
 
-.card {
-  @apply bg-panel border border-line rounded-xl p-5 shadow-glow;
+@layer components {
+  .surface-card {
+    @apply bg-surface-1 border border-line rounded-2xl shadow-soft;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+  }
+
+  .card {
+    @apply surface-card p-6 transition-colors;
+  }
+
+  .card-tight {
+    @apply surface-card p-4;
+  }
+
+  .kpi-card {
+    @apply card relative overflow-hidden;
+  }
+
+  .kpi-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: linear-gradient(180deg, #d20a55, transparent 70%);
+    opacity: 0.9;
+  }
+
+  .kpi-value {
+    @apply text-3xl font-semibold tracking-tight text-textMain;
+    font-feature-settings: "tnum", "ss01";
+  }
+
+  .kpi-value-lg {
+    @apply text-4xl font-semibold tracking-tight text-textMain;
+    font-feature-settings: "tnum", "ss01";
+  }
+
+  .muted {
+    @apply text-textMuted;
+  }
+
+  .subtle {
+    @apply text-textSubtle;
+  }
+
+  .section-title {
+    @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-textMuted;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-line bg-surface-2 px-2.5 py-1 text-[11px] font-medium text-textSubtle;
+  }
+
+  .chip-accent {
+    @apply chip border-emerald-500/40 bg-emerald-500/10 text-emerald-400;
+  }
+
+  .chip-warn {
+    @apply chip border-amber/40 bg-amber/10 text-amber;
+  }
+
+  .chip-danger {
+    @apply chip border-rose/40 bg-rose/10 text-rose;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 px-3 py-1 text-xs text-textSubtle;
+  }
+
+  .stat {
+    @apply flex flex-col gap-0.5;
+  }
+
+  .stat-label {
+    @apply text-[11px] uppercase tracking-[0.14em] text-textMuted;
+  }
+
+  .stat-value {
+    @apply text-xl font-semibold text-textMain;
+    font-feature-settings: "tnum";
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition;
+  }
+
+  .btn-primary:hover {
+    @apply bg-emerald-400;
+  }
+
+  .btn-primary:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-xl border border-line bg-surface-2 px-3 py-2 text-sm text-textSubtle transition hover:border-emerald-500/50 hover:text-textMain;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-line bg-surface-2 px-3 py-2 text-sm text-textMain placeholder:text-textMuted focus:border-emerald-500/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20;
+  }
+
+  .select {
+    @apply input pr-8;
+  }
+
+  .table-pro {
+    @apply min-w-full text-sm text-textMain;
+  }
+
+  .table-pro thead tr {
+    @apply border-b border-line/80 text-left text-textMuted;
+  }
+
+  .table-pro thead th {
+    @apply whitespace-nowrap px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.16em];
+  }
+
+  .table-pro tbody tr {
+    @apply border-b border-line/40 transition-colors hover:bg-surface-2/60;
+  }
+
+  .table-pro tbody td {
+    @apply px-4 py-3 align-top;
+  }
+
+  .divider-soft {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(210, 10, 85, 0.55), transparent);
+  }
+
+  .help-text {
+    @apply text-xs text-textMuted leading-relaxed;
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(210, 10, 85, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(210, 10, 85, 0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(210, 10, 85, 0.10), rgba(255, 255, 255, 0.02));
+    background-size: 200% 100%;
+    animation: shimmer 1.6s linear infinite;
+  }
+
+  .ring-emerald-soft {
+    @apply ring-1 ring-emerald-500/30;
+  }
 }
 
-.kpi-value {
-  @apply text-3xl font-semibold tracking-tight;
-}
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 
-.muted {
-  @apply text-textMuted;
+  .scroll-x {
+    @apply overflow-x-auto;
+    scrollbar-color: rgba(210, 10, 85, 0.45) transparent;
+  }
+
+  .scroll-x::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .scroll-x::-webkit-scrollbar-thumb {
+    background: rgba(210, 10, 85, 0.35);
+    border-radius: 999px;
+  }
 }

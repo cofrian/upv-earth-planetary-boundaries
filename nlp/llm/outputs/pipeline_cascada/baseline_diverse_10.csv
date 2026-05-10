@@ -1,0 +1,86 @@
+doc_id,route,agent1_model,agent1_chemical,agent1_physical,agent1_biological,agent1_methodology,agent1_frame,agent1_n_items,agent1_raw,agent1_time_s,agent1_parse_error,agent1_error,kw_top_pbs,kw_top_score,agent3_model,llm_primary_pb,llm_primary_conf,llm_secondary_pbs,llm_rejected_pbs,llm_reasoning,agent3_time_s,agent3_error,total_time_s
+958e8ae09926,llm_judged,qwen2.5:3b,,,microbial functional genes; ecosystem functioning,measured,biology,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""microbial functional genes"", ""ecosystem functioning""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",11.472,,,PB7(2),2,qwen2.5:14b,PB1,High,None,PB7,"The abstract reports the alteration of microbial functional gene expressions in response to warming, which is directly linked to ecosystem functioning. The operational object here is the expression of microbial genes under varying temperatures, explicitly tied to PB1's core definition of climate change impacts on ecological systems. Weak signals suggested a focus on ecosystem functioning, aligning with my analysis.",6.872,,18.345
+d84d0ce7a4c8,llm_judged,qwen2.5:3b,,pH; CO2,Mytilus edulis; immune response; growth and development; calcification rates,measured,biology,6,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""pH"", ""CO2""],
+  ""biological_observations"": [""Mytilus edulis"", ""immune response"", ""growth and development"", ""calcification rates""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",1.408,,,PB2(8); PB1(7),8,qwen2.5:14b,PB2,High,None,PB1,"The research measures the immune response of Mytilus edulis mussels exposed to acidified seawater, focusing on phagocytosis and other immuno-surveillance parameters. The operational object is clearly linked to ocean acidification through pH manipulation and CO2 exposure, directly addressing PB2's core definition involving marine organisms' responses to decreased pH levels. Weak signals aligned with this focus.",5.198,,6.612
+bdf5eac988ad,llm_judged,qwen2.5:3b,polylactide,,,mentioned,engineering,1,"{
+  ""chemical_species"": [""polylactide""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",0.897,,,PB8(4),4,qwen2.5:14b,PB8,Medium,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB9","The abstract focuses on reviewing polylactide (PLA), a bioplastic, and discussing waste management strategies for PLA within the context of industrial feasibility. The primary variable being analyzed is plastic waste management, which aligns with PB8 due to its focus on synthetic chemicals and materials released into the environment. Although the weak signals hinted at PB8 through keywords like 'plastics' and 'plastic waste', they did not provide specific quantitative or methodological details that would elevate this to a higher confidence level.",6.796,,7.695
+7d15d84ce20e,llm_judged,qwen2.5:3b,,photosynthetically active radiation (PAR); photosynthetically active radiation (PAR+UV-A radiation (UV-A); photosynthetically active radiation (PAR+ UV-A+UV-B radiation (UV-B),photoinhibition of photosynthesis; kinetics of recovery in zoospores; ultraviolet radiation (UVR) effectively delays photosynthetic recovery,measured,biology,6,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [
+    ""photosynthetically active radiation (PAR)"",
+    ""photosynthetically active radiation (PAR+UV-A radiation (UV-A)"",
+    ""photosynthetically active radiation (PAR+ UV-A+UV-B radiation (UV-B)""
+  ],
+  ""biological_observations"": [
+    ""photoinhibition of photosynthesis"",
+    ""kinetics of recovery in zoospores"",
+    ""ultraviolet radiation (UVR) effectively delays photosynthetic recovery""
+  ],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",2.406,,,PB3(6),6,qwen2.5:14b,PB3,High,None,"PB1, PB4, PB5, PB6, PB7, PB8, PB9","The abstract measures the kinetics of photosynthetic recovery in zoospores under different radiation spectra, including UV-B radiation due to stratospheric ozone depletion. The primary focus is on how ultraviolet radiation affects photosynthesis and recovery processes in marine organisms, which directly relates to PB3 (Stratospheric Ozone Depletion). Weak signals suggested a possible connection to PB3 based on keywords like 'ozone depletion', aligning with the abstract's content.",6.43,,8.839
+437469852fd9,llm_judged,qwen2.5:3b,,climate,,mentioned,earth_sciences,1,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""climate"", ""energy"", ""flow"", ""mass"", ""radiation""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.091,,,,0,qwen2.5:14b,None,N/A,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The abstract discusses the use of climate and Earth system models to reconstruct past climatic events, emphasizing the epistemological aspects rather than specific biophysical measurements or modeling. The focus is on theoretical and conceptual frameworks within paleoclimatology, not on quantifying any planetary boundary variables directly. Weak signals did not identify any relevant PB vocabulary, aligning with my assessment that this abstract does not measure or model a primary Planetary Boundary.",5.881,,6.974
+730088fdf1e2,llm_judged,qwen2.5:3b,NH4 +; soluble reactive P (SRP),,streams; nutrient spiraling; release; uptake; nitrogen; phosphorus,measured,earth_sciences,8,"{
+  ""chemical_species"": [""NH4 +"", ""soluble reactive P (SRP)""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""streams"", ""nutrient spiraling"", ""release"", ""uptake"", ""nitrogen"", ""phosphorus""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.607,,,,0,qwen2.5:14b,PB4,High,None,"PB1, PB5, PB7","The research measures the release (R) and net uptake (Unet) of nutrients in streams, focusing on NH4+ and SRP. This directly addresses biogeochemical flows related to nutrient cycling and eutrophication, aligning with PB4's core definition. The weak signals correctly identified chemical species and biological observations relevant to nutrient spiraling.",5.112,,6.723
+e9722863b198,llm_judged,qwen2.5:3b,,electricity; hydrology; environment; livelihood; diversity,fisheries; agriculture; biodiversity; capture fisheries; sediment or nutrients,measured,earth_sciences,10,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""electricity"", ""hydrology"", ""environment"", ""livelihood"", ""diversity""],
+  ""biological_observations"": [""fisheries"", ""agriculture"", ""biodiversity"", ""capture fisheries"", ""sediment or nutrients""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.679,,,PB1(3),3,qwen2.5:14b,PB7,High,PB5,PB1,"The abstract measures the impacts of hydropower dam construction on fisheries and agricultural productivity in Cambodia and Vietnam, focusing on biodiversity loss and economic consequences. The primary variable being quantified is the reduction in fishery yields and crop production due to dam construction, which directly affects livelihoods and environmental diversity. This aligns with PB7 (Biosphere Integrity) as it explicitly measures human pressure on genetic, species, and ecosystem diversity. Weak signals suggested a focus on climate change but did not capture the primary biophysical analysis.",6.565,,8.248
+3bbd6f08b6ac,llm_judged,qwen2.5:3b,,climate,,mentioned,engineering,1,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [""climate"", ""energy"", ""flow"", ""mass"", ""radiation""],
+  ""biological_observations"": [],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""engineering""
+}",1.127,,,PB1(3),3,qwen2.5:14b,PB1,High,PB5,"PB2, PB3, PB4, PB6, PB7, PB8, PB9","The abstract focuses on the management of water resources under changing conditions, particularly emphasizing climate destabilization. The operational object is the application of systems approaches to manage water resources more sustainably in response to rapid climate change. While the paper discusses broader aspects like urbanization and social-environmental interactions, it clearly models how these changes impact water resource management through a performance-based engineering framework. This aligns with PB1's core definition of human-driven alteration of the climate system affecting ecological processes. The weak signals suggested PB1 due to mentions of global warming, which is consistent with my analysis.",7.829,,8.959
+78dc23f39924,llm_judged,qwen2.5:3b,,,CAS; ecosystem functioning,mentioned,earth_sciences,2,"{
+  ""chemical_species"": [],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""CAS"", ""ecosystem functioning""],
+  ""methodology"": ""mentioned"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",1.013,,,PB7(5),5,qwen2.5:14b,PB7,High,None,"PB1, PB4, PB5, PB6, PB8, PB9","The abstract focuses on the relationship between biodiversity and ecosystem functioning (BEF) across scales, emphasizing how biodiversity supports multifunctionality in complex adaptive systems. The operational object is the BEF relationship, which directly aligns with PB7's core definition of human pressure on genetic, species, and ecosystem diversity affecting resilience and functioning. Weak signals agreed with this focus, highlighting 'ecosystem functioning' as a key term.",5.863,,6.878
+56c7d6d62d7c,llm_judged,qwen2.5:3b,dust aerosol; single scattering albedo,short- wave radiative forcing; surface radiation quantities; aerosol shortwave direct radiative forcing (ARF); monthly averaged ARFEs (ARFs per unit aerosol optical depth at 500 nm (AOD500)); diurnal ARFs at the surface and top of the atmosphere (TOA); aerosol optical depth at 500 nm (AOD500),,none,earth_sciences,8,"{
+  ""chemical_species"": [""dust aerosol"", ""single scattering albedo""],
+  ""physical_metrics"": [
+    ""short- wave radiative forcing"",
+    ""surface radiation quantities"",
+    ""aerosol shortwave direct radiative forcing (ARF)"",
+    ""monthly averaged ARFEs (ARFs per unit aerosol optical depth at 500 nm (AOD500))"",
+    ""diurnal ARFs at the surface and top of the atmosphere (TOA)"",
+    ""aerosol optical depth at 500 nm (AOD500)""
+  ],
+  ""biological_observations"": [],
+  ""methodology"": ""measured|modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",2.999,,,PB9(6); PB1(3),6,qwen2.5:14b,PB9,High,None,PB1,"The research measures and models the characteristics of dust aerosols, including their single scattering albedo (SSA500) and short-wave radiative forcing (ARF), in Dunhuang from April to June 2012. The study quantifies how these aerosols affect surface radiation quantities and regional climate through direct radiative forcing. This aligns with PB9's focus on atmospheric aerosol loading, as the abstract explicitly discusses particulate matter and its impact on regional climate patterns. Weak signals agreed with this assessment.",6.27,,9.273

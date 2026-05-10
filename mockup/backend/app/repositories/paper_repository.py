@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import uuid
 
 from sqlalchemy import desc, func, or_
@@ -26,6 +28,7 @@ class PaperRepository:
         sort: str,
         page: int,
         page_size: int,
+        min_abstract_len: int | None = None,
     ) -> tuple[list[Paper], int]:
         source_norm = func.lower(func.trim(func.coalesce(Paper.source, "")))
         title_norm = func.lower(func.trim(func.coalesce(Paper.title, "")))
@@ -53,6 +56,8 @@ class PaperRepository:
             q = q.filter(func.lower(Paper.keywords).like(f"%{keywords.lower()}%"))
         if pb:
             q = q.join(PBResult, PBResult.paper_id == Paper.id).filter(PBResult.top_pb_code == pb)
+        if min_abstract_len is not None and min_abstract_len > 0:
+            q = q.filter(func.length(Paper.abstract_norm) >= min_abstract_len)
 
         total = q.count()
 
@@ -60,6 +65,12 @@ class PaperRepository:
             q = q.order_by(desc(Paper.year))
         elif sort == "year_asc":
             q = q.order_by(Paper.year.asc())
+        elif sort == "abstract_len_desc":
+            q = q.order_by(desc(func.length(Paper.abstract_norm)))
+        elif sort == "abstract_len_asc":
+            q = q.order_by(func.length(Paper.abstract_norm).asc())
+        elif sort == "title_asc":
+            q = q.order_by(Paper.title.asc())
         else:
             q = q.order_by(desc(Paper.created_at))
 

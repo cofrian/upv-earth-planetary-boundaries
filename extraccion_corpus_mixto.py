@@ -7,6 +7,7 @@ import html
 import subprocess
 import time
 import unicodedata
+import sys
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -40,13 +41,18 @@ except Exception:
         "introduccion", "introducción", "resumen", "palabras", "clave",
     }
 
-SAMPLE_SIZE = 1000
+PROCESS_ALL_PDFS = True
+SAMPLE_SIZE = None
+RUN_EDA_AFTER_EXTRACTION = True
 DOWNLOAD_BLOCKS = 3
+START_BLOCK = max(1, int(os.getenv("START_BLOCK", "1")))
 LIST_FILE = os.path.join("muestras", "listado_pdfs.txt")
-SAMPLE_MANIFEST = os.path.join("muestras", "muestra_seleccionada_1000.csv")
+SAMPLE_MANIFEST = os.path.join("muestras", "inventario_pdfs_procesados.csv")
 DOWNLOAD_DIR = "muestra_pdfs"
-OUTPUT_FILE = "data/corpus/master_corpus_mixto_1000_clean.csv"
-TRACEABILITY_FILE = "data/corpus/master_corpus_mixto_1000_traceability.csv"
+OUTPUT_FILE = "data/corpus/master_corpus_mixto_clean.csv"
+TRACEABILITY_FILE = "data/corpus/master_corpus_mixto_traceability.csv"
+ENRICHED_OUTPUT_FILE = "data/corpus/master_corpus_mixto_clean_enriched.csv"
+EDA_OUTPUT_DIR = os.path.join("docs", "eda")
 RCLONE_REMOTE = "gdrive:datos proyectoiii/PB/"
 PREVIEW_PAGES = 2
 KEEP_LOCAL_CACHE = False
@@ -55,6 +61,11 @@ MIN_CLEAN_ABSTRACT_CHARS = 500
 LANGUAGE_MIN_CONFIDENCE = 0.80
 CPU_COUNT = os.cpu_count() or 1
 MAX_WORKERS = 1 if CPU_COUNT <= 1 else min(4, CPU_COUNT)
+RCLONE_CONTIMEOUT = "30s"
+RCLONE_TIMEOUT = "30m"
+RCLONE_RETRIES = "8"
+RCLONE_LOW_LEVEL_RETRIES = "20"
+RCLONE_RETRIES_SLEEP = "10s"
 
 DOMAIN_STOPWORDS = {"doi", "http", "https", "www", "com", "org", "edu", "introduction", "abstract", "keywords", "index", "terms"}
 AUXILIARY_NOISE_STOPWORDS = {
@@ -391,7 +402,10 @@ def extract_path_parts(relative_path):
 
 def build_random_sample():
     all_paths = load_pdf_inventory(LIST_FILE)
-    selected = random.sample(all_paths, min(SAMPLE_SIZE, len(all_paths)))
+    if PROCESS_ALL_PDFS or SAMPLE_SIZE is None:
+        selected = list(all_paths)
+    else:
+        selected = random.sample(all_paths, min(SAMPLE_SIZE, len(all_paths)))
 
     sample = []
     for remote_path in selected:
@@ -440,20 +454,31 @@ def batch_download_sample(sample):
                 "--transfers",
                 "4",
                 "--fast-list",
+                "--contimeout",
+                RCLONE_CONTIMEOUT,
+                "--timeout",
+                RCLONE_TIMEOUT,
+                "--retries",
+                RCLONE_RETRIES,
+                "--low-level-retries",
+                RCLONE_LOW_LEVEL_RETRIES,
+                "--retries-sleep",
+                RCLONE_RETRIES_SLEEP,
+                "--stats",
+                "10s",
+                "--stats-one-line",
+                "--progress",
             ],
             check=False,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.PIPE,
+            stdout=None,
+            stderr=None,
             text=True,
         )
 
         # No abortar el flujo completo por errores parciales: luego hay fallback por archivo.
         if result.returncode != 0:
-            stderr_text = (result.stderr or "").strip()
-            short_error = "\n".join(stderr_text.splitlines()[:5])
             print("[Aviso] rclone batch devolvió errores parciales; se intentará fallback por archivo.")
-            if short_error:
-                print(f"[Detalle rclone] {short_error}")
+            print(f"[Detalle rclone] Código de salida: {result.returncode}")
     finally:
         if os.path.exists(list_path):
             os.remove(list_path)
@@ -500,7 +525,22 @@ def download_pdf(remote_path):
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         remote_spec = f"{RCLONE_REMOTE}{remote_path}"
         subprocess.run(
-            ["rclone", "copyto", remote_spec, file_path],
+            [
+                "rclone",
+                "copyto",
+                remote_spec,
+                file_path,
+                "--contimeout",
+                RCLONE_CONTIMEOUT,
+                "--timeout",
+                RCLONE_TIMEOUT,
+                "--retries",
+                "3",
+                "--low-level-retries",
+                "10",
+                "--retries-sleep",
+                RCLONE_RETRIES_SLEEP,
+            ],
             check=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.PIPE,
@@ -691,17 +731,54 @@ def make_trace_row(row):
     return trace_row
 
 
+def run_eda_report():
+    print("\nEjecutando EDA y consolidación de keywords...")
+    subprocess.run(
+        [
+            sys.executable,
+            "analisis_corpus_eda.py",
+            "--input",
+            OUTPUT_FILE,
+            "--trace",
+            TRACEABILITY_FILE,
+            "--output",
+            ENRICHED_OUTPUT_FILE,
+            "--out-dir",
+            EDA_OUTPUT_DIR,
+        ],
+        check=True,
+    )
+
+
 def main():
     start = time.time()
     sample = build_random_sample()
     sample_blocks = split_sample_into_blocks(sample, DOWNLOAD_BLOCKS)
 
-    print(f"Muestra aleatoria: {len(sample)} PDFs")
+    if PROCESS_ALL_PDFS or SAMPLE_SIZE is None:
+        print(f"Inventario completo del Drive: {len(sample)} PDFs")
+    else:
+        print(f"Muestra aleatoria: {len(sample)} PDFs")
+
+    if START_BLOCK > len(sample_blocks):
+        raise ValueError(
+            f"START_BLOCK={START_BLOCK} fuera de rango. Bloques disponibles: 1..{len(sample_blocks)}"
+        )
+
+    if START_BLOCK > 1:
+        print(
+            f"Reanudando ejecución desde bloque {START_BLOCK}/{len(sample_blocks)}. "
+            "Se conservan salidas existentes para continuar en append."
+        )
+
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-    if os.path.exists(OUTPUT_FILE):
+    if START_BLOCK == 1 and os.path.exists(OUTPUT_FILE):
         os.remove(OUTPUT_FILE)
-    if os.path.exists(TRACEABILITY_FILE):
+    if START_BLOCK == 1 and os.path.exists(TRACEABILITY_FILE):
         os.remove(TRACEABILITY_FILE)
+
+    output_exists_before = os.path.exists(OUTPUT_FILE)
+    trace_exists_before = os.path.exists(TRACEABILITY_FILE)
 
     total_kept = 0
     total_dropped = 0
@@ -710,6 +787,8 @@ def main():
 
     for block_index, sample_block in enumerate(sample_blocks, 1):
         if not sample_block:
+            continue
+        if block_index < START_BLOCK:
             continue
 
         if USE_BATCH_DOWNLOAD:
@@ -727,8 +806,14 @@ def main():
                 register_dedupe_key(row, seen_dois, seen_title_years)
                 kept_rows.append(make_output_row(row))
 
-        append_rows_to_csv(kept_rows, OUTPUT_FILE, OUTPUT_COLUMNS, write_header=(total_kept == 0))
-        append_rows_to_csv(trace_rows, TRACEABILITY_FILE, TRACEABILITY_COLUMNS, write_header=(total_kept == 0 and total_dropped == 0))
+        write_output_header = (total_kept == 0) and (not output_exists_before)
+        write_trace_header = (total_kept == 0 and total_dropped == 0) and (not trace_exists_before)
+
+        append_rows_to_csv(kept_rows, OUTPUT_FILE, OUTPUT_COLUMNS, write_header=write_output_header)
+        append_rows_to_csv(trace_rows, TRACEABILITY_FILE, TRACEABILITY_COLUMNS, write_header=write_trace_header)
+
+        output_exists_before = output_exists_before or bool(kept_rows)
+        trace_exists_before = trace_exists_before or bool(trace_rows)
         total_kept += len(kept_rows)
         total_dropped += len(trace_rows) - len(kept_rows)
 
@@ -742,6 +827,14 @@ def main():
     print(f"Trazabilidad: {TRACEABILITY_FILE}")
     print(f"Muestra guardada en: {SAMPLE_MANIFEST}")
 
+    if RUN_EDA_AFTER_EXTRACTION:
+        run_eda_report()
+
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nInterrupción manual detectada. El proceso se detuvo sin corromper salidas.")
+        print("Puedes relanzar el script; rclone omitirá PDFs ya descargados por --ignore-existing.")
+        raise SystemExit(130)

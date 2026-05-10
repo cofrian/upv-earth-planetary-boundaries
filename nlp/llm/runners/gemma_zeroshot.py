@@ -6,9 +6,10 @@ import os # Añadido para el manejo seguro de archivos
 from pathlib import Path
 
 
-ROOT_DIR = Path(__file__).resolve().parents[2]
-SCRIPT_DIR = Path(__file__).resolve().parent
-OUTPUTS_DIR = SCRIPT_DIR / 'outputs'
+ROOT_DIR = Path(__file__).resolve().parents[3]
+LLM_DIR = Path(__file__).resolve().parents[1]
+OUTPUTS_DIR = LLM_DIR / 'outputs' / 'inferences'
+GROUND_TRUTH_DIR = LLM_DIR / 'outputs' / 'ground_truth'
 OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
 
 # ==========================================
@@ -26,33 +27,9 @@ except FileNotFoundError as e:
     print(f"Error fatal: No se encontró el archivo. {e}")
     exit()
 
-# ESTA ES TU LISTA DE VALIDACIÓN HUMANA (108 papers)
-ids_validados = [
-    "d1ad08c326d1", "933573e12633", "8581e74341ad", "8d8ab7ed834f", "ff6fb1e2be19",
-    "a3d6daa1a396", "b0a263cd3ba1", "eaf6d52d5457", "3f271659124f", "c21a0b99e259",
-    "ca6e200d678b", "3f68844ce318", "1f05b7130bac", "733ba5fc919b", "c6e6f6ecfc86",
-    "777fe0df0d19", "958e8ae09926", "d84d0ce7a4c8", "84915f5956b8", "a31195146871",
-    "0866b31f11c4", "66c76ad14a95", "afea8402003b", "bdf5eac988ad", "2847f25a6987",
-    "e33a9f68417e", "5b69b4b177c8", "7d15d84ce20e", "3159c4d063f0", "fc1441e078b0",
-    "9cdd576a9db7", "358f64b8021b", "da697160487b", "cab713fe6b41", "de492b348258",
-    "c95e30752adf", "7c0bf746ba69", "1b1615a2a91f", "410aff4dd954", "b9e1bf330baf",
-    "a59af72ab39c", "5b0090a41d47", "6039788ff154", "9153f4dcf3d6", "4b96859cedec",
-    "3c0c667b5363", "cf94a74b8764", "2ea3de6be731", "6c517c5bda80", "56c7d6d62d7c",
-    "0672168600bf", "260cc6707374", "a2d7c6427ea6", "7e7db277fd49", "ea1c763936e6",
-    "edcffe92f4f7", "d1fc7e47a220", "b9283c8bb52e", "08f457a29ab7", "bd9f05de8774",
-    "455162266eca", "e8ac38dcd4f6", "e727426383d4", "fd7c9736c65e", "3d6573117d0b",
-    "eac718b2695f", "4c59c898e3d7", "b98dbc59db77", "0b7a68d1a06a", "762d789f17fe",
-    "73261bea95b6", "bb87293d7644", "cb831c750a69", "8a3d4a75e493", "ee5e8ed6aa50",
-    "6adf36ff1a69", "a0bf6d5dbb2a", "b04f1061de65", "b2f5c867cc6d", "42c958306230",
-    "0f11125f1b80", "1710172c2f61", "21ecc353ac74", "eb62900f32b4", "9c540c6b7af5",
-    "3e5fff353a4c", "f21bc832abc6", "9e1320ce502d", "dbd6c72cd37b", "b68bd4348e6d",
-    "362e76793312", "888d4516378f", "bbf5ed8cca66", "697b132b1c14", "fd5e38820a05",
-    "3bbd6f08b6ac", "da95dfe229ec", "61c5ef71efb6", "9275249d37b1", "0473ab551ece",
-    "efb1b08a09c7", "6fa69e1a923c", "2cca03b7a82b", "600784de6428", "e94f3a3a8624",
-    "81a2071c7d3b", "7f70ba66f24a", "b1fb9424d9f7"
-]
-
-# FILTRO: Solo nos quedamos con los que están en la lista
+# Lista de doc_ids leída desde el ground truth (única fuente de verdad).
+df_human = pd.read_csv(GROUND_TRUTH_DIR / 'validacion_real.csv', sep=';', encoding='utf-8')
+ids_validados = df_human['doc_id'].dropna().astype(str).unique().tolist()
 df_sample = df_corpus[df_corpus['doc_id'].isin(ids_validados)].copy()
 print(f"✅ Filtro aplicado: Se van a analizar exactamente {len(df_sample)} papers validados.")
 
@@ -71,11 +48,15 @@ for index, row in df_pbs.iterrows():
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL_NAME = "gemma4:26b"
 
-def classify_abstract_strict(abstract_text):
-    # Prompt matemáticamente idéntico al de Qwen y Llama (con etiquetas <text>)
+def classify_abstract_zero_shot(abstract_text):
+    # PROMPT MAESTRO ZERO-SHOT: Estructura jerárquica + Anti-Overfiltering
     prompt = f"""You are a strict and precise scientific evaluator analyzing research abstracts from the Universitat Politècnica de València (UPV) against the Planetary Boundaries (PBs) framework.
 
-Your task is to find the PB with the HIGHEST conceptual similarity to the abstract. You must strictly apply the activation rules and evaluate the exclusion rules. Do not force a match if the scientific connection is weak.
+Your task is to identify the Planetary Boundaries affected by the research. You must strictly apply the activation rules and evaluate the exclusion rules. 
+
+CRITICAL GUARDRAILS:
+1. Do not force a match if the scientific connection is weak, purely theoretical, or merely thematic.
+2. Conversely, do not over-reject if the explicit biophysical metric is present.
 
 ### PLANETARY BOUNDARIES RULES:
 {pb_rules}
@@ -85,31 +66,28 @@ Your task is to find the PB with the HIGHEST conceptual similarity to the abstra
 {abstract_text}
 </text>
 
-### INSTRUCTIONS:
-Step 1: Concept Extraction. Identify the core scientific concepts, phenomena, or metrics in the abstract.
-Step 2: Similarity Matching. Compare these concepts against the Core Definition and Activation Logic of each PB. Select the PB(s) with the strongest scientific overlap.
-Step 3: Exclusion Check. Apply the EXCLUSION RULE. If the rule is explicitly violated, the PB MUST be discarded.
-Step 4: Output the final decision in JSON format EXACTLY as follows. You must include a "confidence" score (High, Medium, or Low) evaluating how strong the match is. Return ONLY valid JSON, without any markdown formatting or extra text.
+### INSTRUCTIONS (ZERO-SHOT):
+Step 1: Concept Extraction. Identify the core scientific metrics, biophysical impacts, and specific chemical/physical substances measured in the abstract.
+Step 2: Exclusion Check (CRITICAL). Apply the EXCLUSION RULE for every PB you consider. If the rule is explicitly violated (e.g., social sciences without biophysical metrics), the PB MUST be discarded into "rejected_pbs".
+Step 3: Anti-Overfiltering Clause. DO NOT OVER-REJECT. If the abstract explicitly measures, models, or analyzes the exact physical metrics of a boundary (e.g., measuring "aerosols" or "PM2.5" for PB9, "pH" for PB2, or "nitrogen/phosphorus" for PB4), you MUST assign that PB, even if the broader context is applied research (like air quality, wastewater management, or engineering).
+Step 4: Similarity Matching & Hierarchy. From the surviving PBs, assign the SINGLE most dominant Planetary Boundary as the "primary_pb". If other boundaries are explicitly and strongly affected, list them as "secondary_pbs".
+Step 5: JSON Output. Output ONLY valid JSON matching this exact schema. Do not include markdown blocks or extra text:
 
 {{
-    "reasoning_process": "Analyze the similarity and evaluate the exclusion rules to justify your decision.",
-    "assigned_pbs": [
-        {{
-            "pb_code": "PB1",
-            "reason": "Justify why this is the highest similarity match.",
-            "confidence": "High"
-        }}
-    ]
+    "reasoning_process": "Analyze the biophysical metrics, weigh the exclusion rules against the anti-overfiltering clause, and scientifically justify your primary, secondary, and rejected PBs.",
+    "primary_pb": {{"pb_code": "PBX", "confidence": "High/Medium/Low"}} or null,
+    "secondary_pbs": [{{"pb_code": "PBY", "confidence": "High/Medium/Low"}}],
+    "rejected_pbs": ["PBZ", "PBW"]
 }}
-If no PB meets the criteria after applying the strict rules, return {{"reasoning_process": "Explain why similarities were too weak or excluded...", "assigned_pbs": []}}.
 """
 
     payload = {
         "model": MODEL_NAME,
         "prompt": prompt,
+        "format": "json", # Garantiza que Ollama devuelva un JSON perfectamente parseable
         "stream": False,
         "options": {
-            "temperature": 0.0, 
+            "temperature": 0.0, # Vital para que sea determinista y analítico
             "top_p": 0.9
         }
     }
@@ -119,77 +97,85 @@ If no PB meets the criteria after applying the strict rules, return {{"reasoning
         response = requests.post(OLLAMA_URL, json=payload)
         response.raise_for_status()
         result_json = response.json()
-        
-        llm_response_text = result_json.get("response", "{}")
-        eval_time = time.time() - start_time
-        return llm_response_text, eval_time
+        return result_json.get("response", "{}"), time.time() - start_time
     except Exception as e:
         return json.dumps({"error": str(e)}), time.time() - start_time
-
+    
 # ==========================================
-# EXTRAE EL JSON DE FORMA SEGURA
+# 3. EXTRAE EL JSON DE FORMA SEGURA (NUEVO FORMATO MULTI-LABEL)
 # ==========================================
 def parse_llm_output(raw_text):
     try:
         start_idx = raw_text.find('{')
         end_idx = raw_text.rfind('}')
-        
         if start_idx != -1 and end_idx != -1:
-            json_str = raw_text[start_idx:end_idx+1]
-            data = json.loads(json_str)
+            data = json.loads(raw_text[start_idx:end_idx+1])
         else:
-            raise ValueError("No se encontró estructura JSON en la respuesta.")
+            raise ValueError("No JSON structure found.")
         
         reasoning = data.get("reasoning_process", "")
-        assigned_pbs = data.get("assigned_pbs", [])
         
-        if not assigned_pbs or len(assigned_pbs) == 0:
-            return reasoning, "None", "N/A" 
+        # Extraer PB Primario
+        prim_pb = data.get("primary_pb")
+        if prim_pb and isinstance(prim_pb, dict):
+            prim_code = prim_pb.get("pb_code", "None")
+            prim_conf = prim_pb.get("confidence", "Unknown")
         else:
-            pb_codes_str = ", ".join([item.get("pb_code", "") for item in assigned_pbs])
-            confidence_str = ", ".join([item.get("confidence", "Unknown") for item in assigned_pbs])
-            return reasoning, pb_codes_str, confidence_str
-    except Exception as e:
-        return f"Error procesando JSON: {e}", "Error_Formato", "Error"
+            prim_code, prim_conf = "None", "N/A"
+            
+        # Extraer PBs Secundarios
+        sec_pbs = data.get("secondary_pbs", [])
+        if sec_pbs and isinstance(sec_pbs, list):
+            sec_codes = ", ".join([item.get("pb_code", "") for item in sec_pbs if isinstance(item, dict)])
+        else:
+            sec_codes = "None"
+            
+        # Extraer PBs Rechazados
+        rej_pbs = data.get("rejected_pbs", [])
+        if rej_pbs and isinstance(rej_pbs, list):
+            rej_codes = ", ".join(rej_pbs)
+        else:
+            rej_codes = "None"
 
+        return reasoning, prim_code, prim_conf, sec_codes, rej_codes
+        
+    except Exception as e:
+        return f"Error procesando JSON: {e}", "Error_Formato", "Error", "Error", "Error"
+    
 # ==========================================
-# 3 Y 4. BUCLE DE EVALUACIÓN CON GUARDADO SEGURO
+# 4. BUCLE DE EVALUACIÓN ZERO-SHOT
 # ==========================================
 total_papers = len(df_sample)
-output_filename = OUTPUTS_DIR / f'eval_{MODEL_NAME.replace(":", "_")}_validacion_108.csv'
+output_filename = OUTPUTS_DIR / f'eval_{MODEL_NAME.replace(":", "_")}_ZEROSHOT_208.csv'
 
-# Limpiamos el archivo si ya existía para empezar de cero
 if os.path.exists(output_filename):
     os.remove(output_filename)
 
-print(f"\nIniciando evaluación ESTRICTA con el modelo: {MODEL_NAME}")
-print(f"Los resultados se irán guardando automáticamente en: {output_filename}")
+print(f"\nIniciando evaluación ZERO-SHOT MULTI-LABEL con modelo: {MODEL_NAME}")
 print("-" * 70)
 
 for i, (index, row) in enumerate(df_sample.iterrows(), start=1):
-    print(f"Procesando Abstract {i}/{total_papers} (Doc ID: {row['doc_id']})...", end=" ", flush=True)
+    print(f"[{i}/{total_papers}] Doc: {row['doc_id']}...", end=" ", flush=True)
     
-    # 1. Inferencia
-    llm_out, t_elapsed = classify_abstract_strict(row['clean_abstract'])
-    reasoning, codes, confidence = parse_llm_output(llm_out)
+    llm_out, t_elapsed = classify_abstract_zero_shot(row['clean_abstract'])
+    reasoning, p_code, p_conf, s_codes, r_codes = parse_llm_output(llm_out)
     
-    print(f"[{t_elapsed:.2f}s] -> PBs: {codes} | Confianza: {confidence}")
+    print(f"[{t_elapsed:.1f}s] Pri: {p_code} | Sec: {s_codes} | Rej: {r_codes}")
     
-    # 2. Guardado en tiempo real
     df_fila = pd.DataFrame([{
         'doc_id': row['doc_id'],
-        'llm_predicted_pbs': codes,
-        'llm_confidence': confidence,
+        'llm_primary_pb': p_code,
+        'llm_primary_conf': p_conf,
+        'llm_secondary_pbs': s_codes,
+        'llm_rejected_pbs': r_codes,
         'llm_reasoning': reasoning,
-        'clean_abstract': row['clean_abstract'],
         'inference_time_sec': t_elapsed
     }])
     
-    # Escribir cabeceras solo la primera vez
     if not os.path.isfile(output_filename):
         df_fila.to_csv(output_filename, index=False)
     else:
         df_fila.to_csv(output_filename, mode='a', header=False, index=False)
 
 print("\n" + "=" * 70)
-print(f"✅ Completado y asegurado. Resultados en: {output_filename}")
+print(f"✅ Finalizado. Dataset ZERO-SHOT guardado en: {output_filename}")

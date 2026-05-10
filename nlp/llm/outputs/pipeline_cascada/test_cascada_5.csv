@@ -1,0 +1,36 @@
+doc_id,route,agent1_model,agent1_chemical,agent1_physical,agent1_biological,agent1_methodology,agent1_frame,agent1_n_items,agent1_raw,agent1_time_s,agent1_parse_error,agent1_error,kw_top_pbs,kw_top_score,agent3_model,llm_primary_pb,llm_primary_conf,llm_secondary_pbs,llm_rejected_pbs,llm_reasoning,agent3_time_s,agent3_error,total_time_s
+b39624d6c38a,llm_judged,llama3.2:3b,hydrological models; climate change scenarios; Global Climate Models (GCMs); rainfall runoff modelling,uncertainty; parameter uncertainty; prediction uncertainties; climate change; water resources; impact assessment,,measured,engineering,10,"{
+  ""chemical_species"": [""hydrological models"", ""climate change scenarios"", ""Global Climate Models (GCMs)"", ""rainfall runoff modelling""],
+  ""physical_metrics"": [""uncertainty"", ""parameter uncertainty"", ""prediction uncertainties"", ""climate change"", ""water resources"", ""impact assessment""],
+  ""biological_observations"": [""organisms"", ""populations"", ""ecosystems"", ""physiology"", ""ecological responses""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""engineering""
+}",3.509,,,PB1(6),6,qwen2.5:14b,PB1,High,None,"PB4, PB5","The abstract focuses on the uncertainties in hydrological models used to assess the impact of climate change on water resources. The primary variable being measured and modeled is the uncertainty related to hydrological models and their parameters, which directly impacts assessments of climate change effects on water resources. This aligns with PB1 as it involves explicit analysis of climate change's influence on water systems through model uncertainties. Weak signals suggested a high score for PB1 keywords, supporting this conclusion.",8.148,,11.663
+8581e74341ad,llm_judged,llama3.2:3b,PM2.5; Black Carbon; aerosol optical depth (AOD); fine particulate matter; aerosol extinction,surface mass concentrations; columnar aerosol optical properties; aerosol extinction proﬁles,,measured,engineering,8,"{
+  ""chemical_species"": [""PM2.5"", ""Black Carbon"", ""aerosol optical depth (AOD)"", ""fine particulate matter"", ""aerosol extinction""],
+  ""physical_metrics"": [""surface mass concentrations"", ""columnar aerosol optical properties"", ""aerosol extinction proﬁles"", ""radiation"", ""energy""],
+  ""biological_observations"": [""organisms"", ""ecosystems"", ""physiology"", ""ecological responses""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""engineering""
+}",3.645,,,PB9(11),11,qwen2.5:14b,PB9,High,None,"PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8","The research measures and models surface mass concentrations of fine particulate matter (PM2.5) and black carbon (BC), as well as columnar aerosol optical properties, using various ground-based instruments and satellite data. The focus on these specific aerosol-related variables aligns with PB9's core definition of atmospheric aerosol loading. Weak signals strongly supported this identification.",8.54,,12.188
+03c55a425a95,llm_judged,llama3.2:3b,Cir- culation; anthropogenic emissions; dry static energy; latent heat,global atmospheric cir- culation; mass transport; thermo- dynamic mass stream function; surface warming; moistening; energy transport; poleward energy trans- port; poleward mass transport,,measured,earth_sciences,12,"{
+  ""chemical_species"": [""Cir- culation"", ""anthropogenic emissions"", ""dry static energy"", ""latent heat""],
+  ""physical_metrics"": [""global atmospheric cir- culation"", ""mass transport"", ""thermo- dynamic mass stream function"", ""surface warming"", ""moistening"", ""energy transport"", ""poleward energy trans- port"", ""poleward mass transport""],
+  ""biological_observations"": [""organisms"", ""ecosystems"", ""physiology"", ""ecological responses""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",3.909,,,PB1(6),6,qwen2.5:14b,PB1,High,None,"PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9","The study quantifies the weakening of global atmospheric circulation and its expansion in thermodynamic coordinates due to anthropogenic emissions, as diagnosed through climate-model simulations. The primary variable measured is the impact of warming on atmospheric mass transport and energy transport, which directly aligns with PB1's core definition of human-driven alteration of the climate system. Weak signals suggested a high score for PB1 keywords, supporting this conclusion.",8.67,,12.581
+8d8ab7ed834f,llm_judged,llama3.2:3b,SOC; carbon; NPP,temperature; precipitation; climate change; annual NPP,,modelled,earth_sciences,7,"{
+  ""chemical_species"": [""SOC"", ""carbon"", ""NPP""],
+  ""physical_metrics"": [""temperature"", ""precipitation"", ""climate change"", ""annual NPP""],
+  ""biological_observations"": [""organisms"", ""populations"", ""ecosystems"", ""physiology"", ""ecological responses"", ""plant populations""],
+  ""methodology"": ""modelled"",
+  ""disciplinary_frame"": ""earth_sciences""
+}",3.308,,,PB1(3),3,qwen2.5:14b,PB1,High,PB4,"PB2, PB3, PB5, PB6, PB7, PB8, PB9","The abstract models the impact of climate change on soil organic carbon (SOC) and annual net primary production (NPP). The paper quantifies changes in SOC under different climate scenarios, focusing explicitly on temperature rise and precipitation patterns. This aligns with PB1's core definition as it involves human-driven alteration through greenhouse gas emissions leading to warming and ecological impacts. Weak signals agreed with this focus, highlighting 'climate change' and 'temperature', but did not capture the full scope of biophysical analysis.",9.782,,13.093
+ff6fb1e2be19,llm_judged,llama3.2:3b,Saccharomyces; Metschnikowia pulcherrima; Torulaspora delbrueckii; Lachancea thermotolerans; Starmerella bacillaris; Oenococcus oeni; Lactobacillus plantarum,,organisms,measured,biology,8,"{
+  ""chemical_species"": [""Saccharomyces"", ""Metschnikowia pulcherrima"", ""Torulaspora delbrueckii"", ""Lachancea thermotolerans"", ""Starmerella bacillaris"", ""Oenococcus oeni"", ""Lactobacillus plantarum""],
+  ""physical_metrics"": [],
+  ""biological_observations"": [""organisms"", ""populations"", ""ecosystems"", ""physiology"", ""ecological responses""],
+  ""methodology"": ""measured"",
+  ""disciplinary_frame"": ""biology""
+}",3.86,,,PB1(3),3,qwen2.5:14b,PB1,High,None,"PB2, PB4, PB5, PB6, PB7, PB8, PB9","The abstract focuses on the impacts of climate change on wine production, specifically detailing microbial challenges and sensory changes in wines. The operational object is the impact of climate-driven changes on microbial proliferation and wine quality attributes such as sugar content, acidity, pH, and safety issues. This aligns with PB1 (Climate Change) because it explicitly discusses how climatic alterations affect oenological processes and food security through direct ecological impacts. Weak signals suggested a connection to PB1 based on keywords like 'climate change', which is consistent with the abstract's focus.",9.626,,13.488

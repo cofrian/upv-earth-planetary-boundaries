@@ -1,90 +1,145 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { AbstractValidationCard } from "@/components/AbstractValidationCard";
+import { usePushChatScope } from "@/components/ChatScopeProvider";
+import { SimilarPapersList } from "@/components/SimilarPapersList";
+import { StageTimeline } from "@/components/StageTimeline";
+import { SystemMetricsCard } from "@/components/SystemMetricsCard";
+import { formatNumber, modelLabel } from "@/components/format";
 import { apiGet, apiUploadPdf } from "@/lib/api";
-import { Job, JobEvent, JobResult, RuntimeMetrics } from "@/lib/types";
+import {
+  IndexStatus,
+  Job,
+  JobEvent,
+  JobResult,
+} from "@/lib/types";
+
+type StageStatus = "pending" | "active" | "done" | "skipped" | "error";
+
+type StageView = {
+  key: string;
+  label: string;
+  description: string;
+  status: StageStatus;
+  detail?: string | null;
+};
+
+const STAGES: { key: string; label: string; description: string }[] = [
+  { key: "upload", label: "Subida del PDF", description: "Validación y guardado del archivo." },
+  { key: "parse_pdf", label: "Extracción de texto", description: "Lectura del contenido del PDF." },
+  { key: "extract_abstract", label: "Detección del abstract", description: "Identificación de la sección del abstract." },
+  { key: "clean_text", label: "Limpieza semántica", description: "Normalización conservadora del texto." },
+  { key: "validate_abstract", label: "Validación del abstract", description: "Comprobación del criterio de calidad (más de 500 caracteres)." },
+  { key: "generate_embedding", label: "Embedding SPECTER2", description: "Representación con título + abstract limpio." },
+  { key: "similarity_search", label: "Búsqueda de similares", description: "Vecinos cercanos en el corpus UPV." },
+  { key: "pb_scoring", label: "Inferencia Planetary Boundaries", description: "Asignación de PB principal y secundarios." },
+  { key: "summarize", label: "Resumen", description: "Resumen extractivo del abstract." },
+  { key: "persist", label: "Persistencia", description: "Almacenamiento del análisis en la plataforma." },
+];
+
+const STAGE_INDEX = STAGES.reduce<Record<string, number>>((acc, stage, idx) => {
+  acc[stage.key] = idx;
+  return acc;
+}, {});
+
+function buildStages(job: Job | null, events: JobEvent[]): StageView[] {
+  const finished = events.map((event) => event.event_type);
+  const currentIdx = job?.stage ? STAGE_INDEX[job.stage] ?? -1 : -1;
+
+  return STAGES.map((stage, idx) => {
+    const reached = finished.includes(stage.key);
+    let status: StageStatus = "pending";
+    if (job?.status === "failed" && idx === currentIdx) status = "error";
+    else if (reached) status = "done";
+    else if (idx === currentIdx) status = "active";
+    else if (idx < currentIdx) status = "done";
+
+    let detail: string | null = null;
+    const last = [...events].reverse().find((event) => event.event_type === stage.key);
+    if (last) {
+      const payload = last.event_payload || {};
+      if (stage.key === "parse_pdf" && payload.chars !== undefined) {
+        detail = `${formatNumber(Number(payload.chars))} caracteres extraídos`;
+      } else if (stage.key === "extract_abstract" && payload.chars !== undefined) {
+        detail = `${formatNumber(Number(payload.chars))} caracteres detectados como abstract`;
+      } else if (stage.key === "clean_text" && payload.abstract_norm_chars !== undefined) {
+        const passes = payload.passes_threshold ? "supera 500" : "abstract corto";
+        detail = `${formatNumber(Number(payload.abstract_norm_chars))} caracteres tras la limpieza · ${passes}`;
+      } else if (stage.key === "validate_abstract" && payload.abstract_char_len !== undefined) {
+        detail = `${payload.abstract_char_len} caracteres · ${
+          payload.passes_threshold ? "cumple el criterio de calidad" : "por debajo del umbral de 500"
+        }`;
+      } else if (stage.key === "generate_embedding") {
+        const dim = payload.embedding_dim || 0;
+        const modelName = String(payload.model_id || "").includes("specter")
+          ? "SPECTER2"
+          : "modelo de embeddings";
+        detail = `${modelName} · ${dim} dimensiones · título + abstract limpio`;
+      } else if (stage.key === "similarity_search") {
+        if (payload.skipped) detail = "omitido porque el abstract es demasiado corto";
+        else detail = `${payload.results || 0} papers similares recuperados`;
+      } else if (stage.key === "pb_scoring" && payload.top_pb_code) {
+        detail = `PB principal: ${payload.top_pb_code}`;
+      }
+    }
+
+    if (status === "pending" && stage.key === "similarity_search") {
+      const validation = events.find((event) => event.event_type === "validate_abstract");
+      if (validation && validation.event_payload?.passes_threshold === false) {
+        return { ...stage, status: "skipped", detail: "se omite porque el abstract no alcanza los 500 caracteres" };
+      }
+    }
+
+    return { ...stage, status, detail };
+  });
+}
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [job, setJob] = useState<Job | null>(null);
   const [result, setResult] = useState<JobResult | null>(null);
   const [events, setEvents] = useState<JobEvent[]>([]);
-  const [liveMetrics, setLiveMetrics] = useState<RuntimeMetrics | null>(null);
-  const [liveMetricsUpdatedAt, setLiveMetricsUpdatedAt] = useState<string>("-");
   const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [indexStatus, setIndexStatus] = useState<IndexStatus | null>(null);
+  const [dragActive, setDragActive] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const canUpload = useMemo(() => !!file && !loading, [file, loading]);
-  const latestMetrics = useMemo(() => {
-    const withMetrics = [...events]
-      .reverse()
-      .find((event) =>
-        ["cpu_pct", "ram_pct", "gpu_util_pct", "gpu_power_w"].some(
-          (key) => event.event_payload[key as keyof typeof event.event_payload] !== undefined,
-        ),
-      );
-    return withMetrics?.event_payload;
-  }, [events]);
+  const stages = useMemo(() => buildStages(job, events), [job, events]);
+  const canUpload = useMemo(() => !!file && !submitting, [file, submitting]);
 
-  const latestGpuMetrics = useMemo(() => {
-    const withGpuMetrics = [...events]
-      .reverse()
-      .find((event) =>
-        ["gpu_util_pct", "gpu_mem_util_pct", "gpu_power_w"].some((key) => {
-          const value = event.event_payload[key as keyof typeof event.event_payload];
-          return typeof value === "number" && !Number.isNaN(value);
-        }),
-      );
-    return withGpuMetrics?.event_payload;
-  }, [events]);
-
-  const gpuDetected = useMemo(() => {
-    return [latestGpuMetrics?.gpu_util_pct, latestGpuMetrics?.gpu_mem_util_pct, latestGpuMetrics?.gpu_power_w].some(
-      (value) => typeof value === "number" && !Number.isNaN(value),
-    );
-  }, [latestGpuMetrics]);
-
-  const metricsUpdatedAt = useMemo(() => {
-    if (!events.length) return "-";
-    const event = [...events].reverse().find((item) => item.created_at);
-    return event?.created_at ? new Date(event.created_at).toLocaleTimeString() : "-";
-  }, [events]);
-
-  const metricNumber = (value: unknown, digits = 1) => {
-    if (typeof value !== "number" || Number.isNaN(value)) return "-";
-    return value.toFixed(digits);
-  };
-
-  const liveGpuDetected = useMemo(() => {
-    return [liveMetrics?.gpu_util_pct, liveMetrics?.gpu_mem_util_pct, liveMetrics?.gpu_power_w].some(
-      (value) => typeof value === "number" && !Number.isNaN(value),
-    );
-  }, [liveMetrics]);
+  const analysisDone = result?.job?.paper_id != null;
+  usePushChatScope({
+    label: "Paper subido",
+    paperId: result?.job?.paper_id || undefined,
+    jobId: job?.id,
+    greeting: analysisDone
+      ? "El análisis ha terminado. Puedo resumirte el paper, explicarte los PBs detectados o por qué los papers similares se parecen al tuyo."
+      : "Cuando termine el análisis del PDF tendré acceso al abstract, los PBs y los papers similares para responderte. Sube un paper para empezar.",
+    quickActions: [
+      { label: "Resume este paper", question: "Resume el abstract de este paper en 4-6 frases." },
+      { label: "Explícame los PBs", question: "Explícame qué Planetary Boundaries se le han asignado y por qué, usando los scores ya calculados." },
+      { label: "¿Por qué son similares?", question: "Mira los papers similares listados y explica por qué se parecen al subido." },
+      { label: "¿Es válido para el corpus?", question: "¿Este paper cumple los criterios del corpus válido para embeddings? Justifica con la longitud del abstract y el filtro >500 caracteres." },
+    ],
+    suggestions: undefined,
+  });
 
   useEffect(() => {
     let cancelled = false;
-
-    const pollRuntimeMetrics = async () => {
-      try {
-        const data = await apiGet<RuntimeMetrics>("/analytics/runtime/metrics");
-        if (cancelled) return;
-        setLiveMetrics(data);
-        setLiveMetricsUpdatedAt(new Date().toLocaleTimeString());
-      } catch {
-        // Keep previous values when runtime endpoint is temporarily unavailable.
-      }
-    };
-
-    pollRuntimeMetrics();
-    const timer = setInterval(pollRuntimeMetrics, 2000);
+    apiGet<IndexStatus>("/analytics/index-status")
+      .then((data) => {
+        if (!cancelled) setIndexStatus(data);
+      })
+      .catch(() => undefined);
     return () => {
       cancelled = true;
-      clearInterval(timer);
     };
   }, []);
 
-  const pollJob = (jobId: string) => {
+  const pollJob = useCallback((jobId: string) => {
     const timer = setInterval(async () => {
       try {
         const [status, jobEvents] = await Promise.all([
@@ -93,123 +148,200 @@ export default function UploadPage() {
         ]);
         setJob(status);
         setEvents(jobEvents);
-
         if (status.status === "completed" || status.status === "failed") {
           clearInterval(timer);
-          const data = await apiGet<JobResult>(`/jobs/${jobId}/result`);
-          setResult(data);
+          const finalResult = await apiGet<JobResult>(`/jobs/${jobId}/result`);
+          setResult(finalResult);
         }
       } catch (err) {
         clearInterval(timer);
         setError((err as Error).message);
       }
-    }, 2500);
-  };
+    }, 2000);
+  }, []);
 
-  const onSubmit = async () => {
+  const submit = useCallback(async () => {
     if (!file) return;
-    setLoading(true);
+    setSubmitting(true);
     setError("");
     setResult(null);
     setEvents([]);
-
+    setJob(null);
     try {
       const uploaded = await apiUploadPdf(file);
       pollJob(uploaded.job_id);
     } catch (err) {
       setError((err as Error).message);
     } finally {
-      setLoading(false);
+      setSubmitting(false);
+    }
+  }, [file, pollJob]);
+
+  const onDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    setDragActive(false);
+    const dropped = event.dataTransfer.files?.[0];
+    if (dropped && dropped.type === "application/pdf") {
+      setFile(dropped);
     }
   };
 
+  const validation = result?.abstract_validation || null;
+  const embeddingInfo = result?.embedding_info || null;
+  const summary = result?.summary || null;
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-semibold">Subir nuevo paper</h2>
-        <p className="muted">Analiza un PDF y estima su relacion con los 9 Planetary Boundaries.</p>
-      </div>
+    <div className="space-y-8">
+      <header className="space-y-2">
+        <span className="chip-accent">Subida y análisis</span>
+        <h1 className="text-3xl font-semibold tracking-tight">Sube un paper y revisa el flujo SPECTER2</h1>
+        <p className="max-w-3xl text-sm leading-relaxed text-textSubtle">
+          La plataforma extrae el abstract, comprueba que cumple el criterio de calidad, genera el embedding con{" "}
+          {modelLabel(indexStatus?.model_id)} y devuelve los papers más similares dentro del corpus UPV. Cada etapa
+          se muestra con su estado y métricas relevantes.
+        </p>
+      </header>
 
-      <section className="card space-y-4">
-        <input
-          type="file"
-          accept="application/pdf"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
-          className="block w-full rounded-md border border-line bg-panelSoft p-3"
-        />
-        <button
-          onClick={onSubmit}
-          disabled={!canUpload}
-          className="rounded-md bg-accent px-4 py-2 font-semibold text-black disabled:opacity-50"
-        >
-          {loading ? "Subiendo..." : "Procesar PDF"}
-        </button>
-      </section>
-
-      <section className="card space-y-3">
-        <h3 className="text-lg font-semibold">GPU en directo (servidor)</h3>
-        <p className="muted text-sm">Actualizado: {liveMetricsUpdatedAt}</p>
-        <p className="muted text-sm">GPU: {liveGpuDetected ? "detectada" : "sin datos disponibles"}</p>
-        <div className="grid gap-2 md:grid-cols-3">
-          <p><span className="muted">CPU:</span> {metricNumber(liveMetrics?.cpu_pct)}%</p>
-          <p><span className="muted">RAM:</span> {metricNumber(liveMetrics?.ram_pct)}%</p>
-          <p>
-            <span className="muted">RAM usada:</span> {metricNumber(liveMetrics?.ram_used_mb, 0)} /
-            {" "}{metricNumber(liveMetrics?.ram_total_mb, 0)} MB
-          </p>
-          <p><span className="muted">GPU uso:</span> {metricNumber(liveMetrics?.gpu_util_pct)}%</p>
-          <p><span className="muted">GPU memoria:</span> {metricNumber(liveMetrics?.gpu_mem_util_pct)}%</p>
-          <p><span className="muted">GPU potencia:</span> {metricNumber(liveMetrics?.gpu_power_w)} W</p>
-        </div>
-        <p className="muted text-xs">Estas metricas son del host y se actualizan aunque no subas ningun PDF.</p>
-      </section>
-
-      {job && (
-        <section className="card space-y-2">
-          <h3 className="text-lg font-semibold">Estado del job</h3>
-          <p><span className="muted">Estado:</span> {job.status}</p>
-          <p><span className="muted">Etapa:</span> {job.stage}</p>
-          <p><span className="muted">Progreso:</span> {job.progress_pct}%</p>
-          {job.error_message && <p className="text-red-400">{job.error_message}</p>}
-        </section>
-      )}
-
-      {job && (
-        <section className="card space-y-3">
-          <h3 className="text-lg font-semibold">Metricas en directo (runtime)</h3>
-          <p className="muted text-sm">Actualizado: {metricsUpdatedAt}</p>
-          <p className="muted text-sm">GPU: {gpuDetected ? "detectada" : "sin datos en este job"}</p>
-          <div className="grid gap-2 md:grid-cols-3">
-            <p><span className="muted">CPU:</span> {metricNumber(latestMetrics?.cpu_pct)}%</p>
-            <p><span className="muted">RAM:</span> {metricNumber(latestMetrics?.ram_pct)}%</p>
-            <p>
-              <span className="muted">RAM usada:</span> {metricNumber(latestMetrics?.ram_used_mb, 0)} /
-              {" "}{metricNumber(latestMetrics?.ram_total_mb, 0)} MB
-            </p>
-            <p><span className="muted">GPU uso:</span> {metricNumber(latestGpuMetrics?.gpu_util_pct)}%</p>
-            <p><span className="muted">GPU memoria:</span> {metricNumber(latestGpuMetrics?.gpu_mem_util_pct)}%</p>
-            <p><span className="muted">GPU potencia:</span> {metricNumber(latestGpuMetrics?.gpu_power_w)} W</p>
+      <section className="grid gap-6 lg:grid-cols-[2fr_3fr]">
+        <article className="card space-y-4">
+          <p className="section-title">Paper</p>
+          <label
+            htmlFor="pdf-input"
+            onDragOver={(event) => {
+              event.preventDefault();
+              setDragActive(true);
+            }}
+            onDragLeave={() => setDragActive(false)}
+            onDrop={onDrop}
+            className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed px-6 py-10 text-center transition ${
+              dragActive ? "border-emerald-500 bg-emerald-500/10" : "border-line bg-surface-2 hover:border-emerald-500/40"
+            }`}
+          >
+            <span className="text-sm font-semibold text-textMain">
+              {file ? file.name : "Arrastra el PDF aquí o haz clic para seleccionar"}
+            </span>
+            <span className="mt-1 text-xs text-textMuted">
+              {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "Solo se aceptan archivos .pdf"}
+            </span>
+            <input
+              id="pdf-input"
+              ref={inputRef}
+              type="file"
+              accept="application/pdf"
+              className="hidden"
+              onChange={(event) => setFile(event.target.files?.[0] || null)}
+            />
+          </label>
+          <div className="flex flex-wrap items-center gap-2">
+            <button onClick={submit} disabled={!canUpload} className="btn-primary">
+              {submitting ? "Subiendo…" : "Procesar PDF"}
+            </button>
+            {file && (
+              <button
+                onClick={() => {
+                  setFile(null);
+                  if (inputRef.current) inputRef.current.value = "";
+                }}
+                className="btn-ghost"
+              >
+                Quitar archivo
+              </button>
+            )}
           </div>
-          <p className="muted text-xs">Si no hay GPU NVIDIA o no existe nvidia-smi, los campos de GPU aparecen en "-".</p>
-        </section>
-      )}
+          {error && (
+            <div className="rounded-xl border border-rose/40 bg-rose/10 p-3 text-sm text-rose">
+              {error}
+            </div>
+          )}
+        </article>
+
+        <article className="card space-y-3">
+          <p className="section-title">Pipeline en directo</p>
+          <h3 className="text-lg font-semibold">Estado por etapa</h3>
+          <StageTimeline stages={stages} />
+          {job && (
+            <div className="rounded-xl border border-line bg-surface-2 p-4 text-xs text-textSubtle">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span>
+                  <span className="text-textMuted">Identificador:</span>{" "}
+                  <span className="font-mono">{job.id.slice(0, 8)}…</span>
+                </span>
+                <span>
+                  <span className="text-textMuted">Estado:</span>{" "}
+                  <span className={job.status === "failed" ? "text-rose" : "text-emerald-300"}>{job.status}</span>{" "}
+                  · {job.progress_pct}%
+                </span>
+              </div>
+              <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface-3">
+                <div
+                  className="h-full rounded-full bg-emerald-500 transition-all"
+                  style={{ width: `${Math.max(4, job.progress_pct)}%` }}
+                />
+              </div>
+            </div>
+          )}
+        </article>
+      </section>
+
+      <section className="card flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-1">
+          <p className="section-title">Modelo activo</p>
+          <p className="text-base font-semibold text-textMain">{modelLabel(indexStatus?.model_id)}</p>
+          <p className="text-xs text-textMuted">Representación: título + abstract limpio.</p>
+        </div>
+        <div className="flex flex-wrap gap-1.5 text-xs">
+          <span className={indexStatus?.is_specter ? "chip-accent" : "chip-warn"}>
+            {indexStatus?.is_specter ? "SPECTER2" : "modelo alternativo"}
+          </span>
+          <span className="chip">{indexStatus?.embedding_dim || "—"} dimensiones</span>
+          <span className="chip">{formatNumber(indexStatus?.candidates || 0)} papers candidatos</span>
+        </div>
+      </section>
+
+      <SystemMetricsCard pollMs={3000} />
+
+      <AbstractValidationCard validation={validation} embedding={embeddingInfo} />
 
       {result?.pb_result && (
         <section className="card space-y-3">
-          <h3 className="text-lg font-semibold">Resultado del analisis</h3>
-          <p><span className="muted">Top PB:</span> {result.pb_result.top_pb_code}</p>
-          <p><span className="muted">Score top:</span> {result.pb_result.top_pb_score.toFixed(4)}</p>
-          <p><span className="muted">Resumen:</span> {result.summary}</p>
-          <p><span className="muted">Abstract detectado:</span> {result.abstract_detected}</p>
-          <p className="leading-7 text-textMain/90">{result.pb_result.explanation_text}</p>
+          <p className="section-title">Planetary Boundaries estimadas</p>
+          <h3 className="text-lg font-semibold text-textMain">
+            PB principal: {result.pb_result.top_pb_code}
+            <span className="ml-2 text-sm font-normal text-textMuted">
+              · confianza {(result.pb_result.top_pb_score * 100).toFixed(1)}%
+            </span>
+          </h3>
+          <p className="text-sm leading-relaxed text-textSubtle">{result.pb_result.explanation_text}</p>
         </section>
       )}
 
-      {error && (
-        <section className="card border-red-500/50">
-          <p className="text-red-400">{error}</p>
+      {summary && (
+        <section className="card space-y-2">
+          <p className="section-title">Resumen del abstract</p>
+          <p className="text-sm leading-relaxed text-textMain">{summary}</p>
         </section>
       )}
+
+      <section className="card space-y-4">
+        <header className="space-y-1">
+          <p className="section-title">Papers similares por contenido</p>
+          <h3 className="text-lg font-semibold">Vecinos cercanos en el corpus UPV</h3>
+          <p className="help-text">
+            La similitud se calcula con el embedding {modelLabel(indexStatus?.model_id)} del paper (título +
+            abstract limpio) frente al corpus UPV indexado.
+          </p>
+        </header>
+        <SimilarPapersList
+          items={result?.similar_papers || []}
+          modelLabel={modelLabel(indexStatus?.model_id)}
+          emptyMessage={
+            validation && !validation.is_valid_for_embedding
+              ? "El abstract no supera 500 caracteres. La búsqueda de similares se omite hasta que el contenido sea suficiente."
+              : undefined
+          }
+        />
+      </section>
+
     </div>
   );
 }

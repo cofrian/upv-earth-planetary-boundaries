@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 BASE_DIR = Path('.')
-CLEAN_CSV = BASE_DIR / 'data/corpus/master_corpus_mixto_1000_clean.csv'
-TRACE_CSV = BASE_DIR / 'data/corpus/master_corpus_mixto_1000_traceability.csv'
+CLEAN_CSV = BASE_DIR / 'data/corpus/master_corpus_mixto_clean.csv'
+TRACE_CSV = BASE_DIR / 'data/corpus/master_corpus_mixto_traceability.csv'
 OUT_DIR = BASE_DIR / 'docs' / 'eda'
-ENRICHED_CSV = BASE_DIR / 'data/corpus/master_corpus_mixto_1000_clean_enriched.csv'
+ENRICHED_CSV = BASE_DIR / 'data/corpus/master_corpus_mixto_clean_enriched.csv'
 
 EDITORIAL_PATTERNS = [
     r'(?i)published by[^.]*\.?',

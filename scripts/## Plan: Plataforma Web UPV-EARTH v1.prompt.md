@@ -1,6 +1,29 @@
-## Plan: Plataforma Web UPV-EARTH v1
+## Plan Unificado: Plataforma Web UPV-EARTH - Entrega Final
 
-Construir una plataforma web modular (FastAPI + Next.js + PostgreSQL + Docker Compose + Nginx) desplegable en red interna de la UPV, centrada en analítica del corpus existente y análisis de nuevos PDFs mediante extracción de abstract + embeddings BERT + inferencia PB sin dependencia de LLM. El resumen será opcional y con fallback no-LLM por defecto.
+Construir una plataforma web modular (FastAPI + Next.js + PostgreSQL + Docker Compose + Nginx) desplegable en red interna de la UPV, pensada como entrega final del proyecto: debe verse como un producto científico serio, visualmente premium, claro y defendible.
+
+La plataforma debe integrar:
+1. Dashboard principal con KPIs, calidad del corpus y visuales de alto nivel.
+2. Explorador del corpus con filtros, ordenación, paginación y detalle.
+3. Página de subida de paper con estados de proceso y validación metodológica.
+4. Página de resultados con resumen, PBs estimados y papers similares por contenido.
+5. Página de análisis exploratorio del corpus con gráficas, contexto e interpretación breve.
+
+La experiencia visual debe ser dark-first, con acentos verde esmeralda / verde científico, tarjetas limpias, buena jerarquía tipográfica, tablas legibles, estados de carga elegantes y errores comprensibles.
+
+## Criterios metodológicos obligatorios
+1. Distinguir siempre corpus bruto, corpus con abstract, corpus válido, corpus para embeddings e índice FAISS.
+2. El criterio principal para embeddings es `abstract_char_len > 500`.
+3. El texto canónico para embeddings es `title + clean_abstract_semantic`.
+4. No mezclar métricas de corpus bruto con corpus válido o indexado.
+5. Mostrar de forma explícita qué papers sirven realmente para SPECTER2 y por qué.
+
+## Requisitos de producto
+1. El dashboard debe parecer una herramienta real, no una demo técnica pobre.
+2. El AED debe ser completo, visualmente interesante y metodológicamente defendible.
+3. La sección de similares por contenido debe ser un módulo principal, no un apéndice.
+4. El flujo de subida debe permitir entender rápido si el paper es válido para el corpus.
+5. La UI debe priorizar claridad, trazabilidad y utilidad para la entrega final.
 
 **Steps**
 1. Fase 0 - Base del monorepo y configuración compartida
@@ -22,28 +45,32 @@ Construir una plataforma web modular (FastAPI + Next.js + PostgreSQL + Docker Co
 - `corpus_metrics_cache` (agregados EDA precalculados)
 - `ingestion_events` (auditoría de operaciones)
 3.2. Diseñar migraciones y seed inicial desde `master_corpus_mixto_1000_clean_enriched.csv` y trazabilidad asociada.
-3.3. Dejar preparado esquema de fase futura para embeddings persistidos y vector index (tablas reservadas, sin activar búsqueda de similares).
+3.3. Dejar preparado el esquema para embeddings persistidos y vector index (tablas reservadas si se necesita ampliar la capacidad).
 
 4. Fase 3 - Pipeline de inferencia de nuevo PDF (depende de 2 y 3)
 4.1. Endpoint de subida crea `processing_job` y almacena PDF en repositorio seguro.
-4.2. Procesamiento asíncrono con `BackgroundTasks` por decisión de alcance v1.
-4.3. Flujo por etapas: ingestión PDF -> extracción de texto (PyMuPDF) -> detección abstract -> limpieza -> embedding -> similitud con 9 PB -> clasificación top + secundarios -> resumen fallback (primeras 3-4 frases).
+4.2. Procesamiento asíncrono con `BackgroundTasks` por simplicidad operativa.
+4.3. Flujo por etapas: ingestión PDF -> extracción de texto (PyMuPDF) -> detección abstract -> validación de longitud -> limpieza -> embedding SPECTER2 -> similitud con 9 PB -> recuperación de papers similares -> clasificación top + secundarios -> resumen fallback (primeras 3-4 frases).
 4.4. Persistir resultados y exponer endpoint de estado para polling frontend.
 4.5. Estandarizar errores por etapa para UI legible y soporte operativo.
 
 5. Fase 4 - API de analítica y exploración del corpus (paralela con fase 3 tras tener fase 2)
-5.1. Endpoints dashboard: KPIs globales, distribución por PB, por año, calidad de corpus, papers por journal/source.
+5.1. Endpoints dashboard: KPIs globales, distribución por PB, por año, calidad de corpus, papers por journal/source y cobertura de embeddings.
 5.2. Endpoints exploración: búsqueda full-text básica + filtros `year`, `journal`, `pb`, `doi`, `keywords`, ordenación y paginación.
 5.3. Endpoint detalle paper: título, abstract, metadatos, scores PB, resumen y trazabilidad mínima.
 5.4. Endpoint de resultados de job para paper subido, con payload unificado para renderizado de resultados.
+5.5. Endpoints AED: resumen, abstract-lengths, papers-by-year, metadata-completeness, top-keywords, pb-distribution, embedding-coverage y descargas/trazabilidad.
+5.6. Endpoint de similitud por contenido con top-k vecinos y metadatos del corpus UPV.
 
 6. Fase 5 - Frontend Next.js + Tailwind + diseño premium técnico (depende de 4 y 5)
 6.1. Definir sistema visual dark-first inspirado en Vercel/Supabase/Linear con acento verde esmeralda/verde-gris en `DESIGN.md`.
 6.2. Implementar vistas:
 - Dashboard analítico con tarjetas y gráficas consistentes
 - Explorador de papers con filtros + tabla + detalle
+- Página específica de análisis exploratorio del corpus
 - Flujo de subida PDF con estados (upload/parsing/inferencia/resumen/error)
 - Resultado de análisis de paper subido
+- Sección de papers similares por contenido muy bien diseñada
 6.3. Garantizar responsive desktop/móvil y estados vacíos/carga/error no genéricos.
 
 7. Fase 6 - Infraestructura y despliegue interno (paralela con fase 5 tras tener backend/frontend base)
@@ -56,12 +83,12 @@ Construir una plataforma web modular (FastAPI + Next.js + PostgreSQL + Docker Co
 8.1. Redactar `AGENTS.md` con objetivo, arquitectura modular, flujo de datos, ejecución, despliegue y roadmap por fases.
 8.2. Redactar `DESIGN.md` con principios visuales, componentes, tokens, reglas de gráficos/tablas/espaciado y estados UX.
 8.3. Actualizar `README.md` con instalación, variables, seed del corpus UPV, ejecución por Docker Compose y acceso por URL interna.
-8.4. Documentar explícitamente que `similarity_search` queda diseñado para fase futura y no implementado en v1.
+8.4. Documentar la experiencia de similitud por contenido, criterios de corpus para embeddings y trazabilidad de filtros/descartes.
 
-9. Fase 8 - Preparación de fase futura de similares (no implementada en v1; paralela documental con fase 7)
-9.1. Definir interfaces de `similarity_search` y contratos API versionados para no romper frontend.
-9.2. Especificar estrategia posterior con embeddings persistidos + pgvector/faiss + nearest neighbors + posicionamiento relativo en corpus.
-9.3. Dejar checklist de migración técnica para activar la fase 2 sin rehacer núcleo actual.
+9. Similares por contenido y posicionamiento en el corpus
+9.1. Definir interfaces de `similarity_search` y contratos API versionados para top-k vecinos por SPECTER2.
+9.2. Especificar estrategia con embeddings persistidos + FAISS + posicionamiento relativo en corpus.
+9.3. Dejar checklist de calibración, cobertura del índice y trazabilidad de similitud.
 
 **Relevant files**
 - `/home/sortmon/UPV_EARTH_PROYECTOIII/extraccion_corpus_mixto.py` - reutilizar extracción de abstract, limpieza, evaluación de calidad y trazabilidad.
@@ -86,13 +113,14 @@ Construir una plataforma web modular (FastAPI + Next.js + PostgreSQL + Docker Co
 9. Validar que el sistema sigue operativo cuando el proveedor LLM opcional está deshabilitado.
 
 **Decisions**
-- Autenticación v1: sin login (solo red interna).
-- Asincronía v1: `FastAPI BackgroundTasks` por simplicidad y tiempo de entrega.
-- Núcleo PB v1: similitud de embeddings abstract vs definiciones PB (sin clasificador supervisado inicial).
+- Autenticación: sin login por defecto, solo red interna.
+- Asincronía: `FastAPI BackgroundTasks` por simplicidad y tiempo de entrega.
+- Núcleo PB: similitud de embeddings abstract vs definiciones PB.
+- Embeddings de corpus: SPECTER2 + FAISS como flujo central.
 - Resumen sin LLM: fallback simple de primeras 3-4 frases del abstract limpio.
 - Carga inicial: seed automático desde CSV enriquecido actual.
 - URL interna objetivo inicial: `158.42.94.34`.
-- Alcance excluido v1: búsqueda de similares y posicionamiento fino frente al corpus completo.
+- Alcance actual: incluye visualización de similares por contenido y analítica del corpus.
 
 **Further Considerations**
 1. Seguridad de acceso sin login: mantenerlo solo en red interna segmentada; para siguiente iteración evaluar login básico o SSO.
