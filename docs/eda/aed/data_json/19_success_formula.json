@@ -1,0 +1,88 @@
+{
+  "summary": [
+    {
+      "model": "tfidf",
+      "n_docs": 98,
+      "score_raw_mean": 2.107142857142857,
+      "score_norm_mean": 0.6443452380952381,
+      "pts_principal_mean": 2.096938775510204,
+      "pts_2nd_mean": 0.0714285714285714,
+      "pts_3rd_mean": 0.0,
+      "pts_penalty_mean": -0.0612244897959183,
+      "fully_correct": 0.3877551020408163,
+      "pct_top1_full_credit": 0.6326530612244898,
+      "pct_top2_partial_credit": 0.1326530612244898,
+      "pct_principal_missed": 0.2346938775510204
+    },
+    {
+      "model": "specter",
+      "n_docs": 98,
+      "score_raw_mean": 1.6275510204081634,
+      "score_norm_mean": 0.498937074829932,
+      "pts_principal_mean": 1.6683673469387754,
+      "pts_2nd_mean": 0.1020408163265306,
+      "pts_3rd_mean": 0.0,
+      "pts_penalty_mean": -0.1428571428571428,
+      "fully_correct": 0.2959183673469387,
+      "pct_top1_full_credit": 0.4387755102040816,
+      "pct_top2_partial_credit": 0.2346938775510204,
+      "pct_principal_missed": 0.3265306122448979
+    },
+    {
+      "model": "lexical",
+      "n_docs": 98,
+      "score_raw_mean": 1.5612244897959184,
+      "score_norm_mean": 0.4795918367346938,
+      "pts_principal_mean": 1.530612244897959,
+      "pts_2nd_mean": 0.0612244897959183,
+      "pts_3rd_mean": 0.0,
+      "pts_penalty_mean": -0.0306122448979591,
+      "fully_correct": 0.336734693877551,
+      "pct_top1_full_credit": 0.4693877551020408,
+      "pct_top2_partial_credit": 0.0816326530612244,
+      "pct_principal_missed": 0.4489795918367347
+    },
+    {
+      "model": "bert-base",
+      "n_docs": 98,
+      "score_raw_mean": 1.5051020408163265,
+      "score_norm_mean": 0.4534438775510204,
+      "pts_principal_mean": 1.6377551020408163,
+      "pts_2nd_mean": 0.1122448979591836,
+      "pts_3rd_mean": 0.0,
+      "pts_penalty_mean": -0.2448979591836734,
+      "fully_correct": 0.2142857142857142,
+      "pct_top1_full_credit": 0.4489795918367347,
+      "pct_top2_partial_credit": 0.1938775510204081,
+      "pct_principal_missed": 0.3571428571428571
+    },
+    {
+      "model": "scibert",
+      "n_docs": 98,
+      "score_raw_mean": 1.326530612244898,
+      "score_norm_mean": 0.3894557823129251,
+      "pts_principal_mean": 1.5153061224489797,
+      "pts_2nd_mean": 0.1632653061224489,
+      "pts_3rd_mean": 0.0,
+      "pts_penalty_mean": -0.3520408163265306,
+      "fully_correct": 0.0918367346938775,
+      "pct_top1_full_credit": 0.3775510204081632,
+      "pct_top2_partial_credit": 0.2551020408163265,
+      "pct_principal_missed": 0.3673469387755102
+    },
+    {
+      "model": "roberta",
+      "n_docs": 98,
+      "score_raw_mean": 0.3571428571428571,
+      "score_norm_mean": 0.1020408163265306,
+      "pts_principal_mean": 0.5510204081632653,
+      "pts_2nd_mean": 0.0204081632653061,
+      "pts_3rd_mean": 0.0,
+      "pts_penalty_mean": -0.2142857142857142,
+      "fully_correct": 0.0612244897959183,
+      "pct_top1_full_credit": 0.1224489795918367,
+      "pct_top2_partial_credit": 0.1224489795918367,
+      "pct_principal_missed": 0.7551020408163265
+    }
+  ]
+}

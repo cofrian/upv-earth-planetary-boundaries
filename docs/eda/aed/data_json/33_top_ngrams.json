@@ -1,0 +1,268 @@
+{
+  "unigrams": [
+    {
+      "term": "climate",
+      "count": 17331
+    },
+    {
+      "term": "water",
+      "count": 10553
+    },
+    {
+      "term": "global",
+      "count": 9070
+    },
+    {
+      "term": "land",
+      "count": 7830
+    },
+    {
+      "term": "aerosol",
+      "count": 6730
+    },
+    {
+      "term": "environmental",
+      "count": 6718
+    },
+    {
+      "term": "ocean",
+      "count": 6712
+    },
+    {
+      "term": "surface",
+      "count": 6537
+    },
+    {
+      "term": "species",
+      "count": 6000
+    },
+    {
+      "term": "temperature",
+      "count": 5496
+    },
+    {
+      "term": "carbon",
+      "count": 5486
+    },
+    {
+      "term": "under",
+      "count": 5109
+    },
+    {
+      "term": "atmospheric",
+      "count": 4978
+    },
+    {
+      "term": "conditions",
+      "count": 4869
+    },
+    {
+      "term": "future",
+      "count": 4837
+    },
+    {
+      "term": "ozone",
+      "count": 4794
+    },
+    {
+      "term": "emissions",
+      "count": 4746
+    },
+    {
+      "term": "development",
+      "count": 4731
+    },
+    {
+      "term": "well",
+      "count": 4471
+    },
+    {
+      "term": "impact",
+      "count": 4464
+    },
+    {
+      "term": "production",
+      "count": 4426
+    },
+    {
+      "term": "potential",
+      "count": 4339
+    },
+    {
+      "term": "marine",
+      "count": 4338
+    },
+    {
+      "term": "important",
+      "count": 4224
+    },
+    {
+      "term": "impacts",
+      "count": 4193
+    }
+  ],
+  "bigrams": [
+    {
+      "term": "united states",
+      "count": 1115
+    },
+    {
+      "term": "ocean acidification",
+      "count": 984
+    },
+    {
+      "term": "land cover",
+      "count": 975
+    },
+    {
+      "term": "sustainable development",
+      "count": 865
+    },
+    {
+      "term": "global warming",
+      "count": 846
+    },
+    {
+      "term": "boundary layer",
+      "count": 844
+    },
+    {
+      "term": "remote sensing",
+      "count": 733
+    },
+    {
+      "term": "global climate",
+      "count": 721
+    },
+    {
+      "term": "organic matter",
+      "count": 708
+    },
+    {
+      "term": "ecosystem services",
+      "count": 670
+    },
+    {
+      "term": "surface temperature",
+      "count": 655
+    },
+    {
+      "term": "organic carbon",
+      "count": 652
+    },
+    {
+      "term": "aerosol optical",
+      "count": 629
+    },
+    {
+      "term": "biomass burning",
+      "count": 622
+    },
+    {
+      "term": "acidi cation",
+      "count": 622
+    },
+    {
+      "term": "plos pone",
+      "count": 593
+    },
+    {
+      "term": "regional climate",
+      "count": 572
+    },
+    {
+      "term": "water quality",
+      "count": 569
+    },
+    {
+      "term": "land surface",
+      "count": 541
+    },
+    {
+      "term": "carbon dioxide",
+      "count": 527
+    },
+    {
+      "term": "future climate",
+      "count": 514
+    },
+    {
+      "term": "north atlantic",
+      "count": 504
+    },
+    {
+      "term": "water resources",
+      "count": 491
+    },
+    {
+      "term": "optical depth",
+      "count": 479
+    },
+    {
+      "term": "life cycle",
+      "count": 477
+    }
+  ],
+  "trigrams": [
+    {
+      "term": "ocean acidi cation",
+      "count": 411
+    },
+    {
+      "term": "aerosol optical depth",
+      "count": 391
+    },
+    {
+      "term": "united states america",
+      "count": 262
+    },
+    {
+      "term": "declared exist e-mail",
+      "count": 248
+    },
+    {
+      "term": "land land cover",
+      "count": 230
+    },
+    {
+      "term": "life cycle assessment",
+      "count": 219
+    },
+    {
+      "term": "planetary boundary layer",
+      "count": 219
+    },
+    {
+      "term": "frontiers marine science",
+      "count": 202
+    },
+    {
+      "term": "sustainable development goals",
+      "count": 195
+    },
+    {
+      "term": "frontiersin volume edited",
+      "count": 165
+    },
+    {
+      "term": "marine science citation",
+      "count": 153
+    },
+    {
+      "term": "volatile organic compounds",
+      "count": 146
+    },
+    {
+      "term": "moderate resolution imaging",
+      "count": 142
+    },
+    {
+      "term": "plos pone citation",
+      "count": 137
+    },
+    {
+      "term": "under availability statement",
+      "count": 137
+    }
+  ]
+}

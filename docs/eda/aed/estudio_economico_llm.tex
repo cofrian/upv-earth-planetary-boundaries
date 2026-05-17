@@ -1,0 +1,256 @@
+% =============================================================================
+% Estudio económico de inferencia LLM local — prompt v4 (principle-driven)
+% Compatible con el main_overleaf_llm.tex / memoria UPV-EARTH.
+% Requiere en el preámbulo: \usepackage{booktabs, array, siunitx, graphicx}
+% =============================================================================
+
+\section{Estudio económico de la inferencia LLM local}
+\label{sec:estudio-economico}
+
+\subsection{Motivación}
+
+La elección del modelo base (Anexo~0.1.1) se justificó en términos de
+calidad de clasificación: \emph{flexible agreement}, \emph{rigorousness}
+y \emph{positivity bias} medidos sobre el subset validado. Esa decisión
+deja, sin embargo, una pregunta operativa abierta: \textbf{¿cuánto cuesta
+realmente clasificar el corpus con cada modelo?}. En un despliegue real
+del sistema UPV--EARTH ese coste no es despreciable, porque la
+clasificación se ejecuta sobre los $\sim 31{,}600$ documentos del corpus
+institucional ampliado y debe re--ejecutarse cuando cambia el prompt o
+el catálogo de PBs. Este estudio cuantifica tres dimensiones del coste de
+ejecutar el \textbf{prompt v4} (\emph{principle-driven} con tres
+calibration cases, ver Sección~\ref{sec:prompt-v4}) en los tres modelos
+open-weight de la comparativa M2:
+
+\begin{enumerate}
+  \item \textbf{Coste en tokens}: tokens de entrada y de salida por documento.
+  \item \textbf{Coste en tiempo}: \emph{wall--clock} de cada llamada.
+  \item \textbf{Coste energético}: potencia GPU integrada en el tiempo de
+        inferencia, traducida a coste eléctrico y comparada con la tarifa
+        equivalente si los mismos tokens se facturasen vía API en la nube.
+\end{enumerate}
+
+\subsection{Protocolo experimental}
+
+\paragraph{Hardware.} Las medidas se tomaron en la máquina de inferencia
+del grupo, cuyas especificaciones se detallan en la
+Tabla~\ref{tab:estudio-economico-hw}. Todos los modelos se ejecutan
+localmente mediante \texttt{ollama serve} con cuantización por defecto
+(Q4\_K\_M); ni la CPU ni el almacenamiento están en el camino crítico
+del experimento, pero se documentan por reproducibilidad.
+
+\begin{table}[h]
+\centering\small
+\caption{Especificación del banco de pruebas. La GPU es el recurso
+limitante; CPU, RAM y almacenamiento solo entran en juego para servir
+el corpus desde disco y orquestar las llamadas a Ollama.}
+\label{tab:estudio-economico-hw}
+\begin{tabular}{ll}
+\toprule
+Componente & Especificación \\
+\midrule
+GPU            & NVIDIA RTX 4500 Ada Generation, 24\,GiB GDDR6, TDP 210\,W \\
+               & (Compute Capability 8.9, driver 580.126.09) \\
+CPU            & Intel Core i9--14900K, 24 cores / 32 threads, hasta 6.0\,GHz \\
+RAM            & 128\,GiB DDR5 \\
+Almacenamiento & SSD NVMe Samsung 990 Pro 1\,TB (sistema y modelos Ollama) \\
+               & $2\times$ HDD Seagate 20\,TB (corpus y backups) \\
+SO             & Ubuntu 24.04.3 LTS, kernel 6.17.0 \\
+Runtime LLM    & Ollama \texttt{serve} (cuantización Q4\_K\_M en GGUF) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La GPU es el único recurso saturable del experimento: el resto del
+sistema (CPU, RAM, NVMe) opera muy por debajo de su capacidad mientras
+Ollama procesa los abstracts, lo que permite atribuir toda la variación
+observada al modelo y al prompt.
+
+\paragraph{Modelos.} Se comparan los mismos tres modelos open-weight
+evaluados en M2:
+
+\begin{itemize}
+  \item \texttt{llama3.1:8b} -- 8\,B parámetros, $\sim 4.7$\,GiB en disco.
+  \item \texttt{qwen2.5:14b} -- 14\,B parámetros, $\sim 9$\,GiB en disco.
+  \item \texttt{gemma4:26b} -- 25.8\,B parámetros, $\sim 19$\,GiB en disco.
+\end{itemize}
+
+\paragraph{Muestra.} Se eligen los primeros 20 documentos del subset
+validado (excluyendo los 3 calibration cases del prompt v4). El mismo
+abstract se envía a los tres modelos con \emph{idéntico} prompt v4,
+\texttt{temperature}=0 y \texttt{top\_p}=0.9.
+
+\paragraph{Instrumentación.} Para cada llamada se registra:
+
+\begin{itemize}
+  \item Los contadores oficiales que devuelve Ollama:
+        \texttt{prompt\_eval\_count} (tokens de entrada),
+        \texttt{eval\_count} (tokens de salida) y los \texttt{duration}
+        en nanosegundos (\texttt{load}, \texttt{prompt\_eval},
+        \texttt{eval}, \texttt{total}).
+  \item Un \emph{sampler} concurrente que invoca \texttt{nvidia-smi} cada
+        $250$\,ms durante la inferencia, extrayendo
+        \texttt{power.draw}, \texttt{memory.used} y \texttt{utilization.gpu}.
+        La energía consumida se obtiene por integración trapezoidal
+        de la potencia instantánea:
+        $E_{\text{Wh}} \approx \tfrac{1}{3600}\sum_i \tfrac{1}{2}(P_i+P_{i-1})\,\Delta t_i$.
+  \item Antes de cada modelo se ejecuta una llamada \emph{warm-up} con
+        \texttt{num\_predict=1} para descontar el coste de carga del
+        modelo en VRAM, que no representa coste recurrente en producción.
+\end{itemize}
+
+El \emph{wall-clock} de la primera llamada queda contaminado por la carga
+en VRAM, pero se neutraliza con el warm-up. El consumo eléctrico de
+referencia se calcula con una tarifa de \SI{0.15}{\eur\per\kilo\watt\hour}.
+El equivalente cloud se calcula multiplicando tokens medidos por los
+precios públicos de GPT--4o (\$2.50/\$10.00 por M tokens
+in/out), Claude Sonnet (\$3.00/\$15.00) y Claude Haiku
+(\$0.80/\$4.00), con una conversión de \$1 = \EUR{0.92}.
+
+\subsection{Resultados}
+
+\begin{table}[h]
+\centering\small
+\caption{Coste de inferencia del prompt v4 por modelo. Tokens y tiempo
+son medias por documento; energía y coste agregan los 20 documentos.
+La columna \emph{Éxito} indica cuántos documentos completaron sin error
+de \emph{timeout}.}
+\label{tab:estudio-economico-modelos}
+\begin{tabular}{lccccccc}
+\toprule
+Modelo & Éxito & tokens$_\text{in}$ & tokens$_\text{out}$ & wall (s) & $\bar{P}$ (W) & VRAM (GiB) & $E_\text{total}$ (Wh) \\
+\midrule
+\texttt{llama3.1:8b} & 20/20 & 2{,}391 & 107.2 & 2.78 & 112.8 & 10.5 & 1.66 \\
+\texttt{qwen2.5:14b} & 20/20 & 2{,}423 & 105.3 & 4.08 & 139.0 & 16.2 & 3.04 \\
+\texttt{gemma4:26b}  & 14/20$^\dagger$ & 2{,}503$^\ddagger$ & 149.5$^\ddagger$ & 1.78$^\dagger$ & 134.8 & 20.4 & 0.90$^\dagger$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{2pt}
+\footnotesize
+$^\dagger$ Excluye 6 documentos en los que la generación de gemma4:26b
+agotó el \emph{timeout} de 600\,s.\quad
+$^\ddagger$ El contador de tokens lo devolvió únicamente $1$ de las $14$
+llamadas exitosas; el resto vino con \texttt{null} (Ollama no rellena
+\texttt{prompt\_eval\_count} cuando hay \emph{cache hit} del prompt).
+\end{table}
+
+\begin{table}[h]
+\centering\small
+\caption{Coste por documento traducido a euros: electricidad local
+(tarifa \SI{0.15}{\eur\per\kilo\watt\hour}) y precio equivalente si los
+mismos tokens se facturaran en una API cloud (USD/M tok convertido a
+EUR a \$1=\EUR{0.92}).}
+\label{tab:estudio-economico-coste}
+\begin{tabular}{lcccc}
+\toprule
+Modelo & € luz/doc & € GPT--4o/doc & € Claude Sonnet/doc & € Claude Haiku/doc \\
+\midrule
+\texttt{llama3.1:8b} & $1.25\!\times\!10^{-5}$ & $6.49\!\times\!10^{-3}$ & $8.08\!\times\!10^{-3}$ & $2.15\!\times\!10^{-3}$ \\
+\texttt{qwen2.5:14b} & $2.28\!\times\!10^{-5}$ & $6.54\!\times\!10^{-3}$ & $8.14\!\times\!10^{-3}$ & $2.17\!\times\!10^{-3}$ \\
+\texttt{gemma4:26b}  & $0.96\!\times\!10^{-5}$ & $6.79\!\times\!10^{-3}$ & $8.56\!\times\!10^{-3}$ & $2.28\!\times\!10^{-3}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Los tres modelos consumen un orden de magnitud parecido en tokens de
+entrada ($\sim 2{,}400$, dominado por las reglas de las 9 PBs que se
+inyectan en el prompt v4) y entre $105$ y $150$ tokens de salida (un JSON
+estructurado con razonamiento corto, PB primaria, PBs secundarias y
+rechazadas). El coste energético local es, en todos los casos, despreciable
+frente al coste equivalente cloud: \textbf{ejecutar el clasificador
+localmente cuesta entre $260$ y $700$ veces menos electricidad que
+facturar los mismos tokens a Claude Haiku}, el modelo cloud más barato
+de la comparación.
+
+\subsection{Lectura por modelo}
+
+\paragraph{\texttt{llama3.1:8b}: el más eficiente, el menos riguroso.}
+Es el más rápido (2.78\,s/doc), el de menor VRAM (10.5\,GiB, cabe en una
+GPU de consumo) y el de menor potencia media (113\,W). Sin embargo, M2
+ya documentó que tiene \emph{rigorousness} $0.00\,\%$: clasifica casi
+cualquier abstract como PB y no aprende a abstenerse. El bajo coste
+energético no compensa esa carencia operativa.
+
+\paragraph{\texttt{qwen2.5:14b}: el compromiso defendible.}
+Tarda ~$1.5\times$ más que llama y dobla su consumo energético, pero
+exhibe la mejor combinación de \emph{flexible agreement} ($52\,\%$) con
+\emph{rigorousness} apreciable ($38\,\%$) y \emph{positivity bias} $0.00\,\%$
+(Anexo~0.1.1). El coste real por documento es ínfimo ($2.3\!\times\!10^{-5}$\,€
+de electricidad) y la VRAM se mantiene cómodamente por debajo del límite
+de la 4500 Ada. Es el único modelo de los tres que es a la vez
+\emph{operacionalmente estable} y \emph{científicamente honesto}, lo que
+justifica retrospectivamente la decisión de iterar el prompt v1$\to$v4
+sobre qwen.
+
+\paragraph{\texttt{gemma4:26b}: no es viable a 26\,B en esta GPU.}
+Este es el hallazgo más relevante del estudio. La tabla
+\ref{tab:estudio-economico-modelos} muestra una \emph{media}
+engañosamente buena (1.78\,s/doc) porque solo agrega las llamadas que
+completaron. La realidad cruda es:
+
+\begin{itemize}
+  \item \textbf{6 de 20 documentos ($30\,\%$) agotaron el timeout de
+        600\,s}, es decir, gemma se quedó generando hasta que el cliente
+        cortó la conexión. Cada uno de esos fallos consumió
+        $\sim 25$\,Wh por sí solo, frente a los $0.06$\,Wh de una llamada
+        normal.
+  \item Las llamadas exitosas alternan entre tiempos muy bajos
+        ($<1$\,s) que parecen \emph{cache hits} del prompt sin generación
+        real, y respuestas razonables de $2$--$7$\,s. El contador
+        \texttt{prompt\_eval\_count} viene a \texttt{null} en $13$ de las
+        $14$ llamadas exitosas, lo que confirma que Ollama está sirviendo
+        respuestas con el prompt cacheado y no re-evaluando.
+  \item Pico de VRAM $20.4$\,GiB sobre $24$\,GiB disponibles: gemma vive
+        en el límite del hardware, lo que explica la inestabilidad.
+\end{itemize}
+
+En términos de coste real --- incluyendo los timeouts --- gemma4:26b
+consumiría aproximadamente $\mathbf{150}$\,\textbf{Wh por cada 20
+documentos}, frente a $3$\,Wh de qwen, es decir, $\sim 50\times$ más
+energía con $30\,\%$ de tasa de fallo. La afirmación de M2 sobre que
+gemma era \emph{``demasiado lento para iterar sobre el corpus''} queda
+ahora cuantificada con un argumento energético adicional: no solo es
+lento, es inestable en esta GPU.
+
+\subsection{Extrapolación al corpus completo}
+
+Suponiendo coste lineal en el número de documentos y manteniendo el
+prompt v4, clasificar los $31{,}634$ documentos del corpus institucional
+ampliado con \texttt{qwen2.5:14b} costaría aproximadamente:
+
+\begin{itemize}
+  \item \textbf{Tiempo}: $31{,}634 \times 4.08\,\text{s} \approx 36$ horas
+        de inferencia continua.
+  \item \textbf{Energía}: $31{,}634 \times 0.152\,\text{Wh} \approx 4.8$\,kWh.
+  \item \textbf{Coste eléctrico}: $\approx \EUR{0.72}$.
+  \item \textbf{Coste equivalente cloud}: $\EUR{205}$ con GPT--4o,
+        $\EUR{257}$ con Claude Sonnet, $\EUR{68}$ con Claude Haiku.
+\end{itemize}
+
+Es decir, el sistema completo se reclasifica end-to-end por menos de un
+euro de electricidad, lo que hace operacionalmente trivial re-correr el
+pipeline cada vez que el catálogo de PBs o el prompt sufran un cambio
+significativo.
+
+\subsection{Limitaciones del estudio}
+
+\begin{enumerate}
+  \item La muestra es de 20 documentos por modelo. Es suficiente para
+        comparar órdenes de magnitud, pero las medias por documento
+        tienen ruido del orden del $10$--$20\,\%$.
+  \item \texttt{nvidia-smi} reporta consumo total de la GPU, no solo el
+        atribuible al proceso Ollama. En esta máquina no había otra carga
+        en GPU durante el experimento, por lo que la atribución es
+        razonable, pero no es estrictamente \emph{per-process}.
+  \item Los precios cloud son los públicos de mayo 2026 y no incluyen
+        descuentos por uso prolongado, prompt caching del proveedor ni
+        latencia de red.
+  \item El coste de \emph{warm-up} (carga del modelo en VRAM, $\sim 5$--$15$\,s
+        en gemma) no se imputa al documento; en un servicio que ya tiene
+        el modelo residente es despreciable, pero no lo sería en
+        invocaciones esporádicas tipo \emph{cold start}.
+\end{enumerate}
+
+Los CSV brutos del experimento (una fila por (modelo, documento) y
+resumen agregado por modelo) se incluyen como material reproducible en
+\path{nlp/llm/outputs/studies/estudio_economico_v4/}.

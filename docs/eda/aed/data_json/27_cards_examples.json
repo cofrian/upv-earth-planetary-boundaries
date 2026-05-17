@@ -1,0 +1,94 @@
+{
+  "cards": [
+    {
+      "pb": "PB1",
+      "pb_name": "Climate Change",
+      "doc_id": "7089f4fdb5d6",
+      "title": "Sustainability 2013, 5, 2305-2326",
+      "abstract_excerpt": "Australia‘s urban built environment contributes significantly to the nation‘s greenhouse gas emissions; therefore, encouraging urban development to pursue low-carbon outcomes will aid in reducing carbon in the overall economy. Cities and...",
+      "score_top1": 0.2375,
+      "top2": "PB9",
+      "score_top2": 0.0796
+    },
+    {
+      "pb": "PB2",
+      "pb_name": "Ocean Acidification",
+      "doc_id": "5f79401f5bb9",
+      "title": "Effects of Temperature and Ocean Acidification on theExtrapallial Fluid pH, Calcification Rate, and ConditionFactor of t",
+      "abstract_excerpt": "Increasing anthropogenic carbon dioxide is predicted to cause declines in ocean pH and calcium carbonate saturation state over the coming centuries, making it potentially harder for marine calciﬁers to build their shells and skeletons. One.",
+      "score_top1": 0.2802,
+      "top2": "PB1",
+      "score_top2": 0.0057
+    },
+    {
+      "pb": "PB3",
+      "pb_name": "Stratospheric Ozone",
+      "doc_id": "a78e2fa6f6ad",
+      "title": "Earth and Planetary Science | Volume 01 | Issue 02 | October 2022",
+      "abstract_excerpt": "Article history Received: 30 November 2022 Revised: 14 February 2023 Accepted: 28 February 2023 Published Online: 9 March 2023 Anthropogenic Chlorofluorocarbons (CFCs) compelled stratospheric ozone reduction is one of the significant...",
+      "score_top1": 0.456,
+      "top2": "PB5",
+      "score_top2": 0.0275
+    },
+    {
+      "pb": "PB4",
+      "pb_name": "Biogeochemical Flows",
+      "doc_id": "1b491e31510d",
+      "title": "ReviewHow Effective Are Existing Phosphorus Management Strategiesin Mitigating Surface Water Quality Problems in the U.S",
+      "abstract_excerpt": "Phosphorus is an essential component of modern agriculture. Long-term land application of phosphorous-enriched fertilizers and animal manure leads to phosphorus accumulation in soil that may become susceptible to mobilization via erosion,..",
+      "score_top1": 0.2444,
+      "top2": "PB5",
+      "score_top2": 0.0493
+    },
+    {
+      "pb": "PB5",
+      "pb_name": "Freshwater Use",
+      "doc_id": "9f4874f01dc3",
+      "title": "(sin titulo)",
+      "abstract_excerpt": "The scarcity of freshwater resources is a global concern that is exacerbated by an increasing global population and climate change induced by global warming. To address this issue, the largest water-consuming sector has taken a series of...",
+      "score_top1": 0.4359,
+      "top2": "PB4",
+      "score_top2": 0.0101
+    },
+    {
+      "pb": "PB6",
+      "pb_name": "Land-System Change",
+      "doc_id": "16490ddffb31",
+      "title": "Earth.0 License",
+      "abstract_excerpt": ". The increasing availability of high-quality remote sensing data and advanced technologies has spurred land cover mapping to characterize land change from local to global scales. However, most land change datasets either span multiple...",
+      "score_top1": 0.325,
+      "top2": "PB1",
+      "score_top2": 0.0159
+    },
+    {
+      "pb": "PB7",
+      "pb_name": "Biosphere Integrity",
+      "doc_id": "70ed2ebf7c99",
+      "title": "Zeitschrift für Praktische PhilosophieBand 7, Heft 2, 2020, S. 191–220",
+      "abstract_excerpt": "Since at least the 1992 Rio Declaration on Environment and Development, the concept of “ecosystem integrity” has become established as a guiding principle of international environmental policy. The origins of this concept lie in efforts in.",
+      "score_top1": 0.4134,
+      "top2": "PB1",
+      "score_top2": 0.0182
+    },
+    {
+      "pb": "PB8",
+      "pb_name": "Novel Entities",
+      "doc_id": "d2ad2942ad31",
+      "title": "PEER-REVIEWED REVIEW ARTICLE bioresources.com",
+      "abstract_excerpt": "PEER-REVIEWED REVIEW ARTICLE bioresources.com Teacă et al. “Soil degradation of polymers,” BioResources 18(1), 2213-2261. 2213 In-Soil Degradation of Polymer Materials Waste – A Survey of Different Approaches in Relation with Environmental.",
+      "score_top1": 0.1914,
+      "top2": "PB1",
+      "score_top2": 0.021
+    },
+    {
+      "pb": "PB9",
+      "pb_name": "Aerosol Loading",
+      "doc_id": "c8b15333cfdd",
+      "title": "This is a repository copy of Observing UK Bonfire Night pollution from space: analysis of atmospheric aerosol.",
+      "abstract_excerpt": "8 UK Bonfire Night (BFN) is an annual event on the 5th November to celebrate the failed 9 gunpowder plot of Guy Fawkes to blow up the Houses of Parliament. This event is celebrated 10 with firework and bonfire displays, which reduce...",
+      "score_top1": 0.2584,
+      "top2": "PB2",
+      "score_top2": 0.0086
+    }
+  ]
+}

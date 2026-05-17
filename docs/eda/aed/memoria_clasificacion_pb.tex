@@ -1,0 +1,418 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=2.4cm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black!70, urlcolor=blue!70!black, citecolor=black!70}
+\usepackage{enumitem}
+\setlist{nosep, leftmargin=1.4em}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{UPV-EARTH $\times$ Planetary Boundaries}}
+\fancyhead[R]{\small\textit{Memoria de clasificación}}
+\fancyfoot[C]{\thepage}
+
+\definecolor{accent}{HTML}{1F4E79}
+\newcommand{\good}[1]{\textbf{\textcolor{accent}{#1}}}
+
+\title{\Large\textbf{Clasificación multilabel de papers UPV-EARTH\\en Planetary Boundaries: una evaluación crítica de seis modelos}}
+\author{Equipo UPV-EARTH \\ \small\textit{Análisis basado en 31\,560 abstracts y 98 anotaciones humanas}}
+\date{Mayo 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent
+Se aborda la clasificación de 31\,560 abstracts del corpus científico UPV-EARTH (1980--2025) en las nueve \emph{Planetary Boundaries} (PB) definidas por Steffen et al.\ (2015). Dada la imposibilidad de entrenar supervisadamente con solo 138 anotaciones manuales, se evalúan seis enfoques zero-shot/few-shot por similitud semántica: dos baselines (léxico y TF-IDF), tres backbones \textsc{bert} sin fine-tune (\textsc{bert-base}, \textsc{roberta-base}, \textsc{scibert}) y \textsc{specter}. La validación contra 98 papers anotados por experto humano (130 PBs en total) se realiza con siete familias de métricas que incluyen \emph{top-1}, ranking ponderado, F1 multilabel y un análisis por PB de falsos positivos y omisiones. El resultado más relevante es que \textbf{TF-IDF con threshold calibrado supera a los transformers no fine-tuneados en todas las métricas globales} (F1 multilabel = 0{,}61; score por posición = 0{,}77; PB principal en top-2 = 77\,\%), un hallazgo coherente con el hecho de que los abstracts académicos contienen explícitamente terminología PB y que la representación mean-pooled de \textsc{bert}/\textsc{roberta} colapsa hacia atractores espurios (notablemente PB6). Se propone una receta de ensemble por PB y se documentan las limitaciones que invalidan conclusiones tajantes sin trabajo adicional.
+\end{abstract}
+
+\section{Introducción}
+
+El proyecto UPV-EARTH se propone caracterizar la huella temática de la producción científica de la Universitat Politècnica de València sobre el marco \emph{Planetary Boundaries}, un conjunto de nueve sistemas terrestres cuyos umbrales no deberían rebasarse para mantener un Holoceno operativo. La tarea concreta consiste en asignar cada abstract del corpus a una o varias de las nueve PB:
+
+\begin{itemize}
+\item \textbf{PB1} Climate Change \quad \textbf{PB2} Ocean Acidification \quad \textbf{PB3} Stratospheric Ozone Depletion
+\item \textbf{PB4} Biogeochemical Flows \quad \textbf{PB5} Freshwater Use \quad \textbf{PB6} Land-System Change
+\item \textbf{PB7} Biosphere Integrity \quad \textbf{PB8} Novel Entities \quad \textbf{PB9} Atmospheric Aerosol Loading
+\end{itemize}
+
+\paragraph{Naturaleza del problema.} No estamos ante un problema de clasificación supervisada al uso: disponemos de únicamente 138 anotaciones manuales, lo que sitúa la mediana de soporte por clase en $\sim$8 documentos. Es \textbf{insuficiente para fine-tunear un transformer} con garantías. La aproximación correcta es zero-shot/few-shot por similitud semántica: la definición textual de cada PB (keywords, frases de ejemplo, descripción operativa) funciona como ``anchor'' y los abstracts se comparan contra ese anchor en un espacio de representación. La elección del espacio de representación es lo que distingue a los seis modelos evaluados.
+
+\paragraph{Hipótesis previas.} Antes de medir esperábamos que (i) los baselines fueran competitivos pero acotados por el problema de sinonimia, (ii) \textsc{specter} fuera el mejor transformer porque está específicamente diseñado para representar papers, y (iii) \textsc{bert-base} y \textsc{scibert} estuvieran cerca pero por debajo de \textsc{specter}. El resultado real difiere de la hipótesis en aspectos no menores y motiva la discusión crítica de la §\ref{sec:discusion}.
+
+\section{Metodología}
+
+\subsection{Pipeline del corpus}
+
+El corpus se construye a partir de descargas mixtas (Scopus + OpenAlex) y un pipeline de limpieza documentado en la trazabilidad del proyecto:
+\[
+\underbrace{44\,970}_{\text{raw}} \longrightarrow \underbrace{44\,593}_{\text{deduplicados}} \longrightarrow \underbrace{31\,634}_{\text{filtrados}} \longrightarrow \underbrace{31\,560}_{\text{usables tras limpieza}}
+\]
+La pérdida es atribuible a duplicados por DOI o título+año, abstracts inferiores a 500 caracteres, idiomas no anglosajones y registros con metadata insuficiente. Antes de la inferencia se aplica una limpieza defensiva adicional (URLs, HTML, DOIs, copyrights editoriales, caracteres de control y descarte de abstracts $<200$ caracteres), descartándose 75 documentos adicionales (0{,}24\,\%). La justificación es minimizar el ruido que consume tokens del \texttt{max\_length=256} de los tokenizers.
+
+\subsection{Definición operativa de los PBs}
+
+Cada PB se representa por un documento textual estructurado que combina:
+\begin{itemize}
+\item Definición corta y larga (operativa, no enciclopédica).
+\item \texttt{core\_keywords} (vocabulario central) y \texttt{applied\_keywords\_upv} (terminología característica del perfil UPV).
+\item Frases de ejemplo y reglas de activación.
+\item Notas de exclusión para desambiguar pares con solapamiento físico (e.g., PB4 vs PB5).
+\end{itemize}
+La calidad de este documento es decisiva: si un PB está mal definido, ningún modelo lo recupera. La granularidad actual es resultado de iteración cruzada con los papers de Steffen et al.~y Larosa et al.~y se considera congelada para esta evaluación.
+
+\subsection{Modelos evaluados}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\linewidth}{l l X}
+\toprule
+\textbf{Modelo} & \textbf{Tipo} & \textbf{Justificación de inclusión} \\
+\midrule
+\textsc{lexical} & keyword matching & Suelo de la tarea: si un transformer no lo supera, no se justifica el coste. Máxima interpretabilidad. \\
+\textsc{tf-idf} & similitud coseno bag-of-words & Escalón intermedio. Captura co-ocurrencias que las keywords pierden, sin coste de GPU. \\
+\textsc{bert-base} & transformer pre-entrenado & Estándar de hecho. Test del coste/beneficio de salto a transformers genéricos. \\
+\textsc{roberta-base} & transformer pre-entrenado & Comparativa estándar contra BERT. Mejoras documentadas en benchmarks generales (\textsc{glue}). \\
+\textsc{scibert} & BERT en corpus científico & Test de la hipótesis ``vocabulario de dominio mejora la representación''. \\
+\textsc{specter} & BERT con \emph{citation-aware} fine-tune & El conceptualmente correcto: entrenado para que abstracts de papers relacionados estén cerca en el espacio. \\
+\bottomrule
+\end{tabularx}
+\caption{Los seis enfoques y su justificación. La pregunta que responde cada modelo es distinta; ninguno es redundante.}
+\end{table}
+
+Para todos los transformers se obtiene el embedding del documento mediante \emph{mean-pooling} del \texttt{last\_hidden\_state} sobre la máscara de atención, seguido de normalización L2. La asignación PB se realiza por similitud coseno contra el embedding del documento PB de referencia.
+
+\subsection{Métricas}
+
+Distinguimos siete familias de métricas, cada una respondiendo a una pregunta operativa distinta:
+
+\begin{enumerate}
+\item \textbf{Top-1 micro/macro F1}: $\mathbb{1}[\text{argmax}_i s_i = \text{gold}]$.
+\item \textbf{Multilabel F1, precisión, recall}: $|P \cap G|/|P|$, $|P \cap G|/|G|$.
+\item \textbf{Jaccard samples}: $|P \cap G|/|P \cup G|$ promediado.
+\item \textbf{Exact match ratio}: $\mathbb{1}[P = G]$.
+\item \textbf{Cobertura por nivel}: \emph{gold}$_1$, \emph{gold}$_2$, \emph{gold}$_3$ presentes en top-$k$.
+\item \textbf{LRAP} (Label Ranking Average Precision): calidad del ranking interno, independiente de threshold.
+\item \textbf{Ruido (falsos positivos)}: $|P \setminus G|/|P|$.
+\end{enumerate}
+
+La calibración del threshold $\tau$ para el modo multilabel se realiza con búsqueda en rejilla $\tau \in \{0{,}03,\ldots,0{,}75\}$ y $\delta \in \{0,\ldots,0{,}20\}$ donde $\delta$ es la tolerancia respecto al score máximo. \textbf{Un hallazgo importante de este trabajo} es que el grid inicial $\tau \in [0{,}20, 0{,}75]$ es inapropiado para TF-IDF (cuyos scores cosine en espacios sparsos son típicamente $<0{,}15$), provocando el colapso del modo multilabel a vector vacío. Re-calibrar con grid extendido $\tau \in [0{,}03, 0{,}75]$ resuelve el problema y sitúa a TF-IDF como el modelo de referencia, como veremos.
+
+\subsection{Fórmula de éxito ponderada}\label{sec:formula}
+
+Las métricas anteriores son independientes; ninguna por sí sola refleja el caso de uso operativo, en el que (i) acertar el PB principal vale más que acertar uno secundario, y (ii) un acierto cercano en el ranking debe puntuar, aunque menos que un acierto estricto. Definimos por tanto una métrica compuesta a dos niveles.
+
+\paragraph{Fórmula A (acierto + ranking parcial).}
+\begin{equation}
+\text{score}_A(d) = 3{,}0 \cdot \mathbb{1}_{[\text{top1}=g_1]} + 1{,}5 \cdot \mathbb{1}_{[g_1 \in \{\text{top1},\text{top2}\}, \text{top1} \neq g_1]} + 1{,}0 \cdot \mathbb{1}_{[g_2 \in P]} + 0{,}5 \cdot \mathbb{1}_{[g_3 \in P]} - 0{,}25 \cdot |P \setminus G|
+\end{equation}
+
+\paragraph{Fórmula B (ranking por posición, MRR ponderado).}
+\begin{equation}
+\text{score}_B(d) = \sum_{i \in \{1,2,3\}} \frac{w_i \cdot \mathbb{1}[g_i \text{ existe}]}{\text{rank}_M(g_i)}, \qquad w_1=3,\ w_2=2,\ w_3=1
+\end{equation}
+donde $\text{rank}_M(g_i)$ es la posición ($1$ = mejor) del PB $g_i$ en el ranking descendente de scores del modelo $M$. Ambas se normalizan dividiendo por el máximo alcanzable en cada documento. La fórmula B es la más informativa porque pondera la \textbf{distancia al óptimo} en el ranking, no solo si entra o no entra en top-$k$.
+
+\section{Resultados de validación}
+
+\subsection{Soporte del ground truth}
+
+De 208 entradas en el Excel \texttt{validacion\_real.csv}, 138 tienen \texttt{1stpb}, 40 \texttt{2ndpb}, 1 \texttt{3rdpb}. Tras intersección con el corpus, quedan \textbf{98 documentos comunes con 130 PBs anotados en total}: 98 primarios + 32 secundarios + 0 terciarios (el único 3rdpb anotado quedó fuera tras filtrado del corpus).
+
+La distribución por PB del soporte humano se muestra en la Tabla \ref{tab:soporte}.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+PB & PB1 & PB2 & PB3 & PB4 & PB5 & PB6 & PB7 & PB8 & PB9 \\
+\midrule
+Soporte & 38 & 8 & 8 & 12 & 9 & 6 & 19 & 7 & 23 \\
+\bottomrule
+\end{tabular}
+\caption{Distribución del soporte humano por PB. PB1 acapara el 29\,\% de las anotaciones; PB6 solo 5\,\%. Cualquier métrica por-PB para soportes $\leq 8$ debe interpretarse con barras de error amplias.}
+\label{tab:soporte}
+\end{table}
+
+\subsection{Acierto del PB principal (\texttt{1stpb})}
+
+La métrica más estricta: ¿qué fracción de las 98 anotaciones tienen el \texttt{1stpb} como predicción top-1 del modelo, o entre el top-2?
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Modelo} & \textbf{Top-1 (\%)} & \textbf{Top-1 o Top-2 (\%)} & \textbf{Top-1 a Top-3 (\%)} \\
+\midrule
+\good{tf-idf} & \good{63{,}3} & \good{76{,}5} & \good{82{,}7} \\
+bert-base & 44{,}9 & 64{,}3 & 79{,}6 \\
+specter & 43{,}9 & 67{,}3 & 76{,}5 \\
+lexical & 46{,}9 & 55{,}1 & 62{,}2 \\
+scibert & 37{,}8 & 63{,}3 & 80{,}6 \\
+roberta & 12{,}2 & 24{,}5 & 53{,}1 \\
+\bottomrule
+\end{tabular}
+\caption{Acierto del PB principal del Excel en las primeras posiciones del ranking de cada modelo. TF-IDF lidera todas las versiones de la métrica. RoBERTa sin fine-tune colapsa por debajo del azar uniforme (que sería $11\,\%$ para top-1 y $22\,\%$ para top-2).}
+\label{tab:primary}
+\end{table}
+
+\subsection{Acierto del conjunto multilabel}
+
+Sobre los 130 PBs anotados en total, ¿cuántos descubre cada modelo y con qué precisión?
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Modelo} & \textbf{Predichos} & \textbf{Correctos} & \textbf{Precisión} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\good{tf-idf} & 91 & 67 & 0{,}74 & \good{0{,}51} & \good{0{,}61} \\
+lexical & 60 & 48 & \good{0{,}80} & 0{,}37 & 0{,}51 \\
+specter & 119 & 63 & 0{,}53 & 0{,}49 & 0{,}51 \\
+bert-base & 163 & 67 & 0{,}41 & 0{,}52 & 0{,}46 \\
+scibert & 218 & 80 & 0{,}37 & \good{0{,}62} & 0{,}46 \\
+roberta & 98 & 14 & 0{,}14 & 0{,}11 & 0{,}12 \\
+\bottomrule
+\end{tabular}
+\caption{Validación multilabel con threshold óptimo por modelo ($\tau$ y $\delta$ recalibrados). TF-IDF gana en F1 con margen. Lexical tiene la mayor precisión pero a costa de un recall mediocre. SciBERT tiene el mayor recall pero a costa de explosión de cardinalidad (predice 1{,}7$\times$ los PBs reales).}
+\label{tab:multi}
+\end{table}
+
+\subsection{Score ponderado por posición (Fórmula B)}
+
+El criterio más informativo: peso\_gold\,/\,rank\_modelo, normalizado por el máximo posible (Tabla~\ref{tab:rank}).
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Modelo} & \textbf{Score B} & \textbf{Rank medio} \texttt{1stpb} & \textbf{\% en top-1} & \textbf{\% en top-2} & \textbf{\% en top-3} \\
+\midrule
+\good{tf-idf} & \good{0{,}77} & \good{2{,}21} & 63{,}3 & 76{,}5 & 82{,}7 \\
+bert-base & 0{,}66 & 2{,}46 & 44{,}9 & 64{,}3 & 79{,}6 \\
+specter & 0{,}65 & 2{,}50 & 43{,}9 & 67{,}3 & 76{,}5 \\
+lexical & 0{,}64 & 3{,}34 & 46{,}9 & 55{,}1 & 62{,}2 \\
+scibert & 0{,}63 & 2{,}59 & 37{,}8 & 63{,}3 & 80{,}6 \\
+roberta & 0{,}37 & 4{,}10 & 12{,}2 & 24{,}5 & 53{,}1 \\
+\bottomrule
+\end{tabular}
+\caption{Score por posición. TF-IDF $0{,}77$ domina; el segundo (\textsc{bert-base}) está $16\,\%$ por debajo. Lexical baja al cuarto puesto porque cuando falla manda el PB principal muy lejos (rank medio $3{,}34$).}
+\label{tab:rank}
+\end{table}
+
+\subsection{Cobertura total: PBs anotados recuperados en top-$k$}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Modelo} & \textbf{Top-1} & \% & \textbf{Top-2} & \% & \textbf{Top-3} & \% \\
+\midrule
+\good{tf-idf} & \good{68} & \good{52{,}3} & \good{92} & \good{70{,}8} & \good{104} & \good{80{,}0} \\
+bert-base & 49 & 37{,}7 & 76 & 58{,}5 & 97 & 74{,}6 \\
+specter & 48 & 36{,}9 & 77 & 59{,}2 & 92 & 70{,}8 \\
+lexical & 56 & 43{,}1 & 71 & 54{,}6 & 78 & 60{,}0 \\
+scibert & 42 & 32{,}3 & 75 & 57{,}7 & 103 & 79{,}2 \\
+roberta & 14 & 10{,}8 & 27 & 20{,}8 & 60 & 46{,}2 \\
+\bottomrule
+\end{tabular}
+\caption{De los 130 PBs anotados en total (todos los niveles), cuántos aparecen en las top-$k$ posiciones del ranking de cada modelo. TF-IDF recupera el 80\,\% mirando solo los tres primeros candidatos.}
+\label{tab:cobertura}
+\end{table}
+
+\subsection{Ruido: falsos positivos en multilabel}
+
+¿Cuánto del output multilabel del modelo es ruido (PBs predichos no anotados)?
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Modelo} & \textbf{Predichos} & \textbf{Correctos} & \textbf{Ruido (FP)} & \textbf{\% ruido} \\
+\midrule
+\good{lexical} & 60 & 48 & 12 & \good{20{,}0} \\
+\good{tf-idf} & 91 & 67 & 24 & 26{,}4 \\
+specter & 119 & 63 & 56 & 47{,}1 \\
+bert-base & 163 & 67 & 96 & 58{,}9 \\
+scibert & 218 & 80 & 138 & 63{,}3 \\
+roberta & 98 & 14 & 84 & 85{,}7 \\
+\bottomrule
+\end{tabular}
+\caption{El ruido se calcula sobre los PBs predichos en multilabel. Lexical es el modelo más limpio (4 de 5 predicciones son correctas); RoBERTa el más sucio.}
+\label{tab:ruido}
+\end{table}
+
+\subsection{Análisis por PB: ¿qué modelo falla con cuál?}
+
+Para cada PB, medimos la fracción de papers en los que el modelo \emph{no} coloca ese PB en su top-3. Es la métrica de \textbf{pérdida por clase}.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lr|rrrrrr}
+\toprule
+\textbf{PB} & \textbf{Sop.} & \textbf{lex.} & \textbf{tf-idf} & \textbf{bert} & \textbf{rob.} & \textbf{scib.} & \textbf{spec.} \\
+\midrule
+PB1 Climate & 38 & \good{0\%} & 13\% & 24\% & 74\% & 8\% & 47\% \\
+PB2 Ocean & 8 & \good{0\%} & \good{0\%} & 12\% & \good{0\%} & 12\% & 12\% \\
+PB3 Ozone & 8 & \good{12\%} & 38\% & 25\% & 50\% & 38\% & 38\% \\
+PB4 Biogeochem & 12 & 83\% & 33\% & 33\% & 42\% & 75\% & \good{8\%} \\
+PB5 Freshwater & 9 & 78\% & 22\% & 22\% & 100\% & 44\% & \good{11\%} \\
+PB6 Land-System & 6 & 83\% & 33\% & 17\% & \good{0\%} & \good{0\%} & 33\% \\
+PB7 Biosphere & 19 & 89\% & 32\% & 42\% & 53\% & \good{11\%} & 26\% \\
+PB8 Novel Ent. & 7 & 57\% & 43\% & \good{29\%} & 71\% & 57\% & 71\% \\
+PB9 Aerosol & 23 & 35\% & \good{4\%} & 17\% & 39\% & \good{4\%} & 9\% \\
+\bottomrule
+\end{tabular}
+\caption{Porcentaje de papers con PB anotada en los que el modelo \emph{pierde} esa PB (no aparece en su top-3). En azul, el modelo con menor pérdida por PB. Ningún modelo es uniformemente bueno: la receta de ensemble por PB de la §\ref{sec:operativa} es consecuencia directa de esta tabla.}
+\label{tab:errores_pb}
+\end{table}
+
+\section{Discusión crítica}\label{sec:discusion}
+
+\subsection{¿Por qué un baseline TF-IDF supera a los transformers?}
+
+Esta es la pregunta incómoda y la respuesta tiene tres componentes que no se deben confundir:
+
+\paragraph{(i) Los transformers no están fine-tuneados.}
+Usamos mean-pooling sobre el \texttt{last\_hidden\_state} de modelos pre-entrenados. Es la peor configuración posible para usar BERT en una tarea de clasificación temática: equivale a usar el modelo como extractor de features sin proyección supervisada. \textbf{Fine-tunear \textsc{specter} sobre las 138 anotaciones con contrastive learning} (loss tipo NTXent o triplet) debería mejorar substancialmente y, plausiblemente, situarlo por encima de TF-IDF. Esto está pendiente.
+
+\paragraph{(ii) La tarea tiene mucha señal léxica.}
+Los abstracts académicos contienen \emph{explícitamente} terminología PB: ``we study climate change effects on \ldots''. TF-IDF aprovecha esta señal directamente. No es magia; es que el problema, parcialmente, es de coincidencia léxica calibrada. Esto no es despectivo: en muchas tareas reales de NLP académico la baseline léxica es el suelo difícil de superar.
+
+\paragraph{(iii) El corpus PB de referencia favorece la representación sparsa.}
+Los documentos PB son listas estructuradas de keywords y frases definitorias. TF-IDF compara dos representaciones de la misma naturaleza (bag-of-words de texto técnico). Es un emparejamiento natural. Un documento PB más narrativo (textos largos en lenguaje natural fluido) probablemente desplazaría la ventaja hacia \textsc{specter}.
+
+\paragraph{Conclusión.} TF-IDF no es ``mejor'' en abstracto, es \textbf{mejor en este setup}. La afirmación robusta es: \emph{en zero-shot, sin fine-tune, con documentos PB estructurados como keywords, TF-IDF supera a transformers genéricos}. Cualquier extrapolación más allá requiere experimento.
+
+\subsection{Patrones patológicos de los transformers sin fine-tune}
+
+Tres confusiones recurrentes invalidan los transformers como están:
+
+\begin{itemize}
+\item \textbf{Atractor a PB6 (Land-System).} \textsc{bert-base}, \textsc{scibert} y \textsc{roberta} arrastran sistemáticamente hacia PB6 documentos de PB1, PB7 y PB9. Las confusiones top-3 lo muestran: \textsc{roberta} confunde PB1$\to$PB6 en 27 papers, PB7$\to$PB6 en 17, PB9$\to$PB6 en 16. La hipótesis razonable: el vocabulario ``land'', ``surface'', ``system'' tiene una representación atractiva en el embedding mean-pooled, no contrarrestada por fine-tune supervisado.
+\item \textbf{Colapso del espacio de RoBERTa.} Empíricamente observamos cosines $>0{,}99$ entre clases para muchos documentos. La distribución de scores es plana e indistinguible. \textsc{roberta}-base sin pooling adaptado no es usable como extractor temático.
+\item \textbf{Sobre-cardinalidad de SciBERT.} Predice 218 PBs sobre 130 reales. Para alcanzar su recall de $0{,}62$ paga un precio de $138$ falsos positivos. Su ``ansiedad'' es interpretable: el vocabulario científico activa múltiples PBs en cada abstract.
+\end{itemize}
+
+Las confusiones de \textsc{specter}, en contraste, son \emph{físicamente coherentes}: PB1$\leftrightarrow$PB3, PB4$\leftrightarrow$PB2. Son errores ``razonables'' en el sentido de que un anotador humano podría dudar en esos pares. Los de \textsc{bert}/\textsc{scibert} son arbitrarios.
+
+\subsection{Lo que NO se debe afirmar sin asterisco}
+
+Como investigadores responsables, debemos ser explícitos sobre lo que las cifras no soportan:
+
+\begin{itemize}
+\item ``\textsc{specter} es peor que TF-IDF'' $\to$ \emph{en este setup zero-shot}. Con fine-tune contrastivo el orden plausiblemente se invierte.
+\item ``PB8 es solo el 2\,\% del corpus UPV'' $\to$ esa cifra viene de un modelo cuyo F1 en PB8 es $\sim 0{,}15$. Una fracción no medida de PB8 reales puede estar etiquetada como otra cosa.
+\item ``El modelo acierta el 63\,\%'' $\to$ sobre 98 docs con distribución desbalanceada, sin test independiente, con un solo anotador.
+\item ``El recall multilabel mide cobertura real'' $\to$ mide cobertura sobre 130 PBs anotados, no sobre el conjunto verdadero (desconocido) de etiquetas correctas.
+\end{itemize}
+
+\subsection{Limitaciones formales}
+
+\begin{enumerate}
+\item \textbf{Tamaño muestral del ground truth ($n=98$, soportes por PB hasta 6).} Los intervalos de confianza binomial al 95\,\% para soportes pequeños son amplios: para PB6 (soporte 6), una pérdida observada del 0\,\% tiene IC inferior 0\,\% pero IC superior $\sim 39\,\%$. Cualquier ranking por-PB es ruidoso.
+\item \textbf{Ausencia de test independiente.} La calibración de $\tau$ y $\delta$ se hizo sobre la misma muestra que valida el modelo. Es \emph{data leakage} metodológico. Para un paper, cross-validation $k$-fold es obligatorio.
+\item \textbf{Anotador único.} Sin inter-annotator agreement no conocemos el techo de la tarea. Si dos humanos coincidieran solo el 70\,\%, ningún modelo puede aspirar a más.
+\item \textbf{Heterogeneidad temporal.} Los modelos vieron texto científico hasta 2020 (\textsc{specter}) o antes. Para abstracts 2023--2024 (terminología emergente: microplásticos, EDCs, nanopartículas) la representación puede degradarse.
+\item \textbf{Sesgo de selección de anotaciones.} Los 138 papers anotados se seleccionaron por procedimiento no documentado en este trabajo. Si están sesgados hacia ciertos temas, las métricas no son representativas del comportamiento sobre los 31\,560 papers totales.
+\end{enumerate}
+
+\section{Recomendación operativa}\label{sec:operativa}
+
+\subsection{Modelo único}
+
+Si el caso de uso obliga a elegir \emph{un} modelo:
+
+\begin{itemize}
+\item \textbf{Etiquetado del tema principal de un paper.} \textsc{tf-idf}, modo \emph{top-2}. Acierta el \texttt{1stpb} humano en el 77\,\% de los papers. Coste $\approx 0$, GPU innecesaria, $\sim 30$ segundos para etiquetar el corpus entero.
+\item \textbf{Etiquetado multilabel realista.} \textsc{tf-idf}, $\tau=0{,}03$, $\delta=0{,}08$. F1=$0{,}61$, P=$0{,}74$, R=$0{,}51$.
+\item \textbf{Auto-anotación sin revisión (alta precisión).} \textsc{lexical}. P=$0{,}80$. Útil como filtro de alta confianza para producción inmediata.
+\item \textbf{Análisis exploratorio temático con embeddings densos.} \textsc{specter}. Sus confusiones intra-familia son físicamente coherentes y útiles para detectar papers borderline interdisciplinares.
+\item \textbf{No usar.} \textsc{roberta} sin fine-tune (colapsa); \textsc{bert-base} y \textsc{scibert} sin fine-tune en producción (atractor PB6).
+\end{itemize}
+
+\subsection{Ensemble por PB}
+
+De la Tabla \ref{tab:errores_pb} se deriva una receta de ensemble óptimo \emph{por clase}:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{l l r}
+\toprule
+\textbf{PB} & \textbf{Modelo recomendado} & \textbf{\% pérdida} \\
+\midrule
+PB1 Climate Change & \textsc{lexical} & 0 \\
+PB2 Ocean Acidification & \textsc{lexical} \emph{o} \textsc{tf-idf} & 0 \\
+PB3 Stratospheric Ozone & \textsc{lexical} & 12 \\
+PB4 Biogeochemical Flows & \textsc{specter} & 8 \\
+PB5 Freshwater Use & \textsc{specter} & 11 \\
+PB6 Land-System Change & \textsc{scibert} & 0 \\
+PB7 Biosphere Integrity & \textsc{scibert} & 11 \\
+PB8 Novel Entities & \textsc{bert-base} & 29 \\
+PB9 Atmospheric Aerosol & \textsc{tf-idf} \emph{o} \textsc{scibert} & 4 \\
+\bottomrule
+\end{tabular}
+\caption{Ensemble por PB. La pérdida agregada del ensemble se estima en $\sim 8\,\%$ (media ponderada por soporte), frente al $\sim 20\,\%$ del mejor modelo individual.}
+\label{tab:ensemble}
+\end{table}
+
+La intuición es clara: lexical clava lo que tiene firma léxica inequívoca (clima, océano, ozono); \textsc{specter} captura interacciones sistémicas (biogeoquímica, agua); \textsc{scibert} aporta en biosfera y aerosoles por vocabulario técnico; PB8 sigue siendo el caso difícil para todos.
+
+\subsection{Siguiente paso técnico crítico}
+
+Fine-tunear \textsc{specter} sobre las 138 anotaciones con contrastive learning (triplet loss sobre pares positivos/negativos del Excel) y re-evaluar. La predicción razonable es que \textsc{specter}-tuned superaría a TF-IDF tanto en F1 multilabel como en score por posición, especialmente en PB4, PB5 y PB7. Sin ese experimento, el ranking actual es el real.
+
+\section{Conclusiones}
+
+\begin{enumerate}
+\item TF-IDF con threshold calibrado ($\tau=0{,}03$, $\delta=0{,}08$) es el modelo de referencia para clasificar abstracts en Planetary Boundaries en este corpus: 63\,\% top-1, 77\,\% top-2, F1 multilabel = $0{,}61$, score ponderado por posición = $0{,}77$.
+\item Los transformers genéricos sin fine-tune (\textsc{bert-base}, \textsc{roberta}, \textsc{scibert}) están claramente por debajo y exhiben patrones patológicos (notablemente, atractor hacia PB6) que invalidan su uso en producción.
+\item \textsc{specter} es el único transformer competitivo y produce errores físicamente coherentes. Es la apuesta natural para fine-tune supervisado.
+\item Ningún modelo es uniformemente bueno: la pérdida por PB varía del 0\,\% al 89\,\% según la combinación modelo$\times$clase. Un ensemble por PB reduce la pérdida agregada al $\sim 8\,\%$.
+\item La firma temática que emerge (PB1, PB6, PB2 dominantes; PB8 marginal) es \textbf{cualitativamente robusta} a la elección del modelo (excluyendo RoBERTa). Las coocurrencias PB$\times$PB físicamente esperadas (PB3$\leftrightarrow$PB9, PB6$\leftrightarrow$PB7, PB4$\leftrightarrow$PB5) se recuperan en todos los modelos competitivos con Jaccard $\geq 0{,}15$, lo que sirve de control de calidad sin necesidad de anotaciones adicionales.
+\item Las limitaciones metodológicas (n pequeño, anotador único, leak de threshold) impiden conclusiones tajantes sobre cifras absolutas. Las conclusiones cualitativas (orden de los modelos, patrones de error, dominancia de PBs) son sólidas.
+\end{enumerate}
+
+\section*{Referencias}
+
+\small
+\begin{enumerate}
+\item Steffen, W., et al. (2015). Planetary boundaries: Guiding human development on a changing planet. \emph{Science}, 347(6223).
+\item Rockström, J., et al. (2009). A safe operating space for humanity. \emph{Nature}, 461.
+\item Devlin, J., Chang, M.-W., Lee, K., \& Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. \emph{NAACL-HLT}.
+\item Liu, Y., et al. (2019). RoBERTa: A Robustly Optimized BERT Pretraining Approach. \emph{arXiv:1907.11692}.
+\item Beltagy, I., Lo, K., \& Cohan, A. (2019). SciBERT: A Pretrained Language Model for Scientific Text. \emph{EMNLP}.
+\item Cohan, A., Feldman, S., Beltagy, I., Downey, D., \& Weld, D. S. (2020). SPECTER: Document-level Representation Learning using Citation-informed Transformers. \emph{ACL}.
+\item Larosa, F., \& Mysiak, J. (2022). Mapping the landscape of climate services. \emph{Environmental Research Letters}.
+\end{enumerate}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\
+\small\textit{Memoria asociada al pipeline reproducible en \texttt{scripts/aed\_master.py}, \texttt{scripts/aed\_metrics.py}, \texttt{scripts/aed\_validation\_primary.py}, \texttt{scripts/aed\_rank\_score.py} y \texttt{scripts/aed\_success\_formula.py}. Predicciones de los seis modelos sobre los 31\,560 abstracts en \texttt{nlp/bert\_finetuning/outputs\_full/}. Datos derivados (figuras y tablas finales) en \texttt{docs/eda/aed/figures/} y \texttt{docs/eda/aed/tables/}.}
+
+\end{document}

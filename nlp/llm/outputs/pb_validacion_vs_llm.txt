@@ -1,0 +1,48 @@
+Cruce de validacion_real.csv (validación manual) con la última inferencia del LLM
+(qwen2.5_14b_fewshot_v4_principle, 146 docs, todos presentes en el ground truth).
+Conteo de documentos por PB.
+
+=== JSON 1 — PB primario (1er PB real vs 1er PB predicho) ===
+
+{
+  "modelo": "qwen2.5_14b_fewshot_v4_principle",
+  "docs_evaluados": 146,
+  "pb_primario": {
+    "PB1": { "validacion": 24, "llm": 21 },
+    "PB2": { "validacion": 8,  "llm": 8 },
+    "PB3": { "validacion": 8,  "llm": 6 },
+    "PB4": { "validacion": 9,  "llm": 14 },
+    "PB5": { "validacion": 3,  "llm": 5 },
+    "PB6": { "validacion": 4,  "llm": 3 },
+    "PB7": { "validacion": 12, "llm": 8 },
+    "PB8": { "validacion": 7,  "llm": 5 },
+    "PB9": { "validacion": 21, "llm": 24 }
+  }
+}
+
+=== JSON 2 — 1er + 2do PB (real vs predicho, cada doc cuenta para sus 2 PBs) ===
+
+{
+  "modelo": "qwen2.5_14b_fewshot_v4_principle",
+  "docs_evaluados": 146,
+  "pb_primario_y_secundario": {
+    "PB1": { "validacion": 39, "llm": 25 },
+    "PB2": { "validacion": 8,  "llm": 10 },
+    "PB3": { "validacion": 8,  "llm": 7 },
+    "PB4": { "validacion": 11, "llm": 19 },
+    "PB5": { "validacion": 8,  "llm": 7 },
+    "PB6": { "validacion": 6,  "llm": 3 },
+    "PB7": { "validacion": 17, "llm": 9 },
+    "PB8": { "validacion": 7,  "llm": 5 },
+    "PB9": { "validacion": 23, "llm": 24 }
+  }
+}
+
+=== Notas ===
+
+- validacion = nº de docs cuyo PB anotado a mano es ese PB.
+- llm = nº de docs cuyo PB predicho es ese PB.
+- En JSON 1 los docs sin PB asignado (real None o LLM None) no suman a ningún PB,
+  por eso los totales no llegan a 146.
+- En JSON 2, real usa columnas 1stpb + 2ndpb; LLM usa llm_primary_pb + primer
+  valor de llm_secondary_pbs.

@@ -131,6 +131,17 @@ def parse_args() -> argparse.Namespace:
         help="Si >0, limita documentos para prueba rapida.",
     )
     parser.add_argument(
+        "--clean-text",
+        action="store_true",
+        help="Aplica limpieza defensiva (URLs, HTML, DOIs, copyright, whitespace) al texto de entrada.",
+    )
+    parser.add_argument(
+        "--min-text-len",
+        type=int,
+        default=200,
+        help="Longitud minima de caracteres tras limpieza; abstracts mas cortos se descartan.",
+    )
+    parser.add_argument(
         "--fallback-top1",
         action="store_true",
         help="Si no pasa threshold, asigna top-1 como fallback.",
@@ -162,10 +173,45 @@ def parse_float_grid(grid: str) -> list[float]:
     return values
 
 
+_URL_RE = re.compile(r"https?://\S+|www\.\S+")
+_EMAIL_RE = re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b")
+_HTML_RE = re.compile(r"<[^>]+>")
+_HTMLENT_RE = re.compile(r"&[a-zA-Z#0-9]{2,8};")
+_DOI_RE = re.compile(r"\b(?:doi[:\s]*|https?://(?:dx\.)?doi\.org/)\S+", re.IGNORECASE)
+_CTRL_RE = re.compile(r"[\x00-\x1f\x7f-\x9f]")
+_MULTISPACE_RE = re.compile(r"\s+")
+_COPYRIGHT_RE = re.compile(r"©.*?(?:reserved|rights|elsevier|wiley|springer|mdpi|taylor)\.?",
+                           re.IGNORECASE)
+
+
 def normalize_text(value: object) -> str:
     if pd.isna(value):
         return ""
     return str(value).strip()
+
+
+def clean_for_inference(value: object, min_len: int = 0) -> str:
+    """Limpieza defensiva de abstracts antes de pasar a tokenizer.
+
+    - Elimina URLs, emails, etiquetas HTML y entidades.
+    - Quita DOIs y boilerplate de copyright editorial.
+    - Normaliza espacios y caracteres de control.
+    - Devuelve cadena vacia si tras limpiar queda <min_len caracteres.
+    """
+    if pd.isna(value):
+        return ""
+    txt = str(value)
+    txt = _HTML_RE.sub(" ", txt)
+    txt = _HTMLENT_RE.sub(" ", txt)
+    txt = _URL_RE.sub(" ", txt)
+    txt = _EMAIL_RE.sub(" ", txt)
+    txt = _DOI_RE.sub(" ", txt)
+    txt = _COPYRIGHT_RE.sub(" ", txt)
+    txt = _CTRL_RE.sub(" ", txt)
+    txt = _MULTISPACE_RE.sub(" ", txt).strip()
+    if min_len > 0 and len(txt) < min_len:
+        return ""
+    return txt
 
 
 def parse_pb_code(value: object) -> str | None:
@@ -213,8 +259,20 @@ def load_project_data(args: argparse.Namespace) -> tuple[pd.DataFrame, pd.DataFr
         raise ValueError(f"No existe columna '{args.text_col}' en corpus. Disponibles: {available}")
 
     merged = corpus.merge(trace, on="doc_id", how="left")
-    merged["text_input"] = merged[args.text_col].map(normalize_text)
-    merged = merged[merged["text_input"].str.len() > 0].copy()
+    if getattr(args, "clean_text", False):
+        min_len = max(0, int(getattr(args, "min_text_len", 0)))
+        merged["text_input"] = merged[args.text_col].map(
+            lambda v: clean_for_inference(v, min_len=min_len)
+        )
+        before = len(merged)
+        merged = merged[merged["text_input"].str.len() > 0].copy()
+        print(
+            f"[INFO] Limpieza activa: descartados {before - len(merged)} abstracts "
+            f"con <{min_len} chars tras limpiar."
+        )
+    else:
+        merged["text_input"] = merged[args.text_col].map(normalize_text)
+        merged = merged[merged["text_input"].str.len() > 0].copy()
     merged["pb_code_from_folder"] = merged["pb_folder"].map(parse_pb_code)
     merged["filter_status"] = merged["filter_status"].fillna("unknown")
     merged["filter_reason"] = merged["filter_reason"].fillna("")

@@ -1,0 +1,1462 @@
+{
+  "per_pb_top_terms": {
+    "PB1": [
+      {
+        "term": "climate",
+        "count": 4925
+      },
+      {
+        "term": "global",
+        "count": 1511
+      },
+      {
+        "term": "carbon",
+        "count": 1435
+      },
+      {
+        "term": "energy",
+        "count": 1068
+      },
+      {
+        "term": "future",
+        "count": 871
+      },
+      {
+        "term": "temperature",
+        "count": 859
+      },
+      {
+        "term": "emissions",
+        "count": 835
+      },
+      {
+        "term": "impacts",
+        "count": 802
+      },
+      {
+        "term": "environmental",
+        "count": 729
+      },
+      {
+        "term": "surface",
+        "count": 690
+      },
+      {
+        "term": "production",
+        "count": 665
+      },
+      {
+        "term": "development",
+        "count": 645
+      },
+      {
+        "term": "ocean",
+        "count": 625
+      },
+      {
+        "term": "water",
+        "count": 620
+      },
+      {
+        "term": "under",
+        "count": 614
+      },
+      {
+        "term": "soil",
+        "count": 599
+      },
+      {
+        "term": "impact",
+        "count": 599
+      },
+      {
+        "term": "warming",
+        "count": 589
+      },
+      {
+        "term": "adaptation",
+        "count": 582
+      },
+      {
+        "term": "sustainable",
+        "count": 574
+      },
+      {
+        "term": "important",
+        "count": 551
+      },
+      {
+        "term": "potential",
+        "count": 550
+      },
+      {
+        "term": "precipitation",
+        "count": 549
+      },
+      {
+        "term": "conditions",
+        "count": 542
+      },
+      {
+        "term": "atmospheric",
+        "count": 528
+      },
+      {
+        "term": "well",
+        "count": 518
+      },
+      {
+        "term": "land",
+        "count": 503
+      },
+      {
+        "term": "regional",
+        "count": 497
+      },
+      {
+        "term": "earth",
+        "count": 475
+      },
+      {
+        "term": "human",
+        "count": 470
+      },
+      {
+        "term": "food",
+        "count": 469
+      },
+      {
+        "term": "variability",
+        "count": 461
+      },
+      {
+        "term": "science",
+        "count": 455
+      },
+      {
+        "term": "regions",
+        "count": 442
+      },
+      {
+        "term": "health",
+        "count": 438
+      },
+      {
+        "term": "policy",
+        "count": 437
+      },
+      {
+        "term": "processes",
+        "count": 436
+      },
+      {
+        "term": "current",
+        "count": 430
+      },
+      {
+        "term": "increased",
+        "count": 416
+      },
+      {
+        "term": "some",
+        "count": 407
+      }
+    ],
+    "PB2": [
+      {
+        "term": "ocean",
+        "count": 4261
+      },
+      {
+        "term": "marine",
+        "count": 3036
+      },
+      {
+        "term": "coastal",
+        "count": 1582
+      },
+      {
+        "term": "acidification",
+        "count": 1435
+      },
+      {
+        "term": "species",
+        "count": 1256
+      },
+      {
+        "term": "under",
+        "count": 1196
+      },
+      {
+        "term": "water",
+        "count": 1138
+      },
+      {
+        "term": "conditions",
+        "count": 1078
+      },
+      {
+        "term": "global",
+        "count": 1058
+      },
+      {
+        "term": "coral",
+        "count": 1027
+      },
+      {
+        "term": "seawater",
+        "count": 1009
+      },
+      {
+        "term": "temperature",
+        "count": 986
+      },
+      {
+        "term": "climate",
+        "count": 963
+      },
+      {
+        "term": "surface",
+        "count": 919
+      },
+      {
+        "term": "carbon",
+        "count": 895
+      },
+      {
+        "term": "environmental",
+        "count": 870
+      },
+      {
+        "term": "growth",
+        "count": 851
+      },
+      {
+        "term": "carbonate",
+        "count": 815
+      },
+      {
+        "term": "acidi",
+        "count": 712
+      },
+      {
+        "term": "rates",
+        "count": 704
+      },
+      {
+        "term": "increased",
+        "count": 692
+      },
+      {
+        "term": "production",
+        "count": 687
+      },
+      {
+        "term": "future",
+        "count": 683
+      },
+      {
+        "term": "science",
+        "count": 651
+      },
+      {
+        "term": "impact",
+        "count": 618
+      },
+      {
+        "term": "response",
+        "count": 610
+      },
+      {
+        "term": "ecosystems",
+        "count": 604
+      },
+      {
+        "term": "potential",
+        "count": 594
+      },
+      {
+        "term": "elevated",
+        "count": 591
+      },
+      {
+        "term": "important",
+        "count": 590
+      },
+      {
+        "term": "waters",
+        "count": 589
+      },
+      {
+        "term": "processes",
+        "count": 588
+      },
+      {
+        "term": "reef",
+        "count": 585
+      },
+      {
+        "term": "chemistry",
+        "count": 585
+      },
+      {
+        "term": "atmospheric",
+        "count": 582
+      },
+      {
+        "term": "warming",
+        "count": 581
+      },
+      {
+        "term": "concentrations",
+        "count": 581
+      },
+      {
+        "term": "organisms",
+        "count": 573
+      },
+      {
+        "term": "impacts",
+        "count": 543
+      },
+      {
+        "term": "here",
+        "count": 521
+      }
+    ],
+    "PB3": [
+      {
+        "term": "ozone",
+        "count": 6822
+      },
+      {
+        "term": "stratospheric",
+        "count": 1914
+      },
+      {
+        "term": "stratosphere",
+        "count": 1232
+      },
+      {
+        "term": "surface",
+        "count": 1088
+      },
+      {
+        "term": "climate",
+        "count": 1038
+      },
+      {
+        "term": "global",
+        "count": 975
+      },
+      {
+        "term": "lower",
+        "count": 944
+      },
+      {
+        "term": "atmospheric",
+        "count": 941
+      },
+      {
+        "term": "polar",
+        "count": 931
+      },
+      {
+        "term": "measurements",
+        "count": 889
+      },
+      {
+        "term": "chemistry",
+        "count": 873
+      },
+      {
+        "term": "observations",
+        "count": 861
+      },
+      {
+        "term": "radiation",
+        "count": 839
+      },
+      {
+        "term": "emissions",
+        "count": 797
+      },
+      {
+        "term": "temperature",
+        "count": 790
+      },
+      {
+        "term": "tropospheric",
+        "count": 771
+      },
+      {
+        "term": "layer",
+        "count": 759
+      },
+      {
+        "term": "solar",
+        "count": 743
+      },
+      {
+        "term": "depletion",
+        "count": 719
+      },
+      {
+        "term": "transport",
+        "count": 689
+      },
+      {
+        "term": "chemical",
+        "count": 658
+      },
+      {
+        "term": "trends",
+        "count": 616
+      },
+      {
+        "term": "winter",
+        "count": 609
+      },
+      {
+        "term": "well",
+        "count": 594
+      },
+      {
+        "term": "variability",
+        "count": 592
+      },
+      {
+        "term": "troposphere",
+        "count": 586
+      },
+      {
+        "term": "period",
+        "count": 580
+      },
+      {
+        "term": "simulations",
+        "count": 579
+      },
+      {
+        "term": "concentrations",
+        "count": 576
+      },
+      {
+        "term": "vortex",
+        "count": 571
+      },
+      {
+        "term": "potential",
+        "count": 567
+      },
+      {
+        "term": "arctic",
+        "count": 563
+      },
+      {
+        "term": "impact",
+        "count": 557
+      },
+      {
+        "term": "loss",
+        "count": 535
+      },
+      {
+        "term": "atmosphere",
+        "count": 523
+      },
+      {
+        "term": "uv-b",
+        "count": 517
+      },
+      {
+        "term": "conditions",
+        "count": 502
+      },
+      {
+        "term": "satellite",
+        "count": 499
+      },
+      {
+        "term": "vertical",
+        "count": 499
+      },
+      {
+        "term": "antarctic",
+        "count": 490
+      }
+    ],
+    "PB4": [
+      {
+        "term": "water",
+        "count": 1458
+      },
+      {
+        "term": "nutrient",
+        "count": 1408
+      },
+      {
+        "term": "nitrogen",
+        "count": 1115
+      },
+      {
+        "term": "soil",
+        "count": 794
+      },
+      {
+        "term": "climate",
+        "count": 722
+      },
+      {
+        "term": "production",
+        "count": 683
+      },
+      {
+        "term": "global",
+        "count": 643
+      },
+      {
+        "term": "runoff",
+        "count": 637
+      },
+      {
+        "term": "organic",
+        "count": 596
+      },
+      {
+        "term": "ocean",
+        "count": 577
+      },
+      {
+        "term": "environmental",
+        "count": 563
+      },
+      {
+        "term": "surface",
+        "count": 561
+      },
+      {
+        "term": "conditions",
+        "count": 552
+      },
+      {
+        "term": "concentrations",
+        "count": 552
+      },
+      {
+        "term": "biogeochemical",
+        "count": 547
+      },
+      {
+        "term": "phytoplankton",
+        "count": 539
+      },
+      {
+        "term": "increased",
+        "count": 524
+      },
+      {
+        "term": "processes",
+        "count": 514
+      },
+      {
+        "term": "phosphorus",
+        "count": 505
+      },
+      {
+        "term": "growth",
+        "count": 482
+      },
+      {
+        "term": "under",
+        "count": 472
+      },
+      {
+        "term": "nutrients",
+        "count": 469
+      },
+      {
+        "term": "cycle",
+        "count": 466
+      },
+      {
+        "term": "carbon",
+        "count": 465
+      },
+      {
+        "term": "river",
+        "count": 462
+      },
+      {
+        "term": "rates",
+        "count": 444
+      },
+      {
+        "term": "higher",
+        "count": 430
+      },
+      {
+        "term": "temperature",
+        "count": 422
+      },
+      {
+        "term": "sediment",
+        "count": 421
+      },
+      {
+        "term": "important",
+        "count": 393
+      },
+      {
+        "term": "impact",
+        "count": 378
+      },
+      {
+        "term": "coastal",
+        "count": 376
+      },
+      {
+        "term": "biomass",
+        "count": 370
+      },
+      {
+        "term": "community",
+        "count": 369
+      },
+      {
+        "term": "species",
+        "count": 366
+      },
+      {
+        "term": "ecosystems",
+        "count": 364
+      },
+      {
+        "term": "land",
+        "count": 362
+      },
+      {
+        "term": "microbial",
+        "count": 359
+      },
+      {
+        "term": "potential",
+        "count": 357
+      },
+      {
+        "term": "dissolved",
+        "count": 351
+      }
+    ],
+    "PB5": [
+      {
+        "term": "water",
+        "count": 6413
+      },
+      {
+        "term": "environmental",
+        "count": 1705
+      },
+      {
+        "term": "management",
+        "count": 1464
+      },
+      {
+        "term": "climate",
+        "count": 1427
+      },
+      {
+        "term": "river",
+        "count": 1420
+      },
+      {
+        "term": "global",
+        "count": 1132
+      },
+      {
+        "term": "surface",
+        "count": 991
+      },
+      {
+        "term": "groundwater",
+        "count": 944
+      },
+      {
+        "term": "freshwater",
+        "count": 858
+      },
+      {
+        "term": "basin",
+        "count": 788
+      },
+      {
+        "term": "resources",
+        "count": 751
+      },
+      {
+        "term": "irrigation",
+        "count": 718
+      },
+      {
+        "term": "land",
+        "count": 715
+      },
+      {
+        "term": "temperature",
+        "count": 682
+      },
+      {
+        "term": "soil",
+        "count": 648
+      },
+      {
+        "term": "development",
+        "count": 630
+      },
+      {
+        "term": "conditions",
+        "count": 627
+      },
+      {
+        "term": "flow",
+        "count": 624
+      },
+      {
+        "term": "production",
+        "count": 616
+      },
+      {
+        "term": "future",
+        "count": 610
+      },
+      {
+        "term": "processes",
+        "count": 609
+      },
+      {
+        "term": "human",
+        "count": 591
+      },
+      {
+        "term": "impact",
+        "count": 580
+      },
+      {
+        "term": "under",
+        "count": 563
+      },
+      {
+        "term": "well",
+        "count": 559
+      },
+      {
+        "term": "precipitation",
+        "count": 541
+      },
+      {
+        "term": "potential",
+        "count": 524
+      },
+      {
+        "term": "quality",
+        "count": 507
+      },
+      {
+        "term": "important",
+        "count": 504
+      },
+      {
+        "term": "impacts",
+        "count": 484
+      },
+      {
+        "term": "food",
+        "count": 480
+      },
+      {
+        "term": "region",
+        "count": 468
+      },
+      {
+        "term": "natural",
+        "count": 460
+      },
+      {
+        "term": "lake",
+        "count": 442
+      },
+      {
+        "term": "regions",
+        "count": 436
+      },
+      {
+        "term": "environment",
+        "count": 426
+      },
+      {
+        "term": "ocean",
+        "count": 419
+      },
+      {
+        "term": "sustainability",
+        "count": 415
+      },
+      {
+        "term": "associated",
+        "count": 415
+      },
+      {
+        "term": "agricultural",
+        "count": 414
+      }
+    ],
+    "PB6": [
+      {
+        "term": "land",
+        "count": 5785
+      },
+      {
+        "term": "cover",
+        "count": 1653
+      },
+      {
+        "term": "climate",
+        "count": 1612
+      },
+      {
+        "term": "urban",
+        "count": 1428
+      },
+      {
+        "term": "forest",
+        "count": 1288
+      },
+      {
+        "term": "soil",
+        "count": 1267
+      },
+      {
+        "term": "water",
+        "count": 1149
+      },
+      {
+        "term": "surface",
+        "count": 1106
+      },
+      {
+        "term": "global",
+        "count": 1082
+      },
+      {
+        "term": "spatial",
+        "count": 1020
+      },
+      {
+        "term": "development",
+        "count": 963
+      },
+      {
+        "term": "natural",
+        "count": 849
+      },
+      {
+        "term": "environmental",
+        "count": 792
+      },
+      {
+        "term": "remote",
+        "count": 763
+      },
+      {
+        "term": "management",
+        "count": 735
+      },
+      {
+        "term": "agricultural",
+        "count": 727
+      },
+      {
+        "term": "vegetation",
+        "count": 699
+      },
+      {
+        "term": "future",
+        "count": 676
+      },
+      {
+        "term": "information",
+        "count": 664
+      },
+      {
+        "term": "planning",
+        "count": 624
+      },
+      {
+        "term": "sensing",
+        "count": 623
+      },
+      {
+        "term": "region",
+        "count": 620
+      },
+      {
+        "term": "temperature",
+        "count": 615
+      },
+      {
+        "term": "landscape",
+        "count": 606
+      },
+      {
+        "term": "production",
+        "count": 600
+      },
+      {
+        "term": "under",
+        "count": 598
+      },
+      {
+        "term": "human",
+        "count": 597
+      },
+      {
+        "term": "local",
+        "count": 589
+      },
+      {
+        "term": "land-use",
+        "count": 552
+      },
+      {
+        "term": "regional",
+        "count": 541
+      },
+      {
+        "term": "processes",
+        "count": 536
+      },
+      {
+        "term": "important",
+        "count": 532
+      },
+      {
+        "term": "potential",
+        "count": 509
+      },
+      {
+        "term": "impact",
+        "count": 505
+      },
+      {
+        "term": "increased",
+        "count": 498
+      },
+      {
+        "term": "precipitation",
+        "count": 495
+      },
+      {
+        "term": "well",
+        "count": 493
+      },
+      {
+        "term": "three",
+        "count": 481
+      },
+      {
+        "term": "ecological",
+        "count": 480
+      },
+      {
+        "term": "earth",
+        "count": 478
+      }
+    ],
+    "PB7": [
+      {
+        "term": "species",
+        "count": 4309
+      },
+      {
+        "term": "biodiversity",
+        "count": 1834
+      },
+      {
+        "term": "ecosystem",
+        "count": 1792
+      },
+      {
+        "term": "ecological",
+        "count": 1652
+      },
+      {
+        "term": "climate",
+        "count": 1563
+      },
+      {
+        "term": "environmental",
+        "count": 1379
+      },
+      {
+        "term": "global",
+        "count": 1176
+      },
+      {
+        "term": "conservation",
+        "count": 1162
+      },
+      {
+        "term": "human",
+        "count": 931
+      },
+      {
+        "term": "ecosystems",
+        "count": 847
+      },
+      {
+        "term": "development",
+        "count": 820
+      },
+      {
+        "term": "diversity",
+        "count": 809
+      },
+      {
+        "term": "management",
+        "count": 772
+      },
+      {
+        "term": "services",
+        "count": 756
+      },
+      {
+        "term": "habitat",
+        "count": 728
+      },
+      {
+        "term": "risk",
+        "count": 706
+      },
+      {
+        "term": "future",
+        "count": 705
+      },
+      {
+        "term": "under",
+        "count": 704
+      },
+      {
+        "term": "natural",
+        "count": 689
+      },
+      {
+        "term": "water",
+        "count": 675
+      },
+      {
+        "term": "marine",
+        "count": 624
+      },
+      {
+        "term": "important",
+        "count": 619
+      },
+      {
+        "term": "potential",
+        "count": 616
+      },
+      {
+        "term": "habitats",
+        "count": 553
+      },
+      {
+        "term": "nature",
+        "count": 548
+      },
+      {
+        "term": "green",
+        "count": 524
+      },
+      {
+        "term": "many",
+        "count": 522
+      },
+      {
+        "term": "sustainability",
+        "count": 521
+      },
+      {
+        "term": "environment",
+        "count": 520
+      },
+      {
+        "term": "social",
+        "count": 517
+      },
+      {
+        "term": "processes",
+        "count": 516
+      },
+      {
+        "term": "some",
+        "count": 513
+      },
+      {
+        "term": "current",
+        "count": 510
+      },
+      {
+        "term": "information",
+        "count": 506
+      },
+      {
+        "term": "food",
+        "count": 506
+      },
+      {
+        "term": "communities",
+        "count": 505
+      },
+      {
+        "term": "well",
+        "count": 500
+      },
+      {
+        "term": "impacts",
+        "count": 498
+      },
+      {
+        "term": "land",
+        "count": 497
+      },
+      {
+        "term": "community",
+        "count": 497
+      }
+    ],
+    "PB8": [
+      {
+        "term": "novel",
+        "count": 1876
+      },
+      {
+        "term": "entities",
+        "count": 1505
+      },
+      {
+        "term": "entity",
+        "count": 1099
+      },
+      {
+        "term": "information",
+        "count": 840
+      },
+      {
+        "term": "materials",
+        "count": 664
+      },
+      {
+        "term": "knowledge",
+        "count": 614
+      },
+      {
+        "term": "environmental",
+        "count": 614
+      },
+      {
+        "term": "waste",
+        "count": 608
+      },
+      {
+        "term": "human",
+        "count": 535
+      },
+      {
+        "term": "work",
+        "count": 516
+      },
+      {
+        "term": "well",
+        "count": 475
+      },
+      {
+        "term": "development",
+        "count": 466
+      },
+      {
+        "term": "propose",
+        "count": 450
+      },
+      {
+        "term": "potential",
+        "count": 443
+      },
+      {
+        "term": "proposed",
+        "count": 443
+      },
+      {
+        "term": "cell",
+        "count": 440
+      },
+      {
+        "term": "learning",
+        "count": 439
+      },
+      {
+        "term": "network",
+        "count": 410
+      },
+      {
+        "term": "framework",
+        "count": 398
+      },
+      {
+        "term": "process",
+        "count": 395
+      },
+      {
+        "term": "graph",
+        "count": 390
+      },
+      {
+        "term": "some",
+        "count": 385
+      },
+      {
+        "term": "global",
+        "count": 382
+      },
+      {
+        "term": "only",
+        "count": 378
+      },
+      {
+        "term": "performance",
+        "count": 376
+      },
+      {
+        "term": "patients",
+        "count": 371
+      },
+      {
+        "term": "cells",
+        "count": 369
+      },
+      {
+        "term": "environment",
+        "count": 362
+      },
+      {
+        "term": "including",
+        "count": 357
+      },
+      {
+        "term": "important",
+        "count": 353
+      },
+      {
+        "term": "many",
+        "count": 349
+      },
+      {
+        "term": "under",
+        "count": 346
+      },
+      {
+        "term": "three",
+        "count": 344
+      },
+      {
+        "term": "social",
+        "count": 334
+      },
+      {
+        "term": "features",
+        "count": 329
+      },
+      {
+        "term": "life",
+        "count": 328
+      },
+      {
+        "term": "water",
+        "count": 326
+      },
+      {
+        "term": "further",
+        "count": 325
+      },
+      {
+        "term": "chemical",
+        "count": 324
+      },
+      {
+        "term": "natural",
+        "count": 322
+      }
+    ],
+    "PB9": [
+      {
+        "term": "aerosol",
+        "count": 5348
+      },
+      {
+        "term": "atmospheric",
+        "count": 1686
+      },
+      {
+        "term": "dust",
+        "count": 1634
+      },
+      {
+        "term": "emissions",
+        "count": 1499
+      },
+      {
+        "term": "concentrations",
+        "count": 1464
+      },
+      {
+        "term": "aerosols",
+        "count": 1451
+      },
+      {
+        "term": "measurements",
+        "count": 1300
+      },
+      {
+        "term": "urban",
+        "count": 1298
+      },
+      {
+        "term": "surface",
+        "count": 1191
+      },
+      {
+        "term": "particles",
+        "count": 1172
+      },
+      {
+        "term": "mass",
+        "count": 1172
+      },
+      {
+        "term": "organic",
+        "count": 1160
+      },
+      {
+        "term": "cloud",
+        "count": 1087
+      },
+      {
+        "term": "transport",
+        "count": 1079
+      },
+      {
+        "term": "global",
+        "count": 985
+      },
+      {
+        "term": "optical",
+        "count": 954
+      },
+      {
+        "term": "observations",
+        "count": 920
+      },
+      {
+        "term": "quality",
+        "count": 907
+      },
+      {
+        "term": "climate",
+        "count": 861
+      },
+      {
+        "term": "sources",
+        "count": 861
+      },
+      {
+        "term": "particle",
+        "count": 851
+      },
+      {
+        "term": "layer",
+        "count": 790
+      },
+      {
+        "term": "concentration",
+        "count": 766
+      },
+      {
+        "term": "pollution",
+        "count": 755
+      },
+      {
+        "term": "carbon",
+        "count": 732
+      },
+      {
+        "term": "properties",
+        "count": 721
+      },
+      {
+        "term": "region",
+        "count": 706
+      },
+      {
+        "term": "well",
+        "count": 705
+      },
+      {
+        "term": "chemical",
+        "count": 704
+      },
+      {
+        "term": "conditions",
+        "count": 686
+      },
+      {
+        "term": "regions",
+        "count": 679
+      },
+      {
+        "term": "higher",
+        "count": 674
+      },
+      {
+        "term": "emission",
+        "count": 668
+      },
+      {
+        "term": "impact",
+        "count": 659
+      },
+      {
+        "term": "regional",
+        "count": 631
+      },
+      {
+        "term": "formation",
+        "count": 611
+      },
+      {
+        "term": "china",
+        "count": 599
+      },
+      {
+        "term": "vertical",
+        "count": 596
+      },
+      {
+        "term": "compared",
+        "count": 594
+      },
+      {
+        "term": "depth",
+        "count": 594
+      }
+    ]
+  }
+}

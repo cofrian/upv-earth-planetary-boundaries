@@ -1,0 +1,105 @@
+{
+  "n_papers_with_journal_clean": 18282,
+  "top_journals": [
+    {
+      "journal": "Sustainability",
+      "count": 112
+    },
+    {
+      "journal": "Water",
+      "count": 46
+    },
+    {
+      "journal": "Atmosphere",
+      "count": 38
+    },
+    {
+      "journal": "Published",
+      "count": 36
+    },
+    {
+      "journal": "Environmental Sciences",
+      "count": 34
+    },
+    {
+      "journal": "Beijing",
+      "count": 34
+    },
+    {
+      "journal": "April",
+      "count": 34
+    },
+    {
+      "journal": "Copyright",
+      "count": 32
+    },
+    {
+      "journal": "October",
+      "count": 31
+    },
+    {
+      "journal": "Sciences of the Universe [physics]",
+      "count": 28
+    },
+    {
+      "journal": "Proceedings of the",
+      "count": 27
+    },
+    {
+      "journal": "February",
+      "count": 26
+    },
+    {
+      "journal": "November",
+      "count": 25
+    },
+    {
+      "journal": "Sciences of the Universe [physics]/Ocean, Atmosphere",
+      "count": 25
+    },
+    {
+      "journal": "August",
+      "count": 25
+    },
+    {
+      "journal": "since",
+      "count": 23
+    },
+    {
+      "journal": "Nanjing",
+      "count": 23
+    },
+    {
+      "journal": "September",
+      "count": 23
+    },
+    {
+      "journal": "EMNLP 2021",
+      "count": 22
+    },
+    {
+      "journal": "description",
+      "count": 22
+    },
+    {
+      "journal": "January",
+      "count": 21
+    },
+    {
+      "journal": "December",
+      "count": 21
+    },
+    {
+      "journal": "Economics: 330",
+      "count": 18
+    },
+    {
+      "journal": "From the Biodiversity Heritage Library (BHL)",
+      "count": 18
+    },
+    {
+      "journal": "March",
+      "count": 18
+    }
+  ]
+}

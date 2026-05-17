@@ -1,0 +1,99 @@
+doc_id,title,gold,n_gold,lexical_top1,lexical_top1_verdict,lexical_multi,lexical_multi_verdict,tfidf_top1,tfidf_top1_verdict,tfidf_multi,tfidf_multi_verdict,bert-base_top1,bert-base_top1_verdict,bert-base_multi,bert-base_multi_verdict,roberta_top1,roberta_top1_verdict,roberta_multi,roberta_multi_verdict,scibert_top1,scibert_top1_verdict,scibert_multi,scibert_multi_verdict,specter_top1,specter_top1_verdict,specter_multi,specter_multi_verdict
+00050f80240e,,PB4,1,PB1,miss,,miss,PB4,hit,"PB4,PB9",over,PB4,hit,PB4,exact,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6",miss,PB4,hit,PB4,exact
+01a70dbf979d,"Inﬂuence of dispersal processes on the global dynamics of Emperor penguin,1","PB1,PB7",2,PB1,hit,PB1,under,PB7,hit,PB7,under,PB6,miss,PB6,miss,PB6,miss,PB6,miss,PB7,hit,"PB1,PB6,PB7",over,PB7,hit,PB7,under
+03c55a425a95,DOI 10.1007/s00382-014-2337-8Clim Dyn (2015) 45:975–988,PB1,1,PB1,hit,PB1,exact,PB1,hit,PB1,exact,PB1,hit,"PB1,PB3",over,PB6,miss,PB6,miss,PB1,hit,"PB1,PB6",over,PB3,miss,"PB1,PB3",over
+0672168600bf,,"PB1,PB9",2,PB1,hit,"PB1,PB9",exact,PB9,hit,PB9,under,PB9,hit,"PB2,PB3,PB8,PB9",partial,PB2,miss,PB2,miss,PB6,miss,"PB1,PB6,PB9",over,PB3,miss,,miss
+074d00932720,,PB3,1,PB1,miss,,miss,PB9,miss,"PB2,PB3,PB8,PB9",over,PB3,hit,PB3,exact,PB6,miss,PB6,miss,PB6,miss,"PB1,PB3,PB6,PB9",over,PB3,hit,PB3,exact
+08f457a29ab7,,PB9,1,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB8,miss,"PB6,PB8",miss,PB6,miss,PB6,miss,PB6,miss,"PB2,PB6,PB9",over,PB2,miss,,miss
+0f84341d7e44,ESSAYScaling up area-based conservation toimplement the Global BiodiversityFramework’s 30x30 target: The role ofNature’s,PB7,1,PB1,miss,,miss,PB7,hit,PB7,exact,PB7,hit,"PB6,PB7",over,PB6,miss,PB6,miss,PB7,hit,"PB1,PB6,PB7",over,PB7,hit,"PB6,PB7",over
+11e601dd40d6,,PB1,1,PB1,hit,PB1,exact,PB1,hit,,miss,PB6,miss,"PB1,PB6",over,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6",over,PB1,hit,"PB1,PB2",over
+21ecc353ac74,A Rights Turn in Biodiversity Litigation?,PB7,1,PB1,miss,"PB1,PB7",over,PB7,hit,PB7,exact,PB6,miss,"PB1,PB6",miss,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6,PB7",over,PB7,hit,"PB6,PB7",over
+23aa02497362,,PB2,1,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,PB2,exact
+260cc6707374,,"PB6,PB9",2,PB1,miss,PB1,miss,PB9,hit,,miss,PB2,miss,PB2,miss,PB6,hit,PB6,under,PB9,hit,"PB1,PB2,PB6,PB9",over,PB2,miss,PB2,miss
+2cca03b7a82b,Research Article,"PB1,PB5",2,PB1,hit,PB1,under,PB1,hit,PB1,under,PB1,hit,"PB1,PB6",partial,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6",partial,PB5,hit,"PB1,PB5",exact
+2ea3de6be731,"MARINE ECOLOGY PROGRESS SERIESMar Ecol Prog SerVol. 255: 27–41, 2003Published June 24",PB4,1,PB1,miss,,miss,PB4,hit,PB4,exact,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,"PB1,PB2,PB4,PB5,PB6,PB9",over,PB2,miss,PB2,miss
+3159c4d063f0,,"PB1,PB4",2,PB1,hit,PB1,under,PB4,hit,,miss,PB2,miss,PB2,miss,PB6,miss,PB6,miss,PB6,miss,"PB1,PB2,PB6",partial,PB2,miss,PB2,miss
+35031d18c0c9,ORIGINAL ARTICLEMesoscale eddies: hotspots of prokaryotic activityand differential community structure in the ocean,PB4,1,PB1,miss,,miss,PB2,miss,,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB6,miss,,miss,PB2,miss,PB2,miss
+362e76793312,RESEARCH ARTICLEOpen Access,"PB1,PB7",2,PB1,hit,,miss,PB9,miss,,miss,PB1,hit,PB1,under,PB6,miss,PB6,miss,PB7,hit,"PB1,PB6,PB7",over,PB1,hit,PB1,under
+3bbd6f08b6ac,ArticleSystems Approach to Management of WaterResources—Toward Performance Based WaterResources Engineering,"PB1,PB5",2,PB1,hit,PB1,under,PB5,hit,"PB1,PB5",exact,PB1,hit,PB1,under,PB6,miss,PB6,miss,PB1,hit,"PB1,PB6",partial,PB5,hit,"PB1,PB5",exact
+3c0c667b5363,Molecular Proxies as Indicators of Freshwater Incursion-Driven,PB4,1,PB1,miss,,miss,PB8,miss,PB8,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss
+3d6573117d0b,,"PB1,PB7",2,PB1,hit,,miss,PB8,miss,"PB7,PB8",partial,PB1,hit,PB1,under,PB6,miss,PB6,miss,PB7,hit,"PB1,PB7",exact,PB7,hit,"PB1,PB7",exact
+3e5fff353a4c,Climatic conditions for emergence and flight of mountain,"PB1,PB7",2,PB1,hit,,miss,PB6,miss,,miss,PB6,miss,PB6,miss,PB6,miss,PB6,miss,PB6,miss,"PB6,PB7",partial,PB6,miss,"PB6,PB7",partial
+3e713b4c8d88,ArticleEvaluation of the Grey Water Footprint Comparingthe Indirect Effects of Different Agricultural Practices,PB5,1,PB1,miss,PB1,miss,PB4,miss,,miss,PB6,miss,"PB1,PB5,PB6",over,PB6,miss,PB6,miss,PB6,miss,"PB1,PB5,PB6",over,PB4,miss,PB4,miss
+42c958306230,"MORAVIAN GEOGRAPHICAL REPORTS 2016, 24(3)","PB5,PB6",2,PB1,miss,,miss,PB1,miss,,miss,PB5,hit,"PB5,PB6,PB8",over,PB6,hit,PB6,under,PB6,hit,PB6,under,PB4,miss,,miss
+44cb9ddc20a6,"Tellus (2004), 56A, 328–341Copyright C⃝Blackwell Munksgaard, 2004",PB1,1,PB1,hit,,miss,PB1,hit,PB1,exact,PB6,miss,"PB1,PB6",over,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6",over,PB2,miss,"PB1,PB2,PB6",over
+491cd02d01cd,Atlantic Geology53,PB7,1,PB1,miss,,miss,PB5,miss,,miss,PB6,miss,"PB1,PB2,PB6,PB8",miss,PB6,miss,PB6,miss,PB6,miss,,miss,PB7,hit,"PB6,PB7",over
+496666e9b6da,,"PB1,PB9",2,PB1,hit,PB1,under,PB9,hit,"PB1,PB2,PB9",over,PB3,miss,"PB1,PB3,PB6,PB9",over,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6,PB9",over,PB9,hit,"PB3,PB9",partial
+5194c7c1714e,"Climate change and spring-fruiting fungiHa˚vard Kauserud1,*, Einar Heegaard3,4, Mikhail A. Semenov5,Lynne Boddy6, Rune H",PB1,1,PB1,hit,PB1,exact,PB1,hit,,miss,PB8,miss,PB8,miss,PB6,miss,PB6,miss,PB1,hit,,miss,PB4,miss,,miss
+56c7d6d62d7c,J. BI et al.September 201433,"PB1,PB9",2,PB9,hit,PB9,under,PB9,hit,PB9,under,PB9,hit,"PB3,PB9",partial,PB2,miss,PB2,miss,PB9,hit,"PB6,PB9",partial,PB9,hit,PB9,under
+5aaab1fa33a3,,PB9,1,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB6,miss,PB6,miss,PB9,hit,PB9,exact,PB9,hit,PB9,exact
+5b69b4b177c8,,PB3,1,PB1,miss,,miss,PB3,hit,PB3,exact,PB6,miss,"PB1,PB5,PB6",miss,PB6,miss,PB6,miss,PB6,miss,"PB1,PB3,PB6",over,PB9,miss,"PB1,PB3,PB9",over
+5d9cbb3d18a7,,PB8,1,PB8,hit,PB8,exact,PB4,miss,,miss,PB8,hit,PB8,exact,PB6,miss,PB6,miss,PB8,hit,"PB1,PB8",over,PB8,hit,PB8,exact
+6039788ff154,Environmental mutagenesis during the end-Permianecological crisis,PB3,1,PB1,miss,,miss,PB6,miss,,miss,PB6,miss,,miss,PB2,miss,PB2,miss,PB6,miss,,miss,PB7,miss,,miss
+61c5ef71efb6,This is a repository copy of Legal Lamination to Transboundary Movement of Plastic Pollutants.,PB8,1,PB8,hit,PB8,exact,PB2,miss,,miss,PB1,miss,PB1,miss,PB6,miss,PB6,miss,PB1,miss,"PB1,PB6",miss,PB2,miss,PB2,miss
+662818aff829,178Synoptic Tactics,PB6,1,PB1,miss,,miss,PB6,hit,PB6,exact,PB6,hit,PB6,exact,PB6,hit,PB6,exact,PB6,hit,"PB1,PB6,PB7",over,PB6,hit,PB6,exact
+66c76ad14a95,Visualizing a Field of Research WithScientometrics: Climate ChangeAssociated With Major AquaticSpecies Production in the,PB1,1,PB1,hit,PB1,exact,PB2,miss,,miss,PB1,hit,PB1,exact,PB6,miss,PB6,miss,PB1,hit,,miss,PB2,miss,,miss
+683e518543a2,,PB9,1,PB1,miss,,miss,PB9,hit,"PB1,PB9",over,PB8,miss,PB8,miss,PB6,miss,PB6,miss,PB9,hit,"PB1,PB6,PB8,PB9",over,PB9,hit,PB9,exact
+697b132b1c14,ORIGINAL ARTICLE,"PB7,PB9",2,PB1,miss,,miss,PB5,miss,,miss,PB8,miss,"PB3,PB4,PB8",miss,PB6,miss,PB6,miss,PB5,miss,,miss,PB4,miss,,miss
+6adf36ff1a69,"J. Plant Production, Mansoura Univ., Vol. 3 (1): 1 - 15, 2012",PB8,1,PB1,miss,,miss,PB8,hit,,miss,PB8,hit,PB8,exact,PB6,miss,PB6,miss,PB8,hit,"PB1,PB2,PB4,PB5,PB6,PB7,PB8",over,PB4,miss,,miss
+6c517c5bda80,Proxies and MeasurementTechniques for Mineral Dust inAntarctic Ice Cores,PB1,1,PB1,hit,,miss,PB1,hit,,miss,PB3,miss,,miss,PB9,miss,PB9,miss,PB1,hit,,miss,PB9,miss,,miss
+6d34726fa878,,PB2,1,PB1,miss,"PB1,PB2",over,PB1,miss,"PB1,PB2",over,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,"PB1,PB2,PB6",over,PB2,hit,PB2,exact
+6f65d7f2f5f8,ANALYZING THE IMPACTS OF LAND COVER CHANGE TO THE HYDROLOGIC AND HYDRAULIC BEHAVIOURS OF THE PHILIPPINES' THIRD LARGEST ,"PB5,PB6",2,PB1,miss,,miss,PB6,hit,PB6,under,PB6,hit,"PB5,PB6",exact,PB6,hit,PB6,under,PB6,hit,PB6,under,PB5,hit,"PB5,PB6",exact
+730088fdf1e2,A round-trip ticket: the importance of release processesfor in-stream nutrient spiraling,PB4,1,PB1,miss,,miss,PB4,hit,PB4,exact,PB4,hit,PB4,exact,PB6,miss,PB6,miss,PB6,miss,"PB2,PB4,PB5,PB6,PB7",over,PB4,hit,PB4,exact
+733ba5fc919b,"Dissolved Oxygen and pH Dynamics Coupled to Photosynthesis in Huntington Bay, Western Long Island Sound","PB2,PB7",2,PB1,miss,"PB1,PB4",miss,PB2,hit,PB2,under,PB2,hit,PB2,under,PB2,hit,PB2,under,PB2,hit,PB2,under,PB2,hit,PB2,under
+78dc23f39924,,PB7,1,PB7,hit,PB7,exact,PB7,hit,PB7,exact,PB7,hit,PB7,exact,PB6,miss,PB6,miss,PB7,hit,"PB1,PB7",over,PB7,hit,PB7,exact
+7c0bf746ba69,"Enrichment, distribution and sources of heavy metals in the sediments of Deception Bay, Queensland, Australia: A prelimi",PB8,1,PB1,miss,,miss,PB2,miss,,miss,PB2,miss,PB2,miss,PB6,miss,PB6,miss,PB2,miss,"PB2,PB6",miss,PB2,miss,"PB2,PB4",miss
+7d15d84ce20e,Exposure to ultraviolet radiation delays photosynthetic recoveryin Arctic kelp zoospores,PB3,1,PB3,hit,PB3,exact,PB3,hit,"PB3,PB4",over,PB3,hit,PB3,exact,PB2,miss,PB2,miss,PB3,hit,"PB1,PB2,PB3,PB5,PB6,PB7,PB8",over,PB2,miss,,miss
+7e7db277fd49,SO2 Emission Estimates Using OMI SO2Retrievals for 2005–2017,"PB1,PB9",2,PB1,hit,,miss,PB9,hit,,miss,PB3,miss,"PB1,PB3,PB9",over,PB6,miss,PB6,miss,PB1,hit,"PB1,PB3,PB6,PB9",over,PB3,miss,"PB3,PB9",partial
+7f70ba66f24a,,PB1,1,PB1,hit,,miss,PB1,hit,PB1,exact,PB6,miss,"PB1,PB6",over,PB6,miss,PB6,miss,PB1,hit,"PB1,PB6",over,PB1,hit,"PB1,PB6",over
+81a2071c7d3b,ArticleSensor Capability and Atmospheric Correction inOcean Colour Remote Sensing,PB9,1,PB9,hit,PB9,exact,PB9,hit,"PB2,PB9",over,PB8,miss,"PB1,PB8",miss,PB6,miss,PB6,miss,PB1,miss,"PB1,PB6,PB9",over,PB2,miss,"PB2,PB9",over
+82b2779f08ea,RESEARCH ARTICLEEffects of Ocean Acidification andTemperature Increases on the Photosynthesisof Tropical Reef Calcified ,"PB1,PB2",2,PB1,hit,"PB1,PB2",exact,PB2,hit,PB2,under,PB2,hit,PB2,under,PB2,hit,PB2,under,PB2,hit,PB2,under,PB2,hit,PB2,under
+8319c3cdd2d2,,PB9,1,PB1,miss,,miss,PB6,miss,PB6,miss,PB6,miss,"PB6,PB9",over,PB6,miss,PB6,miss,PB6,miss,"PB6,PB9",over,PB9,hit,PB9,exact
+83964a920703,,PB9,1,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB9,hit,"PB6,PB9",over,PB6,miss,PB6,miss,PB6,miss,"PB1,PB2,PB6,PB9",over,PB9,hit,"PB3,PB9",over
+83a1b1987b47,,PB9,1,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB2,miss,PB2,miss,PB9,hit,"PB3,PB6,PB9",over,PB9,hit,PB9,exact
+888d4516378f,Boundary-Layer Meteorology (2020) 177:169–188,PB2,1,PB1,miss,,miss,PB3,miss,,miss,PB1,miss,,miss,PB3,miss,PB3,miss,PB1,miss,,miss,PB1,miss,PB1,miss
+8d8ab7ed834f,(page number not for citation purposes),"PB1,PB4",2,PB1,hit,PB1,under,PB1,hit,PB1,under,PB1,hit,"PB1,PB6",partial,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6",partial,PB6,miss,PB6,miss
+915bef103e53,Natural Resources Conservation and Research (2023),"PB5,PB7",2,PB1,miss,PB1,miss,PB7,hit,PB7,under,PB6,miss,"PB6,PB7",partial,PB6,miss,PB6,miss,PB6,miss,"PB6,PB7",partial,PB6,miss,,miss
+9164ad05c489,,"PB1,PB9",2,PB9,hit,PB9,under,PB9,hit,PB9,under,PB9,hit,PB9,under,PB2,miss,PB2,miss,PB6,miss,"PB6,PB9",partial,PB9,hit,PB9,under
+9275249d37b1,"HISTORY, STATUS, AND FUTURE OF OYSTER CULTURE IN FRANCE",PB8,1,PB1,miss,,miss,PB7,miss,,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,"PB2,PB6",miss,PB2,miss,,miss
+9480a86811a3,Combining Natural History Collections with FisherKnowledge for Community-Based Conservation in Fiji,PB7,1,PB1,miss,,miss,PB7,hit,,miss,PB6,miss,"PB6,PB7",over,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6,PB7",over,PB7,hit,PB7,exact
+958e8ae09926,ORIGINAL RESEARCHpublished: 06 May 2016doi: 10.3389/fmicb.2016.00668,PB1,1,PB1,hit,,miss,PB6,miss,,miss,PB1,hit,,miss,PB2,miss,PB2,miss,PB6,miss,,miss,PB1,hit,PB1,exact
+9ba110d31936,ArticleSynergetic Aerosol Layer Observation After the 2015Calbuco Volcanic Eruption Event,PB9,1,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB6,miss,PB6,miss,PB6,miss,PB6,miss,PB9,hit,,miss
+a31195146871,Biogeochemical implications of decomposing jellyfish blooms in achanging climate,"PB1,PB2",2,PB1,hit,PB1,under,PB2,hit,"PB2,PB4",partial,PB2,hit,PB2,under,PB2,hit,PB2,under,PB2,hit,PB2,under,PB2,hit,PB2,under
+a60e993db94a,ORIGINAL ARTICLE,PB2,1,PB2,hit,PB2,exact,PB2,hit,"PB2,PB4",over,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,PB2,exact
+a8f8fca16a7f,Frontiers in Ecology and Evolution01frontiersin.org,PB7,1,PB1,miss,,miss,PB7,hit,PB7,exact,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB8,miss,"PB2,PB8",miss,PB2,miss,PB2,miss
+aa624c008b5e,,"PB1,PB9",2,PB1,hit,PB1,under,PB3,miss,"PB1,PB3,PB9",over,PB1,hit,"PB1,PB3",partial,PB2,miss,PB2,miss,PB1,hit,"PB1,PB3,PB6,PB9",over,PB3,miss,"PB3,PB9",partial
+aac5539aa27b,Decreased N2O reduction by low soil pH causes high N2Oemissions in a riparian ecosystem,"PB1,PB3",2,PB1,hit,,miss,PB2,miss,PB2,miss,PB3,hit,"PB2,PB3,PB4",partial,PB2,miss,PB2,miss,PB6,miss,"PB1,PB2,PB4,PB5,PB6",partial,PB4,miss,PB4,miss
+ab2d096a1aaf,ORIGINAL RESEARCH ARTICLEpublished: 20 November 2014doi: 10.3389/fmicb.2014.00632,PB4,1,PB1,miss,,miss,PB2,miss,,miss,PB1,miss,"PB1,PB2",miss,PB2,miss,PB2,miss,PB1,miss,,miss,PB2,miss,PB2,miss
+ab931c264219,DEVELOPMENT OF GLOBAL SCALE LCIA METHOD,PB5,1,PB5,hit,PB5,exact,PB5,hit,PB5,exact,PB1,miss,"PB1,PB6",miss,PB6,miss,PB6,miss,PB1,miss,"PB1,PB5,PB6",over,PB5,hit,PB5,exact
+ad9445fe976c,,PB9,1,PB1,miss,,miss,PB9,hit,PB9,exact,PB3,miss,PB3,miss,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6,PB9",over,PB9,hit,PB9,exact
+b39624d6c38a,,"PB1,PB5",2,PB1,hit,PB1,under,PB1,hit,,miss,PB1,hit,"PB1,PB6",partial,PB6,miss,PB6,miss,PB6,miss,"PB1,PB5,PB6,PB7",over,PB5,hit,"PB4,PB5,PB6,PB7,PB9",partial
+b9283c8bb52e,ArticleTemporal Variability and Characterization of Aerosolsacross the Pakistan Region during the WinterFog Periods,"PB1,PB9",2,PB9,hit,PB9,under,PB9,hit,PB9,under,PB9,hit,PB9,under,PB6,miss,PB6,miss,PB6,miss,"PB6,PB9",partial,PB6,miss,"PB6,PB9",partial
+b9e1bf330baf,The ISME Journal (2021) 15:673–687,PB4,1,PB4,hit,PB4,exact,PB1,miss,"PB1,PB4,PB8",over,PB4,hit,"PB4,PB8",over,PB2,miss,PB2,miss,PB1,miss,"PB1,PB2",miss,PB4,hit,,miss
+bb758b998875,,PB9,1,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB9,hit,"PB1,PB2,PB3,PB6,PB8,PB9",over,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6",miss,PB3,miss,"PB3,PB9",over
+bb87293d7644,,PB1,1,PB1,hit,PB1,exact,PB1,hit,PB1,exact,PB1,hit,PB1,exact,PB6,miss,PB6,miss,PB1,hit,"PB1,PB6",over,PB1,hit,PB1,exact
+bc0e0fcc32f5,,PB1,1,PB1,hit,,miss,PB1,hit,,miss,PB6,miss,"PB6,PB9",miss,PB6,miss,PB6,miss,PB6,miss,PB6,miss,PB4,miss,"PB4,PB6",miss
+bdf5eac988ad,,PB8,1,PB8,hit,PB8,exact,PB8,hit,PB8,exact,PB1,miss,PB1,miss,PB6,miss,PB6,miss,PB8,hit,"PB1,PB8",over,PB8,hit,PB8,exact
+c21a0b99e259,CLIMATE RESEARCH Clim Res l Published June 13,PB1,1,PB1,hit,PB1,exact,PB1,hit,PB1,exact,PB6,miss,PB6,miss,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6",over,PB6,miss,"PB1,PB4,PB6",over
+c8b475531d7e,European Geosciences Union 2007,PB3,1,PB1,miss,,miss,PB3,hit,PB3,exact,PB3,hit,"PB2,PB3",over,PB2,miss,PB2,miss,PB3,hit,"PB3,PB6",over,PB3,hit,PB3,exact
+c95e30752adf,LETTER • OPEN ACCESS,"PB1,PB3",2,PB5,miss,PB5,miss,PB1,hit,"PB1,PB3,PB5",over,PB1,hit,PB1,under,PB6,miss,PB6,miss,PB1,hit,"PB1,PB6",partial,PB4,miss,PB4,miss
+ca6e200d678b,,PB1,1,PB1,hit,,miss,PB5,miss,,miss,PB3,miss,PB3,miss,PB2,miss,PB2,miss,PB6,miss,"PB1,PB3,PB6",over,PB3,miss,PB3,miss
+caa0f4f9200b,"MARINE ECOLOGY PROGRESS SERIESMar Ecol Prog SerVol. 509: 289–302, 2014doi: 10.3354/meps10825Published August 27",PB1,1,PB1,hit,,miss,PB9,miss,,miss,PB6,miss,"PB2,PB6",miss,PB6,miss,PB6,miss,PB6,miss,PB6,miss,PB2,miss,PB2,miss
+cb831c750a69,Extinct flagships: linking extinct andthreatened species,PB7,1,PB1,miss,,miss,PB7,hit,PB7,exact,PB7,hit,PB7,exact,PB6,miss,PB6,miss,PB7,hit,"PB6,PB7",over,PB7,hit,PB7,exact
+cf94a74b8764,"AQUATIC MICROBIAL ECOLOGYAquat Microb EcolVol. 45: 237–246, 2006Published December 21",PB4,1,PB1,miss,,miss,PB2,miss,,miss,PB4,hit,PB4,exact,PB2,miss,PB2,miss,PB2,miss,"PB2,PB6",miss,PB2,miss,PB2,miss
+d002a922aec5,Linking the Abundance of Estuarine Fish and Crustaceansin Nearshore Waters to Shoreline Hardening and Land Cover,"PB6,PB7",2,PB1,miss,,miss,PB6,hit,PB6,under,PB6,hit,"PB2,PB6",partial,PB6,hit,PB6,under,PB6,hit,,miss,PB2,miss,"PB2,PB5,PB6,PB7",over
+d1fc7e47a220,,PB9,1,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB9,hit,"PB3,PB8,PB9",over,PB2,miss,PB2,miss,PB9,hit,"PB6,PB8,PB9",over,PB9,hit,PB9,exact
+d84d0ce7a4c8,,PB2,1,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,PB2,exact,PB2,hit,PB2,exact
+dbde52e667aa,"D. KENTN. D. OPDYKEM. EWINGLamont-Doherty Geological Observatory of Columbia University, Palisades, New York 10964",PB1,1,PB1,hit,,miss,PB2,miss,,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB6,miss,PB6,miss,PB5,miss,,miss
+e727426383d4,,"PB1,PB9",2,PB9,hit,PB9,under,PB9,hit,PB9,under,PB6,miss,"PB1,PB3,PB5,PB6",partial,PB6,miss,PB6,miss,PB6,miss,PB6,miss,PB3,miss,PB3,miss
+eaf6d52d5457,"CLIMATE RESEARCH Clim ResVol. 89: 61–83, 2022 online December 22","PB1,PB5",2,PB1,hit,PB1,under,PB1,hit,PB1,under,PB6,miss,"PB1,PB6",partial,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6",partial,PB3,miss,PB3,miss
+ec09b2719157,,PB9,1,PB1,miss,PB1,miss,PB1,miss,PB1,miss,PB9,hit,"PB3,PB9",over,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6,PB9",over,PB3,miss,PB3,miss
+ed3a2e5f0c07,Sponge-Microbe Associations Survive High Nutrients andTemperatures,PB4,1,PB2,miss,"PB2,PB4",over,PB4,hit,"PB2,PB4",over,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,"PB2,PB7",miss,PB2,miss,PB2,miss
+edcffe92f4f7,Variations in atmospheric PM trace metal content in Spanish towns: Illustrating,PB9,1,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB9,hit,"PB3,PB9",over,PB9,hit,PB9,exact,PB9,hit,PB9,exact,PB9,hit,PB9,exact
+f13c652030d7,,"PB1,PB7",2,PB9,miss,PB9,miss,PB1,hit,"PB1,PB9",partial,PB3,miss,"PB1,PB2,PB3,PB4,PB6,PB9",partial,PB6,miss,PB6,miss,PB6,miss,"PB1,PB6,PB9",partial,PB6,miss,"PB1,PB4,PB6,PB9",partial
+f191a837275d,,PB4,1,PB1,miss,,miss,PB4,hit,,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,"PB2,PB5,PB6",miss,PB2,miss,PB2,miss
+f21bc832abc6,3718 | wileyonlinelibrary.com/journal/gcbGlob Change Biol. 2021;27:3718–3731.,PB7,1,PB1,miss,,miss,PB7,hit,PB7,exact,PB6,miss,"PB6,PB7",over,PB6,miss,PB6,miss,PB6,miss,"PB6,PB7",over,PB6,miss,"PB6,PB7",over
+f89be8cffe97,,PB3,1,PB1,miss,,miss,PB3,hit,PB3,exact,PB9,miss,"PB1,PB3,PB6,PB9",over,PB6,miss,PB6,miss,PB3,hit,"PB1,PB3,PB6,PB9",over,PB3,hit,PB3,exact
+fa215acb1461,"Dissolved and particulate heavy metals distribution in coastal lagoons. A casestudy from Mar Chiquita Lagoon, Argentina",PB8,1,PB9,miss,PB9,miss,PB9,miss,"PB2,PB9",miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,PB2,miss,"PB2,PB5,PB6,PB7",miss,PB2,miss,PB2,miss
+fd5e38820a05,"ArticleSpatial Analysis of the Drivers, Characteristics, and Effects ofForest Fragmentation","PB6,PB7",2,PB6,hit,PB6,under,PB6,hit,"PB6,PB7",exact,PB6,hit,PB6,under,PB6,hit,PB6,under,PB6,hit,PB6,under,PB6,hit,PB6,under
+ff6fb1e2be19,ReviewClimate Changes and Food Quality: The Potential ofMicrobial Activities as Mitigating Strategies in theWine Sector,"PB1,PB7",2,PB1,hit,PB1,under,PB1,hit,PB1,under,PB8,miss,"PB1,PB8",partial,PB6,miss,PB6,miss,PB1,hit,"PB1,PB7,PB8",over,PB1,hit,,miss

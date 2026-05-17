@@ -1,0 +1,288 @@
+{
+  "n_historic_sample": 8000,
+  "n_recent_sample": 8000,
+  "emerging_top20": [
+    {
+      "term": "lockdown",
+      "freq_historic": 0.0,
+      "freq_recent": 0.000156242659053388,
+      "count_hist": 0,
+      "count_rec": 143,
+      "log_growth": 7.354635223786585
+    },
+    {
+      "term": "coronavirus",
+      "freq_historic": 0.0,
+      "freq_recent": 7.757502652301083e-05,
+      "count_hist": 0,
+      "count_rec": 71,
+      "log_growth": 6.655118889734455
+    },
+    {
+      "term": "few-shot",
+      "freq_historic": 0.0,
+      "freq_recent": 6.337114842724829e-05,
+      "count_hist": 0,
+      "count_rec": 58,
+      "log_growth": 6.453170540165561
+    },
+    {
+      "term": "circularity",
+      "freq_historic": 0.0,
+      "freq_recent": 4.916727033148574e-05,
+      "count_hist": 0,
+      "count_rec": 45,
+      "log_growth": 6.199845065772123
+    },
+    {
+      "term": "batteries",
+      "freq_historic": 0.0,
+      "freq_recent": 4.4796846302020335e-05,
+      "count_hist": 0,
+      "count_rec": 41,
+      "log_growth": 6.106952647013078
+    },
+    {
+      "term": "pre-trained",
+      "freq_historic": 0.0,
+      "freq_recent": 4.4796846302020335e-05,
+      "count_hist": 0,
+      "count_rec": 41,
+      "log_growth": 6.106952647013078
+    },
+    {
+      "term": "nature-based",
+      "freq_historic": 0.0,
+      "freq_recent": 4.370424029465399e-05,
+      "count_hist": 0,
+      "count_rec": 40,
+      "log_growth": 6.082315716070852
+    },
+    {
+      "term": "modern-era",
+      "freq_historic": 0.0,
+      "freq_recent": 4.1519028279921285e-05,
+      "count_hist": 0,
+      "count_rec": 38,
+      "log_growth": 6.031142566255967
+    },
+    {
+      "term": "scientificdata",
+      "freq_historic": 0.0,
+      "freq_recent": 3.933381626518859e-05,
+      "count_hist": 0,
+      "count_rec": 36,
+      "log_growth": 5.977208822027896
+    },
+    {
+      "term": "decolonial",
+      "freq_historic": 0.0,
+      "freq_recent": 3.277818022099049e-05,
+      "count_hist": 0,
+      "count_rec": 30,
+      "log_growth": 5.795394315573443
+    },
+    {
+      "term": "sars-cov",
+      "freq_historic": 0.0,
+      "freq_recent": 3.277818022099049e-05,
+      "count_hist": 0,
+      "count_rec": 30,
+      "log_growth": 5.795394315573443
+    },
+    {
+      "term": "fsufs",
+      "freq_historic": 0.0,
+      "freq_recent": 3.277818022099049e-05,
+      "count_hist": 0,
+      "count_rec": 30,
+      "log_growth": 5.795394315573443
+    },
+    {
+      "term": "inps",
+      "freq_historic": 0.0,
+      "freq_recent": 3.277818022099049e-05,
+      "count_hist": 0,
+      "count_rec": 30,
+      "log_growth": 5.795394315573443
+    },
+    {
+      "term": "covid",
+      "freq_historic": 1.980951173515475e-06,
+      "freq_recent": 0.0003878751326150541,
+      "count_hist": 2,
+      "count_rec": 355,
+      "log_growth": 5.228116162225915
+    },
+    {
+      "term": "bioeconomy",
+      "freq_historic": 9.904755867577375e-07,
+      "freq_recent": 5.9000724397782886e-05,
+      "count_hist": 1,
+      "count_rec": 54,
+      "log_growth": 3.992629262282279
+    },
+    {
+      "term": "pandemic",
+      "freq_historic": 4.952377933788688e-06,
+      "freq_recent": 0.00026113283576055757,
+      "count_hist": 5,
+      "count_rec": 239,
+      "log_growth": 3.9455530902456144
+    },
+    {
+      "term": "orcid",
+      "freq_historic": 2.9714267602732127e-06,
+      "freq_recent": 0.00010926060073663496,
+      "count_hist": 3,
+      "count_rec": 100,
+      "log_growth": 3.5725084892035532
+    },
+    {
+      "term": "textile",
+      "freq_historic": 9.904755867577375e-07,
+      "freq_recent": 3.387078622835684e-05,
+      "count_hist": 1,
+      "count_rec": 31,
+      "log_growth": 3.43888700748162
+    },
+    {
+      "term": "wrf-hydro",
+      "freq_historic": 9.904755867577375e-07,
+      "freq_recent": 3.277818022099049e-05,
+      "count_hist": 1,
+      "count_rec": 30,
+      "log_growth": 3.406195303371055
+    },
+    {
+      "term": "specialty",
+      "freq_historic": 1.2876182627850588e-05,
+      "freq_recent": 0.00037257864851192524,
+      "count_hist": 13,
+      "count_rec": 341,
+      "log_growth": 3.3576009446186
+    }
+  ],
+  "declining_top15": [
+    {
+      "term": "burrows",
+      "freq_historic": 4.853330375112914e-05,
+      "freq_recent": 0.0,
+      "count_hist": 49,
+      "count_rec": 0,
+      "log_growth": -6.186893651584357
+    },
+    {
+      "term": "burrow",
+      "freq_historic": 4.259045023058272e-05,
+      "freq_recent": 0.0,
+      "count_hist": 43,
+      "count_rec": 0,
+      "log_growth": -6.056560340219961
+    },
+    {
+      "term": "uvbr",
+      "freq_historic": 3.9619023470309505e-05,
+      "freq_recent": 0.0,
+      "count_hist": 40,
+      "count_rec": 0,
+      "log_growth": -5.984415346529153
+    },
+    {
+      "term": "vsls",
+      "freq_historic": 3.862854788355176e-05,
+      "freq_recent": 0.0,
+      "count_hist": 39,
+      "count_rec": 0,
+      "log_growth": -5.959162092493563
+    },
+    {
+      "term": "nih-pa",
+      "freq_historic": 3.862854788355176e-05,
+      "freq_recent": 0.0,
+      "count_hist": 39,
+      "count_rec": 0,
+      "log_growth": -5.959162092493563
+    },
+    {
+      "term": "prochlorococcus",
+      "freq_historic": 3.664759671003629e-05,
+      "freq_recent": 0.0,
+      "count_hist": 37,
+      "count_rec": 0,
+      "log_growth": -5.9066579208692325
+    },
+    {
+      "term": "phaeocystis",
+      "freq_historic": 3.5657121123278556e-05,
+      "freq_recent": 0.0,
+      "count_hist": 36,
+      "count_rec": 0,
+      "log_growth": -5.879334534557459
+    },
+    {
+      "term": "bioerosion",
+      "freq_historic": 3.367616994976308e-05,
+      "freq_recent": 0.0,
+      "count_hist": 34,
+      "count_rec": 0,
+      "log_growth": -5.822340615759636
+    },
+    {
+      "term": "macrofauna",
+      "freq_historic": 6.735233989952616e-05,
+      "freq_recent": 1.0926060073663498e-06,
+      "count_hist": 68,
+      "count_rec": 1,
+      "log_growth": -4.035280438031612
+    },
+    {
+      "term": "uv-a",
+      "freq_historic": 4.556187699085593e-05,
+      "freq_recent": 1.0926060073663498e-06,
+      "count_hist": 46,
+      "count_rec": 1,
+      "log_growth": -3.645122913351903
+    },
+    {
+      "term": "bacterioplankton",
+      "freq_historic": 4.060949905706724e-05,
+      "freq_recent": 1.0926060073663498e-06,
+      "count_hist": 41,
+      "count_rec": 1,
+      "log_growth": -3.530320622386844
+    },
+    {
+      "term": "eesc",
+      "freq_historic": 3.268569436300534e-05,
+      "freq_recent": 1.0926060073663498e-06,
+      "count_hist": 33,
+      "count_rec": 1,
+      "log_growth": -3.3138514378852286
+    },
+    {
+      "term": "microb",
+      "freq_historic": 3.16952187762476e-05,
+      "freq_recent": 1.0926060073663498e-06,
+      "count_hist": 32,
+      "count_rec": 1,
+      "log_growth": -3.2831750906382564
+    },
+    {
+      "term": "agcm",
+      "freq_historic": 3.0704743189489865e-05,
+      "freq_recent": 1.0926060073663498e-06,
+      "count_hist": 31,
+      "count_rec": 1,
+      "log_growth": -3.251527842886012
+    },
+    {
+      "term": "mesopelagic",
+      "freq_historic": 3.0704743189489865e-05,
+      "freq_recent": 1.0926060073663498e-06,
+      "count_hist": 31,
+      "count_rec": 1,
+      "log_growth": -3.251527842886012
+    }
+  ]
+}

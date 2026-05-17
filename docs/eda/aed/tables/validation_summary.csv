@@ -1,0 +1,7 @@
+model,n_docs,top1_hit_rate,multi_exact_rate,multi_overall_overlap_rate,multi_miss_rate,exact,over,under,partial,miss
+lexical,98,0.571,0.276,0.469,0.531,27,3,16,0,52
+tfidf,98,0.694,0.327,0.633,0.367,32,12,15,3,36
+bert-base,98,0.5,0.204,0.643,0.357,20,20,10,13,35
+roberta,98,0.143,0.061,0.143,0.857,6,0,8,0,84
+scibert,98,0.429,0.061,0.714,0.286,6,45,6,13,28
+specter,98,0.49,0.296,0.592,0.408,29,14,8,7,40

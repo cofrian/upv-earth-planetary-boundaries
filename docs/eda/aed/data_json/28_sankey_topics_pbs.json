@@ -1,0 +1,213 @@
+{
+  "n_clusters": 8,
+  "cluster_centers_top_pbs": [
+    {
+      "cluster": 0,
+      "label": "T1: PB3+PB9",
+      "top_pbs": [
+        "PB3",
+        "PB9",
+        "PB1"
+      ],
+      "n_papers": 2026
+    },
+    {
+      "cluster": 1,
+      "label": "T2: PB9+PB1",
+      "top_pbs": [
+        "PB9",
+        "PB1",
+        "PB6"
+      ],
+      "n_papers": 4412
+    },
+    {
+      "cluster": 2,
+      "label": "T3: PB7+PB1",
+      "top_pbs": [
+        "PB7",
+        "PB1",
+        "PB6"
+      ],
+      "n_papers": 2779
+    },
+    {
+      "cluster": 3,
+      "label": "T4: PB8+PB1",
+      "top_pbs": [
+        "PB8",
+        "PB1",
+        "PB5"
+      ],
+      "n_papers": 2974
+    },
+    {
+      "cluster": 4,
+      "label": "T5: PB2+PB1",
+      "top_pbs": [
+        "PB2",
+        "PB1",
+        "PB5"
+      ],
+      "n_papers": 3390
+    },
+    {
+      "cluster": 5,
+      "label": "T6: PB1+PB6",
+      "top_pbs": [
+        "PB1",
+        "PB6",
+        "PB9"
+      ],
+      "n_papers": 6893
+    },
+    {
+      "cluster": 6,
+      "label": "T7: PB6+PB1",
+      "top_pbs": [
+        "PB6",
+        "PB1",
+        "PB9"
+      ],
+      "n_papers": 3455
+    },
+    {
+      "cluster": 7,
+      "label": "T8: PB5+PB4",
+      "top_pbs": [
+        "PB5",
+        "PB4",
+        "PB1"
+      ],
+      "n_papers": 5631
+    }
+  ],
+  "flows": [
+    {
+      "source": 0,
+      "source_label": "T1: PB3+PB9",
+      "target": "PB3",
+      "n": 1958
+    },
+    {
+      "source": 1,
+      "source_label": "T2: PB9+PB1",
+      "target": "PB9",
+      "n": 4337
+    },
+    {
+      "source": 2,
+      "source_label": "T3: PB7+PB1",
+      "target": "PB1",
+      "n": 119
+    },
+    {
+      "source": 2,
+      "source_label": "T3: PB7+PB1",
+      "target": "PB7",
+      "n": 2509
+    },
+    {
+      "source": 3,
+      "source_label": "T4: PB8+PB1",
+      "target": "PB1",
+      "n": 129
+    },
+    {
+      "source": 3,
+      "source_label": "T4: PB8+PB1",
+      "target": "PB2",
+      "n": 74
+    },
+    {
+      "source": 3,
+      "source_label": "T4: PB8+PB1",
+      "target": "PB4",
+      "n": 87
+    },
+    {
+      "source": 3,
+      "source_label": "T4: PB8+PB1",
+      "target": "PB8",
+      "n": 2626
+    },
+    {
+      "source": 4,
+      "source_label": "T5: PB2+PB1",
+      "target": "PB1",
+      "n": 74
+    },
+    {
+      "source": 4,
+      "source_label": "T5: PB2+PB1",
+      "target": "PB2",
+      "n": 3214
+    },
+    {
+      "source": 4,
+      "source_label": "T5: PB2+PB1",
+      "target": "PB4",
+      "n": 68
+    },
+    {
+      "source": 5,
+      "source_label": "T6: PB1+PB6",
+      "target": "PB1",
+      "n": 6721
+    },
+    {
+      "source": 5,
+      "source_label": "T6: PB1+PB6",
+      "target": "PB4",
+      "n": 162
+    },
+    {
+      "source": 6,
+      "source_label": "T7: PB6+PB1",
+      "target": "PB6",
+      "n": 3343
+    },
+    {
+      "source": 7,
+      "source_label": "T8: PB5+PB4",
+      "target": "PB1",
+      "n": 1218
+    },
+    {
+      "source": 7,
+      "source_label": "T8: PB5+PB4",
+      "target": "PB2",
+      "n": 118
+    },
+    {
+      "source": 7,
+      "source_label": "T8: PB5+PB4",
+      "target": "PB4",
+      "n": 1212
+    },
+    {
+      "source": 7,
+      "source_label": "T8: PB5+PB4",
+      "target": "PB5",
+      "n": 2772
+    },
+    {
+      "source": 7,
+      "source_label": "T8: PB5+PB4",
+      "target": "PB6",
+      "n": 62
+    },
+    {
+      "source": 7,
+      "source_label": "T8: PB5+PB4",
+      "target": "PB8",
+      "n": 63
+    },
+    {
+      "source": 7,
+      "source_label": "T8: PB5+PB4",
+      "target": "PB9",
+      "n": 118
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "top_n_journals": 20,
+  "matrix": {
+    "untitled": {
+      "PB1": 66,
+      "PB2": 33,
+      "PB3": 8,
+      "PB4": 9,
+      "PB5": 32,
+      "PB6": 35,
+      "PB7": 40,
+      "PB8": 31,
+      "PB9": 26
+    },
+    "Sustainability": {
+      "PB1": 46,
+      "PB2": 3,
+      "PB3": 4,
+      "PB4": 10,
+      "PB5": 18,
+      "PB6": 26,
+      "PB7": 15,
+      "PB8": 10,
+      "PB9": 14
+    },
+    "Publication Date": {
+      "PB1": 49,
+      "PB2": 15,
+      "PB3": 5,
+      "PB4": 9,
+      "PB5": 11,
+      "PB6": 13,
+      "PB7": 11,
+      "PB8": 6,
+      "PB9": 5
+    },
+    "Water": {
+      "PB1": 8,
+      "PB2": 5,
+      "PB3": 0,
+      "PB4": 5,
+      "PB5": 25,
+      "PB6": 12,
+      "PB7": 5,
+      "PB8": 3,
+      "PB9": 2
+    },
+    "Physics [physics]/Physics [physics]/Atmospheric and Oceanic ": {
+      "PB1": 7,
+      "PB2": 4,
+      "PB3": 19,
+      "PB4": 1,
+      "PB5": 1,
+      "PB6": 1,
+      "PB7": 1,
+      "PB8": 1,
+      "PB9": 13
+    },
+    "Environmental Sciences": {
+      "PB1": 5,
+      "PB2": 1,
+      "PB3": 1,
+      "PB4": 4,
+      "PB5": 9,
+      "PB6": 8,
+      "PB7": 10,
+      "PB8": 2,
+      "PB9": 5
+    },
+    "Atmosphere": {
+      "PB1": 11,
+      "PB2": 2,
+      "PB3": 2,
+      "PB4": 1,
+      "PB5": 3,
+      "PB6": 5,
+      "PB7": 0,
+      "PB8": 0,
+      "PB9": 21
+    },
+    "Published": {
+      "PB1": 16,
+      "PB2": 6,
+      "PB3": 1,
+      "PB4": 3,
+      "PB5": 3,
+      "PB6": 7,
+      "PB7": 5,
+      "PB8": 3,
+      "PB9": 0
+    },
+    "April": {
+      "PB1": 8,
+      "PB2": 3,
+      "PB3": 7,
+      "PB4": 1,
+      "PB5": 3,
+      "PB6": 5,
+      "PB7": 4,
+      "PB8": 1,
+      "PB9": 11
+    },
+    "Beijing": {
+      "PB1": 5,
+      "PB2": 1,
+      "PB3": 0,
+      "PB4": 1,
+      "PB5": 5,
+      "PB6": 7,
+      "PB7": 1,
+      "PB8": 0,
+      "PB9": 20
+    },
+    "Sciences of the Universe [physics]/Ocean, Atmosphere, Scienc": {
+      "PB1": 14,
+      "PB2": 2,
+      "PB3": 2,
+      "PB4": 3,
+      "PB5": 1,
+      "PB6": 3,
+      "PB7": 1,
+      "PB8": 1,
+      "PB9": 9
+    },
+    "October": {
+      "PB1": 7,
+      "PB2": 3,
+      "PB3": 6,
+      "PB4": 0,
+      "PB5": 6,
+      "PB6": 3,
+      "PB7": 3,
+      "PB8": 1,
+      "PB9": 6
+    },
+    "August": {
+      "PB1": 3,
+      "PB2": 2,
+      "PB3": 5,
+      "PB4": 3,
+      "PB5": 5,
+      "PB6": 5,
+      "PB7": 2,
+      "PB8": 3,
+      "PB9": 7
+    },
+    "Copyright": {
+      "PB1": 10,
+      "PB2": 1,
+      "PB3": 1,
+      "PB4": 2,
+      "PB5": 3,
+      "PB6": 1,
+      "PB7": 1,
+      "PB8": 12,
+      "PB9": 2
+    },
+    "Sciences of the Universe [physics]": {
+      "PB1": 7,
+      "PB2": 4,
+      "PB3": 4,
+      "PB4": 2,
+      "PB5": 3,
+      "PB6": 3,
+      "PB7": 1,
+      "PB8": 0,
+      "PB9": 8
+    },
+    "Proceedings of the": {
+      "PB1": 4,
+      "PB2": 1,
+      "PB3": 0,
+      "PB4": 4,
+      "PB5": 1,
+      "PB6": 1,
+      "PB7": 2,
+      "PB8": 16,
+      "PB9": 1
+    },
+    "Sciences of the Universe [physics]/Ocean, Atmosphere": {
+      "PB1": 8,
+      "PB2": 5,
+      "PB3": 1,
+      "PB4": 1,
+      "PB5": 1,
+      "PB6": 3,
+      "PB7": 0,
+      "PB8": 0,
+      "PB9": 9
+    },
+    "Untitled": {
+      "PB1": 11,
+      "PB2": 1,
+      "PB3": 0,
+      "PB4": 0,
+      "PB5": 0,
+      "PB6": 0,
+      "PB7": 2,
+      "PB8": 13,
+      "PB9": 1
+    },
+    "Microsoft Word - 100710.docx": {
+      "PB1": 1,
+      "PB2": 0,
+      "PB3": 0,
+      "PB4": 0,
+      "PB5": 0,
+      "PB6": 1,
+      "PB7": 0,
+      "PB8": 25,
+      "PB9": 0
+    },
+    "February": {
+      "PB1": 8,
+      "PB2": 2,
+      "PB3": 4,
+      "PB4": 1,
+      "PB5": 3,
+      "PB6": 2,
+      "PB7": 1,
+      "PB8": 0,
+      "PB9": 5
+    }
+  }
+}

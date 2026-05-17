@@ -1,0 +1,88 @@
+{
+  "n_total_labels": 37821,
+  "families": {
+    "Atmosphere & Climate": {
+      "members": [
+        "PB1",
+        "PB2",
+        "PB3",
+        "PB9"
+      ],
+      "total_labels": 21624,
+      "share_of_pb_labels": 57.17
+    },
+    "Chemical & Biogeochemical": {
+      "members": [
+        "PB4",
+        "PB8"
+      ],
+      "total_labels": 5106,
+      "share_of_pb_labels": 13.5
+    },
+    "Land, Water & Biosphere": {
+      "members": [
+        "PB5",
+        "PB6",
+        "PB7"
+      ],
+      "total_labels": 11091,
+      "share_of_pb_labels": 29.32
+    }
+  },
+  "items": [
+    {
+      "pb": "PB1",
+      "name": "Climate Change",
+      "family": "Atmosphere & Climate",
+      "count": 9928
+    },
+    {
+      "pb": "PB2",
+      "name": "Ocean Acidification",
+      "family": "Atmosphere & Climate",
+      "count": 3934
+    },
+    {
+      "pb": "PB3",
+      "name": "Stratospheric Ozone",
+      "family": "Atmosphere & Climate",
+      "count": 2301
+    },
+    {
+      "pb": "PB4",
+      "name": "Biogeochemical Flows",
+      "family": "Chemical & Biogeochemical",
+      "count": 2114
+    },
+    {
+      "pb": "PB5",
+      "name": "Freshwater Use",
+      "family": "Land, Water & Biosphere",
+      "count": 3514
+    },
+    {
+      "pb": "PB6",
+      "name": "Land-System Change",
+      "family": "Land, Water & Biosphere",
+      "count": 4409
+    },
+    {
+      "pb": "PB7",
+      "name": "Biosphere Integrity",
+      "family": "Land, Water & Biosphere",
+      "count": 3168
+    },
+    {
+      "pb": "PB8",
+      "name": "Novel Entities",
+      "family": "Chemical & Biogeochemical",
+      "count": 2992
+    },
+    {
+      "pb": "PB9",
+      "name": "Aerosol Loading",
+      "family": "Atmosphere & Climate",
+      "count": 5461
+    }
+  ]
+}

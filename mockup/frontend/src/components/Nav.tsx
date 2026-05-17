@@ -8,7 +8,6 @@ const links = [
   { href: "/dashboard", label: "Dashboard", description: "Panel ejecutivo" },
   { href: "/analysis", label: "Análisis exploratorio", description: "AED del corpus" },
   { href: "/papers", label: "Explorar corpus", description: "Tabla de papers" },
-  { href: "/benchmark", label: "Benchmark modelos", description: "SPECTER vs SciBERT" },
   { href: "/upload", label: "Subir paper", description: "PDF → SPECTER2" },
 ];
 
@@ -22,17 +21,17 @@ export function Nav() {
           <Image
             src="/etsinf-logo.svg"
             alt="ETSINF — Escola Tècnica Superior d'Enginyeria Informàtica"
-            width={150}
-            height={46}
+            width={340}
+            height={148}
             priority
-            className="h-11 w-auto"
+            className="h-12 w-auto"
           />
           <span className="hidden h-9 w-px bg-line sm:inline-block" aria-hidden />
           <Image
             src="/upv-logo.svg"
             alt="Universitat Politècnica de València"
-            width={130}
-            height={40}
+            width={300}
+            height={90}
             priority
             className="hidden h-10 w-auto sm:block"
           />

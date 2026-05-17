@@ -1,0 +1,7 @@
+model,n_docs,primary_top1_acc,primary_top2_acc,multi_exact_match,multi_any_overlap,multi_precision,multi_recall,multi_f1,total_pred_pbs,correct_pred_pbs,total_gold_pbs
+lexical,98,0.469,0.551,0.276,0.469,0.8,0.369,0.505,60,48,130
+tfidf,98,0.633,0.765,0.327,0.633,0.736,0.515,0.606,91,67,130
+bert-base,98,0.449,0.643,0.204,0.643,0.411,0.515,0.457,163,67,130
+roberta,98,0.122,0.245,0.061,0.143,0.143,0.108,0.123,98,14,130
+scibert,98,0.378,0.633,0.061,0.714,0.367,0.615,0.46,218,80,130
+specter,98,0.439,0.673,0.296,0.592,0.529,0.485,0.506,119,63,130

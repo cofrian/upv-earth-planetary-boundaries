@@ -1,0 +1,151 @@
+{
+  "n_corpus": 31007,
+  "n_pb_labeled": 31560,
+  "year_range": [
+    1980,
+    2025
+  ],
+  "peak_year": 2021,
+  "peak_value": 2311,
+  "median_abstract_len": 1475,
+  "pb_distribution_pct": {
+    "PB1": 23.67,
+    "PB2": 15.66,
+    "PB3": 8.65,
+    "PB4": 6.5,
+    "PB5": 6.6,
+    "PB6": 18.14,
+    "PB7": 7.24,
+    "PB8": 2.0,
+    "PB9": 11.53
+  },
+  "top_pbs": {
+    "PB1": 23.67,
+    "PB6": 18.14,
+    "PB2": 15.66
+  },
+  "bottom_pbs": {
+    "PB8": 2.0,
+    "PB4": 6.5,
+    "PB5": 6.6
+  },
+  "multilabel_share_ge2": 0.2856147021546261,
+  "mean_pbs_per_paper": 1.1516476552598225,
+  "top_jaccard_pairs": [
+    {
+      "a": "PB3",
+      "b": "PB9",
+      "jaccard": 0.2213092303478499,
+      "papers": 1616
+    },
+    {
+      "a": "PB4",
+      "b": "PB5",
+      "jaccard": 0.21529090527200168,
+      "papers": 1025
+    },
+    {
+      "a": "PB6",
+      "b": "PB7",
+      "jaccard": 0.21348922810436288,
+      "papers": 1972
+    },
+    {
+      "a": "PB1",
+      "b": "PB6",
+      "jaccard": 0.1538701817954645,
+      "papers": 2463
+    },
+    {
+      "a": "PB1",
+      "b": "PB9",
+      "jaccard": 0.1139603180287945,
+      "papers": 1591
+    }
+  ],
+  "centrality": [
+    {
+      "pb": "PB6",
+      "weighted_degree": 0.6011364754240667,
+      "betweenness": 0.0
+    },
+    {
+      "pb": "PB5",
+      "weighted_degree": 0.49723090886216376,
+      "betweenness": 0.0
+    },
+    {
+      "pb": "PB1",
+      "weighted_degree": 0.46504133078835364,
+      "betweenness": 0.0
+    },
+    {
+      "pb": "PB9",
+      "weighted_degree": 0.4614203186034859,
+      "betweenness": 0.03571428571428571
+    },
+    {
+      "pb": "PB4",
+      "weighted_degree": 0.45588059299755734,
+      "betweenness": 0.0
+    }
+  ],
+  "model_agreement": {
+    "specter": {
+      "specter": 1.0,
+      "scibert": 0.471,
+      "bert-base": 0.512,
+      "roberta": 0.273,
+      "lex-baseline": 0.356,
+      "tfidf-baseline": 0.464
+    },
+    "scibert": {
+      "specter": 0.471,
+      "scibert": 1.0,
+      "bert-base": 0.528,
+      "roberta": 0.464,
+      "lex-baseline": 0.374,
+      "tfidf-baseline": 0.369
+    },
+    "bert-base": {
+      "specter": 0.512,
+      "scibert": 0.528,
+      "bert-base": 1.0,
+      "roberta": 0.27,
+      "lex-baseline": 0.387,
+      "tfidf-baseline": 0.447
+    },
+    "roberta": {
+      "specter": 0.273,
+      "scibert": 0.464,
+      "bert-base": 0.27,
+      "roberta": 1.0,
+      "lex-baseline": 0.046,
+      "tfidf-baseline": 0.171
+    },
+    "lex-baseline": {
+      "specter": 0.356,
+      "scibert": 0.374,
+      "bert-base": 0.387,
+      "roberta": 0.046,
+      "lex-baseline": 1.0,
+      "tfidf-baseline": 0.391
+    },
+    "tfidf-baseline": {
+      "specter": 0.464,
+      "scibert": 0.369,
+      "bert-base": 0.447,
+      "roberta": 0.171,
+      "lex-baseline": 0.391,
+      "tfidf-baseline": 1.0
+    }
+  },
+  "completeness_missing_pct": {
+    "year": 3.1,
+    "doi": 20.29,
+    "journal": 10.74,
+    "keywords": 42.43,
+    "authors": 0.19,
+    "abstract_norm": 0.02
+  }
+}

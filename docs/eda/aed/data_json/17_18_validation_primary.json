@@ -1,0 +1,88 @@
+{
+  "summary": [
+    {
+      "model": "lexical",
+      "n_docs": 98,
+      "primary_top1_acc": 0.469,
+      "primary_top2_acc": 0.551,
+      "multi_exact_match": 0.276,
+      "multi_any_overlap": 0.469,
+      "multi_precision": 0.8,
+      "multi_recall": 0.369,
+      "multi_f1": 0.505,
+      "total_pred_pbs": 60,
+      "correct_pred_pbs": 48,
+      "total_gold_pbs": 130
+    },
+    {
+      "model": "tfidf",
+      "n_docs": 98,
+      "primary_top1_acc": 0.633,
+      "primary_top2_acc": 0.765,
+      "multi_exact_match": 0.327,
+      "multi_any_overlap": 0.633,
+      "multi_precision": 0.736,
+      "multi_recall": 0.515,
+      "multi_f1": 0.606,
+      "total_pred_pbs": 91,
+      "correct_pred_pbs": 67,
+      "total_gold_pbs": 130
+    },
+    {
+      "model": "bert-base",
+      "n_docs": 98,
+      "primary_top1_acc": 0.449,
+      "primary_top2_acc": 0.643,
+      "multi_exact_match": 0.204,
+      "multi_any_overlap": 0.643,
+      "multi_precision": 0.411,
+      "multi_recall": 0.515,
+      "multi_f1": 0.457,
+      "total_pred_pbs": 163,
+      "correct_pred_pbs": 67,
+      "total_gold_pbs": 130
+    },
+    {
+      "model": "roberta",
+      "n_docs": 98,
+      "primary_top1_acc": 0.122,
+      "primary_top2_acc": 0.245,
+      "multi_exact_match": 0.061,
+      "multi_any_overlap": 0.143,
+      "multi_precision": 0.143,
+      "multi_recall": 0.108,
+      "multi_f1": 0.123,
+      "total_pred_pbs": 98,
+      "correct_pred_pbs": 14,
+      "total_gold_pbs": 130
+    },
+    {
+      "model": "scibert",
+      "n_docs": 98,
+      "primary_top1_acc": 0.378,
+      "primary_top2_acc": 0.633,
+      "multi_exact_match": 0.061,
+      "multi_any_overlap": 0.714,
+      "multi_precision": 0.367,
+      "multi_recall": 0.615,
+      "multi_f1": 0.46,
+      "total_pred_pbs": 218,
+      "correct_pred_pbs": 80,
+      "total_gold_pbs": 130
+    },
+    {
+      "model": "specter",
+      "n_docs": 98,
+      "primary_top1_acc": 0.439,
+      "primary_top2_acc": 0.673,
+      "multi_exact_match": 0.296,
+      "multi_any_overlap": 0.592,
+      "multi_precision": 0.529,
+      "multi_recall": 0.485,
+      "multi_f1": 0.506,
+      "total_pred_pbs": 119,
+      "correct_pred_pbs": 63,
+      "total_gold_pbs": 130
+    }
+  ]
+}

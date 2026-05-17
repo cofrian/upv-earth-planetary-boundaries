@@ -1,0 +1,380 @@
+================================================================================
+UPV-EARTH — GUION COMPLETO DE LA PRESENTACIÓN (ES, ~15 min)
+================================================================================
+
+Duración objetivo: 15:00  ·  Bloque de demo: ~2:00
+Reglas de entrega: baja el ritmo en los números, haz pausa después de cada
+chiste, nunca leas las viñetas — *cuenta* la diapositiva.
+
+================================================================================
+1 · INTRODUCCIÓN — Captatio Benevolentiae  (objetivo 1:30)
+================================================================================
+
+[Diapositiva con la barra rosa vacía. De pie, en el centro. Un segundo de
+silencio antes de abrir la boca.]
+
+"Imaginad esto. La universidad nos da un presupuesto — uno de verdad — y
+una única instrucción: 'Clasificad cada paper que la UPV ha publicado en
+su historia contra los nueve Planetary Boundaries.'
+
+[Diapositiva → '50.000 Papers' con la pila de PDFs.]
+
+Cincuenta mil papers. Clima, agua, biodiversidad, aerosoles,
+contaminantes nuevos… todo el catálogo de cómo la humanidad está
+empujando al planeta más allá de sus límites seguros.
+
+[Diapositiva → Papers + los nueve Planetary Boundaries.]
+
+Ahora bien — esto es la UPV. Y en la UPV las cosas SE HACEN BIEN. Así
+que el plan obvio es leerse los cincuenta mil a mano.
+
+[Pausa. Diapositiva → '100 days straight without sleep!!!']
+
+Echamos las cuentas. Cien días. Seguidos. Sin dormir.
+
+Normalmente, este es el tipo de marrón que le cae discretamente a un
+becario y le arruina el verano. Pero en este caso… los becarios somos
+nosotros. Y le tenemos bastante cariño a nuestra salud mental.
+
+[Beat. Ponte serio.]
+
+Así que decidimos que sería más rentable para todos — para los becarios,
+para la universidad y, francamente, para el planeta — construir el
+framework que vamos a presentar. Porque en el mundo real las palabras
+clave no escalan y los humanos tampoco. Y ahí es donde los Large
+Language Models se ganan el sueldo.
+
+[Diapositiva → Título UPV-EARTH.]
+
+Esto es UPV-EARTH — un framework de Planetary Boundaries para
+clasificar la investigación de la UPV. Somos Sergio, Luis, Fernando,
+María, Sergio y Alba."
+
+
+================================================================================
+2 · OBJETIVOS  (objetivo 1:00)
+================================================================================
+
+[Diapositiva: cuatro tarjetas numeradas.]
+
+"Nuestra misión: poner las bases de un sistema de IA que mapea la
+investigación de la UPV sobre los nueve Planetary Boundaries. Cuatro
+objetivos.
+
+UNO — un corpus analítico LIMPIO. Ningún modelo sobrevive a datos
+sucios.
+
+DOS — definir la tarea: los nueve boundaries, una matriz de referencia
+y los criterios de evaluación.
+
+TRES — comparar dos familias cara a cara: embeddings ligeros vs. LLMs
+pesados. Evidencia, no opiniones.
+
+CUATRO — y aquí está la diferencia con el típico proyecto académico —
+un prototipo DESPLEGABLE. No un notebook: una interfaz real que la
+institución pueda usar mañana."
+
+
+================================================================================
+3 · METODOLOGÍA  (objetivo 5:00 total)
+================================================================================
+
+--------------------------------------------------------------------------------
+3.1 — Transformers  (objetivo 1:30)
+--------------------------------------------------------------------------------
+
+[Diapositiva: Transformers — cuatro tarjetas + diagrama de encoding.]
+
+"Empezamos con lo más barato y más elegante: embeddings preentrenados,
+SIN fine-tuning.
+
+La intuición: si el modelo ya entiende inglés científico, no hace falta
+reentrenarlo — solo hay que hacerle la pregunta geométrica correcta.
+
+Cuatro encoders, en orden creciente de especificidad de dominio:
+BERT — baseline general. RoBERTa — entrenado más fuerte. SciBERT — sobre
+corpus científico. Y SPECTER2, que es el especial: entrenado
+específicamente sobre PAPERS, usando su grafo de citas. No solo entiende
+ciencia — entiende cómo se relacionan los papers entre sí.
+
+[Señala el diagrama.]
+
+El pipeline es simple — y ese es el punto. Codificamos el abstract,
+codificamos las nueve definiciones de boundary, calculamos similitud
+coseno, y asignamos el boundary con la similitud más alta.
+
+Un encoding por paper, nueve comparaciones baratas, totalmente
+explicable. Esto nos dio el baseline fuerte que los LLMs tenían que
+superar."
+
+[Transición.] "Pero los embeddings tienen un techo. Cuando un paper es
+genuinamente ambiguo, necesitamos algo que RAZONE."
+
+--------------------------------------------------------------------------------
+3.2 — Modelos LLM e Ingeniería de Prompts  (objetivo 1:30)
+--------------------------------------------------------------------------------
+
+[Diapositiva: LLM Models — tres modelos, cuatro prompts.]
+
+"Dos preguntas en paralelo: qué modelo, y cómo lo prompteamos.
+
+Tres candidatos. Llama 3.1 8B — rápido pero demasiado superficial. Gemma
+4 26B — fluido pero le pedíamos XML y nos devolvía poesía. Y nuestro
+ganador: QWEN 2.5 14B — el mejor compromiso entre razonamiento,
+seguimiento de instrucciones y disciplina en la salida estructurada.
+
+[Pasa a la columna de prompts.]
+
+Y luego cuatro versiones de prompt — porque el prompt es una pieza de
+INGENIERÍA, no una idea de última hora.
+
+v1 Few-Shot — frágil fuera del dominio de los ejemplos.
+v2 Chain-of-Thought — sube recall, sube sobre-confianza.
+v3 — v2 más un filtro que descarta la intro genérica.
+v4 Principle-Driven XML — le damos al modelo los principios científicos
+explícitos detrás de cada boundary y forzamos salida XML estricta. Esto
+es lo que llevamos a producción.
+
+[Pausa.] "El titular: Qwen 2.5 14B + prompt v4. Quedaos con esos dos
+nombres."
+
+--------------------------------------------------------------------------------
+3.3 — La Cascada de Agentes  (objetivo 1:30)
+--------------------------------------------------------------------------------
+
+[Diapositiva: Agents — pipeline de cinco cajas.]
+
+"Llamar a un modelo de 14B sobre CADA paper de un corpus de 50.000 es
+caro. Así que no lo hacemos. Construimos una CASCADA donde los agentes
+ligeros filtran y los pesados solo disparan en los casos difíciles.
+
+AGENTE 1, el Extractor — un Qwen 2.5 3B. Saca señales estructuradas del
+título y el abstract.
+
+En paralelo, el SCORER hace un solapamiento determinista de palabras
+clave contra nuestra matriz de referencia. Sin LLM.
+
+Ambos alimentan al ROUTER, que pregunta una sola cosa: ¿están de acuerdo
+en que este paper es irrelevante? Si sí, FAST-SKIP. Sin llamada cara.
+Aquí es donde vive el ahorro.
+
+Si es ambiguo, pasa al AGENTE 3 — el Juez — Qwen 2.5 14B con el prompt
+v4. Y solo en el cuadrante peligroso — Juez dice 'none' pero el scorer
+discrepa — entra el AGENTE 4, el CRÍTICO, como segunda opinión.
+
+[Beat.] "La clave es ECONÓMICA: solo los papers ambiguos llegan al
+modelo caro. Misma calidad, una fracción del cómputo."
+
+--------------------------------------------------------------------------------
+3.4 — Métricas de Evaluación  (objetivo 0:30)
+--------------------------------------------------------------------------------
+
+[Diapositiva: métricas de accuracy + diapositiva de sesgo.]
+
+"En multi-etiqueta, accuracy no es un solo número. Usamos seis métricas
+de precisión — Strict Top-1, Relaxed Top-1, Hit@K, Any Overlap, Exact
+Match y Jaccard — más tres de comportamiento: True Negative Rate,
+Positivity Bias y False Negatives.
+
+Accuracy + sesgo + comportamiento. Imagen completa, no un solo número."
+
+
+================================================================================
+4 · RESULTADOS  (objetivo 2:30)
+================================================================================
+
+--------------------------------------------------------------------------------
+4.1 — Representación de Embeddings  (objetivo 0:30)
+--------------------------------------------------------------------------------
+
+[Diapositiva: UMAP de embeddings SPECTER2.]
+
+"Comprobación de sanidad. Proyección UMAP de los embeddings SPECTER2,
+coloreada por boundary. El clúster morado de la derecha — Novel
+Entities — limpiamente separado. Climate Change, en rojo, es la clase
+más grande. Y Biogeochemical Flows y Biosphere Integrity se solapan en
+el centro, lo cual es biológicamente correcto: tienen que solaparse.
+Esta estructura nos la dan los embeddings GRATIS."
+
+--------------------------------------------------------------------------------
+4.2 — Comparación Global de Rendimiento  (objetivo 1:00)
+--------------------------------------------------------------------------------
+
+[Diapositiva: gráfico de barras.]
+
+"El gráfico titular. Las barras magenta son v4.
+
+Frente a v1: Strict Top-1 sube +13,6 puntos hasta 72,1%. Any Overlap
+sube +13,5 puntos hasta 77,5%. Jaccard sube +10,7 puntos hasta 68,8%.
+
+Y False Negatives — la métrica que más nos importaba — BAJA 26,8
+puntos. Del 41% al 14,4%. Estamos cazando los boundaries que antes se
+nos escapaban.
+
+[Señala TNR.] "Y críticamente: True Negative Rate se mantiene en el 76%.
+v2 fue a por el recall y se HUNDIÓ al 54% — se inventaba etiquetas. v4
+recupera recall SIN perder control del sesgo."
+
+--------------------------------------------------------------------------------
+4.3 — Matriz de Confusión  (objetivo 0:30)
+--------------------------------------------------------------------------------
+
+[Diapositiva: matrices de confusión V1–V4.]
+
+"La prueba a nivel de clase. Diagonal fuerte = el modelo lee bien el
+paper. Mirad PB4, Biogeochemical Flows: en v1 la diagonal vale 0,33. En
+v4, 0,89. CINCUENTA Y SEIS PUNTOS sobre una de las clases más difíciles
+del framework."
+
+--------------------------------------------------------------------------------
+4.4 — Tiempo de Inferencia  (objetivo 0:30)
+--------------------------------------------------------------------------------
+
+[Diapositiva: boxplot de latencia.]
+
+"Y el coste. v1: mediana 7,9 segundos. v4: 4,7 segundos, con la
+distribución más ajustada de todas. Ganamos 14 puntos de accuracy y
+PERDEMOS 3 segundos de latencia en el mismo cambio. El tipo de
+resultado que esperas y rara vez consigues."
+
+
+================================================================================
+5 · DEMO — EL MOCKUP  (objetivo 2:00)
+================================================================================
+
+[Cambio a navegador en vivo. Pantalla completa. Aterriza en /dashboard.]
+
+"Todo lo que habéis visto está cableado en un prototipo funcional. Dos
+minutos: lo que un analista de la UPV ve realmente.
+
+[Puntero sobre la nav.] Cuatro secciones: Dashboard, Análisis
+exploratorio, Explorar corpus, Subir paper.
+
+[Dashboard.] El panel ejecutivo: KPIs, cobertura por boundary, heat-map
+de similitud SPECTER2. La vista del vicerrector un lunes por la mañana:
+¿dónde es fuerte la UPV, dónde estamos en silencio?
+
+[Click → Análisis exploratorio.] EDA: pipeline de limpieza, complejidad
+de abstracts, wordclouds por boundary, heat-map año a año. Cada decisión
+de limpieza es AUDITABLE.
+
+[Click → Explorar corpus.] Cincuenta mil papers, buscables, filtrables.
+Pinchas en uno —
+
+[Abre detalle.] — y ves el boundary predicho, la confianza, los papers
+similares en el espacio de embeddings y la traza de razonamiento de la
+cascada. No es una caja negra: cada predicción es EXPLICABLE.
+
+[Click → Subir paper.] Arrastras un PDF, pasa por SPECTER2, se
+clasifica en directo, se incorpora al corpus. Un investigador se
+auto-sirve en treinta segundos.
+
+[Opcional: chatbot flotante.] Y hay una capa conversacional: le
+preguntas al corpus en lenguaje natural y el agente hace la recuperación
+por ti.
+
+[Cierra demo.] "Una interfaz real, sobre datos reales, hoy."
+
+
+================================================================================
+6 · CONCLUSIONES Y LIMITACIONES  (objetivo 1:30)
+================================================================================
+
+[Diapositiva: dos columnas.]
+
+"Tres conclusiones.
+
+UNO — promptear es DISEÑAR razonamiento. No va de plantillas mágicas;
+va de alinear instrucciones con la lógica interna del modelo.
+
+DOS — la divergencia conductual es real. Mismo modelo, distinto prompt,
+COMPORTAMIENTO RADICALMENTE DISTINTO. Lo medimos.
+
+TRES — la fórmula ganadora es principle-driven. Darle al modelo los
+principios científicos equilibra rigor — True Negatives altos — con
+cobertura — recall alto.
+
+[Pasa a limitaciones.] Y siendo honestos con los límites:
+
+- Pocos papers validados — limita la potencia estadística.
+- Por eso no pudimos hacer fine-tuning responsable: dejamos techo sobre
+  la mesa.
+- Y clases raras — PB5 y PB6 — con pocas muestras, números direccionales
+  pero no robustos.
+
+No son excusas. Son el siguiente paquete de trabajo."
+
+
+================================================================================
+7 · TRABAJO FUTURO + CIERRE  (objetivo 1:30)
+================================================================================
+
+[Diapositiva final.]
+
+"Cuatro pasos, en orden de prioridad.
+
+UNO — cerrar el data gap con una campaña de etiquetado HUMAN-IN-THE-LOOP
+con los propios investigadores de la UPV. Unas cientos de etiquetas
+sobre las clases raras desbloquean todo lo de abajo.
+
+DOS — con esos datos, fine-tuning supervisado de SPECTER2 sobre texto
+al estilo UPV. Esperamos otros cinco a diez puntos de Top-1.
+
+TRES — despliegue de producción. Hoy el prototipo corre nativo en una
+máquina; la hoja de ruta es PostgreSQL, vLLM y despliegue
+containerizado.
+
+CUATRO — análisis temporal: ¿cómo ha cambiado la cartera de
+investigación de la UPV a lo largo de los Planetary Boundaries en los
+últimos veinte años? Eso ya no es un clasificador, es una herramienta
+de planificación ESTRATÉGICA. Ese es el producto de verdad.
+
+[Pausa. Da un paso hacia el tribunal.]
+
+"Para cerrar — cincuenta mil papers, cien días sin dormir, seis becarios
+a los que les gustaba bastante su verano. No nos leímos los papers. LE
+ENSEÑAMOS A UNA MÁQUINA A HACERLO. Y lo que hemos construido no es un
+clasificador: es la base de cómo la UPV, a partir de ahora, se va a ver
+a sí misma en el espejo del planeta.
+
+Gracias. Encantados de responder a vuestras preguntas."
+
+[Mantén el contacto visual. La primera pregunta es del tribunal.]
+
+
+================================================================================
+RESUMEN DE TIEMPOS
+================================================================================
+
+  Sección                                              Objetivo  Acumulado
+  ---------------------------------------------------  --------  ----------
+  1 · Introducción                                     1:30      1:30
+  2 · Objetivos                                        1:00      2:30
+  3 · Metodología (Transformers + LLMs + Agentes +     5:00      7:30
+      Métricas)
+  4 · Resultados                                       2:30      10:00
+  5 · Demo                                             2:00      12:00
+  6 · Conclusiones y Limitaciones                      1:30      13:30
+  7 · Trabajo futuro + cierre                          1:30      15:00
+
+
+================================================================================
+NOTAS DE ENTREGA
+================================================================================
+
+- LOS NÚMEROS SON REMATES — dilos despacio: "setenta y dos coma uno por
+  ciento", no "72,1".
+
+- TRES RISAS PLANIFICADAS EN LA INTRO: 100 días sin dormir / arruina el
+  verano al becario / los becarios somos nosotros. Pausa después de
+  cada una. No te rías tú primero.
+
+- NO LEAS LAS DIAPOSITIVAS — la diapositiva es el andamio. Tú eres la
+  señal.
+
+- LA DEMO ES LA SECCIÓN DE MÁS RIESGO — abre las cuatro pestañas del
+  navegador antes de empezar. Si la demo en vivo se cae, narra encima
+  de una captura y sigue.
+
+- CUANDO DIGAS "GRACIAS", CALLA. La primera pregunta es del tribunal —
+  no llenes el silencio.

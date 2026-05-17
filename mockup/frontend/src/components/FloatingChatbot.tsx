@@ -14,7 +14,6 @@ function deriveScopeLabel(pathname: string): string {
   if (pathname === "/papers") return "Explorador de corpus";
   if (pathname.startsWith("/upload")) return "Paper subido";
   if (pathname.startsWith("/analysis")) return "Análisis exploratorio";
-  if (pathname.startsWith("/benchmark")) return "Benchmark de modelos";
   return "UPV-EARTH";
 }
 

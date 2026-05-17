@@ -5,49 +5,36 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: "#080406",
+        bg: "#040806",
         surface: {
-          DEFAULT: "#140a10",
-          1: "#140a10",
-          2: "#1d0f18",
-          3: "#26131f",
+          DEFAULT: "#0a1410",
+          1: "#0a1410",
+          2: "#0f1d18",
+          3: "#13261f",
         },
         line: {
-          DEFAULT: "#262026",
-          strong: "#3a2c34",
-          accent: "#7e0334",
+          DEFAULT: "#1c2c25",
+          strong: "#2a4034",
+          accent: "#1e6b4f",
         },
-        textMain: "#f1e6ee",
-        textSubtle: "#c8b7c3",
-        textMuted: "#8a7a82",
-        // Magenta corporativa ETSINF como acento. Mantenemos el alias
-        // `emerald.*` para que los componentes que aún usen `bg-emerald-500`
-        // hereden automáticamente el nuevo tono sin cambios.
+        textMain: "#e6f4ed",
+        textSubtle: "#a9c5b7",
+        textMuted: "#6f8a7c",
         emerald: {
-          400: "#ec4079",
-          500: "#d20a55",
-          600: "#a80544",
-          700: "#7e0334",
-          glow: "#d20a5540",
+          400: "#34d399",
+          500: "#10b981",
+          600: "#059669",
+          700: "#047857",
+          glow: "#34d39940",
         },
-        magenta: {
-          50: "#fff0f6",
-          100: "#ffd6e6",
-          200: "#ffadcc",
-          300: "#ff7aa9",
-          400: "#ec4079",
-          500: "#d20a55",
-          600: "#a80544",
-          700: "#7e0334",
-        },
-        accent: "#d20a55",
-        accentSoft: "#ec4079",
-        accentDeep: "#7e0334",
+        accent: "#34d399",
+        accentSoft: "#10b981",
+        accentDeep: "#047857",
         amber: "#fbbf24",
         rose: "#f87171",
         // legacy aliases
-        panel: "#140a10",
-        panelSoft: "#1d0f18",
+        panel: "#0a1410",
+        panelSoft: "#0f1d18",
       },
       fontFamily: {
         sans: [
@@ -68,15 +55,15 @@ const config: Config = {
         ],
       },
       boxShadow: {
-        glow: "0 0 0 1px rgba(210,10,85,0.18), 0 22px 48px rgba(12,4,9,0.55)",
-        emerald: "0 0 0 1px rgba(210,10,85,0.45), 0 10px 28px rgba(168,5,68,0.18)",
-        soft: "0 1px 0 rgba(255,255,255,0.04) inset, 0 18px 36px rgba(12,4,9,0.55)",
+        glow: "0 0 0 1px rgba(52,211,153,0.18), 0 22px 48px rgba(4,12,9,0.55)",
+        emerald: "0 0 0 1px rgba(52,211,153,0.45), 0 10px 28px rgba(16,185,129,0.18)",
+        soft: "0 1px 0 rgba(255,255,255,0.04) inset, 0 18px 36px rgba(4,12,9,0.55)",
       },
       backgroundImage: {
         "grid-fade":
-          "linear-gradient(180deg, rgba(30,13,24,0.85) 0%, rgba(8,4,6,1) 100%)",
+          "linear-gradient(180deg, rgba(13,30,24,0.85) 0%, rgba(4,8,6,1) 100%)",
         "emerald-radial":
-          "radial-gradient(circle at 30% 0%, rgba(210,10,85,0.18), transparent 55%)",
+          "radial-gradient(circle at 30% 0%, rgba(16,185,129,0.18), transparent 55%)",
         "card-shine":
           "linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0))",
       },

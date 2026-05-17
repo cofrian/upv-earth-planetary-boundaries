@@ -1,0 +1,377 @@
+================================================================================
+UPV-EARTH — FULL PRESENTATION SCRIPT (EN, ~15 min)
+================================================================================
+
+Total target: 15:00  ·  Demo block: ~2:00
+Delivery rules: slow down on numbers, pause after each joke, never read
+bullets verbatim — *tell* the slide.
+
+================================================================================
+1 · INTRODUCTION — Captatio Benevolentiae  (target 1:30)
+================================================================================
+
+[Empty pink-bar slide. Stand center. One beat of silence before opening.]
+
+"Imagine this. The university gives us a budget — a real one — and a
+single instruction: 'Classify every paper UPV has ever published against
+the nine Planetary Boundaries.'
+
+[Slide → '50,000 Papers' with the stack of PDFs.]
+
+Fifty thousand papers. Climate, freshwater, biodiversity, aerosols,
+novel chemicals… the whole catalogue of how humanity is pushing the
+planet past its safe limits.
+
+[Slide → Papers + the nine Planetary Boundaries.]
+
+Now — this is the UPV. And at the UPV we do things PROPERLY. So the
+obvious plan is to read all fifty thousand by hand.
+
+[Pause. Slide → '100 days straight without sleep!!!']
+
+We did the math. One hundred days. Straight. Without sleeping.
+
+Normally, this is the kind of job that quietly lands on some unlucky
+intern and ruins their summer. But this time… we are the interns. And
+we happen to be quite fond of our mental health.
+
+[Beat. Turn serious.]
+
+So we decided it would be more profitable for everyone — for the
+interns, for the university, and frankly for the planet — to build the
+framework you're about to see. Because in the real world, keyword
+search doesn't scale, and humans don't either. That is where Large
+Language Models earn their keep.
+
+[Slide → UPV-EARTH title.]
+
+This is UPV-EARTH — a Planetary Boundaries framework for classifying
+UPV research. We are Sergio, Luis, Fernando, María, Sergio, and Alba."
+
+
+================================================================================
+2 · OBJECTIVES  (target 1:00)
+================================================================================
+
+[Slide: four numbered cards.]
+
+"Our mission: lay the foundations of an AI system that maps UPV research
+onto the nine Planetary Boundaries. Four objectives.
+
+ONE — a CLEAN analytical corpus. No model survives dirty data.
+
+TWO — define the task itself: the nine boundaries, a reference matrix,
+and the evaluation criteria.
+
+THREE — compare two families head-to-head: lightweight embeddings vs.
+heavyweight LLMs. Evidence, not opinions.
+
+FOUR — and this is where we depart from the typical academic project —
+a DEPLOYABLE prototype. Not a notebook: a real interface the institution
+can pick up tomorrow."
+
+
+================================================================================
+3 · METHODOLOGY  (target 5:00 total)
+================================================================================
+
+--------------------------------------------------------------------------------
+3.1 — Transformers  (target 1:30)
+--------------------------------------------------------------------------------
+
+[Slide: Transformers — four cards + encoding diagram.]
+
+"We started with the cheapest, most elegant option: pre-trained
+embeddings, NO fine-tuning.
+
+The intuition: if a model already understands scientific English, we
+don't need to retrain it — we just need to ask the right geometric
+question.
+
+Four encoders, in increasing order of domain specificity. BERT — the
+general-language baseline. RoBERTa — same family, trained harder.
+SciBERT — pre-trained on a scientific corpus. And SPECTER2, the special
+one: trained specifically on SCIENTIFIC PAPERS, using their citation
+graph. It doesn't just understand science — it understands HOW PAPERS
+RELATE to each other.
+
+[Point to the diagram.]
+
+The pipeline is simple — and that's the point. Encode the abstract,
+encode the nine boundary definitions, take cosine similarity, assign
+the boundary with the highest score.
+
+One encoding per paper, nine cheap comparisons, fully explainable.
+That gave us the hard baseline the LLMs had to beat."
+
+[Transition.] "But embeddings have a ceiling. When a paper is genuinely
+ambiguous, we need something that can REASON."
+
+--------------------------------------------------------------------------------
+3.2 — LLM Models & Prompt Engineering  (target 1:30)
+--------------------------------------------------------------------------------
+
+[Slide: LLM Models — three models, four prompts.]
+
+"Two questions in parallel: which model, and how do we prompt it.
+
+Three candidates. Llama 3.1 8B — fast but too shallow. Gemma 4 26B —
+fluent, but we'd ask for XML and it'd write us poetry. And our winner:
+QWEN 2.5 14B — the best trade-off between reasoning quality,
+instruction-following, and disciplined structured output.
+
+[Move to prompts.]
+
+And four prompt versions — because the prompt is a piece of ENGINEERING,
+not an afterthought.
+
+v1 Few-Shot — brittle outside the example domains.
+v2 Chain-of-Thought — recall up, over-confidence up.
+v3 — v2 plus a background filter that discards the generic intro.
+v4 Principle-Driven XML — we give the model the explicit scientific
+PRINCIPLES behind each boundary and force a strict XML output. This is
+what we ship.
+
+[Pause.] "The headline: Qwen 2.5 14B + the v4 prompt. Hold those two
+names."
+
+--------------------------------------------------------------------------------
+3.3 — The Agent Cascade  (target 1:30)
+--------------------------------------------------------------------------------
+
+[Slide: Agents — five-box pipeline.]
+
+"Calling a 14B model on EVERY paper in a 50,000-paper corpus is
+expensive. So we don't. We built a CASCADE where lightweight agents
+filter, and the heavy ones only fire on the hard cases.
+
+AGENT 1, the Extractor — a Qwen 2.5 3B. Pulls structured signals from
+the title and abstract.
+
+In parallel, the SCORER runs a deterministic keyword overlap against
+our reference matrix. No LLM call.
+
+Both feed the ROUTER, which asks a single question: do they agree this
+paper is irrelevant? If yes — FAST-SKIP. No expensive call. This is
+where the savings live.
+
+If it's ambiguous, it goes to AGENT 3 — the Judge — Qwen 2.5 14B with
+the v4 prompt. And only in the dangerous quadrant — Judge says 'none'
+but the scorer disagrees — does AGENT 4, the CRITIC, fire as a second
+opinion.
+
+[Beat.] "The key insight is ECONOMIC: only the genuinely ambiguous
+papers reach the expensive model. Same accuracy, a fraction of the
+compute."
+
+--------------------------------------------------------------------------------
+3.4 — Evaluation Metrics  (target 0:30)
+--------------------------------------------------------------------------------
+
+[Slide: accuracy metrics + bias slide.]
+
+"In a multi-label problem, accuracy is not one number. We use six
+precision metrics — Strict Top-1, Relaxed Top-1, Hit@K, Any Overlap,
+Exact Match and Jaccard — plus three behavioural ones: True Negative
+Rate, Positivity Bias and False Negatives.
+
+Accuracy plus bias plus behaviour. Full picture, not one score."
+
+
+================================================================================
+4 · RESULTS  (target 2:30)
+================================================================================
+
+--------------------------------------------------------------------------------
+4.1 — Embeddings Representation  (target 0:30)
+--------------------------------------------------------------------------------
+
+[Slide: UMAP of SPECTER2 embeddings.]
+
+"Sanity check. UMAP projection of SPECTER2 embeddings, coloured by
+boundary. The purple cluster on the right — Novel Entities — cleanly
+separated. Climate Change, in red, is the largest class. And
+Biogeochemical Flows and Biosphere Integrity overlap in the centre,
+which is biologically correct: they SHOULD overlap. The embeddings
+give us this structure FOR FREE."
+
+--------------------------------------------------------------------------------
+4.2 — Global Performance Comparison  (target 1:00)
+--------------------------------------------------------------------------------
+
+[Slide: bar chart.]
+
+"The headline chart. The magenta bars are v4.
+
+Against v1: Strict Top-1 goes UP plus 13.6 points to 72.1%. Any Overlap
+plus 13.5 points to 77.5%. Jaccard plus 10.7 points to 68.8%.
+
+And False Negatives — the metric we cared about most — drops 26.8
+points. From 41% down to 14.4%. We're catching the boundaries we used
+to miss.
+
+[Point at TNR.] "And critically: True Negative Rate stays at 76%. v2
+chased recall and COLLAPSED to 54% — it was inventing labels. v4 buys
+back the recall WITHOUT losing bias control."
+
+--------------------------------------------------------------------------------
+4.3 — Confusion Matrix  (target 0:30)
+--------------------------------------------------------------------------------
+
+[Slide: confusion matrices V1–V4.]
+
+"The per-class proof. Strong diagonal = the model is reading the paper
+correctly. Look at PB4, Biogeochemical Flows: in v1 the diagonal value
+is 0.33. In v4, 0.89. FIFTY-SIX POINTS on one of the hardest classes
+in the framework."
+
+--------------------------------------------------------------------------------
+4.4 — Inference Time  (target 0:30)
+--------------------------------------------------------------------------------
+
+[Slide: latency boxplot.]
+
+"And the cost side. v1: median 7.9 seconds. v4: 4.7 seconds, with the
+tightest distribution of any version. We GAINED 14 accuracy points and
+LOST 3 seconds of latency in the same change. The kind of result you
+hope for and rarely get."
+
+
+================================================================================
+5 · DEMO — THE MOCKUP  (target 2:00)
+================================================================================
+
+[Switch to live browser. Full screen. Land on /dashboard.]
+
+"Everything you've seen is wired into a working prototype. Two minutes:
+what an analyst at UPV actually sees.
+
+[Pointer on the nav.] Four sections: Dashboard, Exploratory Analysis,
+Corpus Browser, Upload.
+
+[Dashboard.] The executive panel: KPIs, coverage per boundary, SPECTER2
+similarity heat-map. The vice-rector's Monday-morning view: WHERE IS
+UPV STRONG, WHERE ARE WE SILENT?
+
+[Click → Exploratory Analysis.] EDA: cleaning pipeline, abstract
+complexity, per-boundary word-clouds, year-on-year heat-map. Every
+cleaning decision is AUDITABLE.
+
+[Click → Corpus Browser.] Fifty thousand papers, searchable,
+filterable. Click into one —
+
+[Open paper detail.] — and you see the predicted boundary, the
+confidence, the SIMILAR PAPERS in embedding space, and the reasoning
+trace from the agent cascade. Not a black box: every prediction is
+EXPLAINABLE.
+
+[Click → Upload.] Drag a PDF, runs through SPECTER2, classified live,
+joins the corpus. A researcher self-serves in thirty seconds.
+
+[Optional: floating chatbot.] There's also a conversational layer: ask
+the corpus in natural language, the agent does the retrieval for you.
+
+[Close demo.] "A real interface, on real data, today."
+
+
+================================================================================
+6 · CONCLUSIONS & LIMITATIONS  (target 1:30)
+================================================================================
+
+[Slide: two columns.]
+
+"Three conclusions.
+
+ONE — prompting is REASONING DESIGN. It's not about magic templates;
+it's about aligning instructions with the model's internal logic.
+
+TWO — behavioural divergence is real. Same model, different prompt,
+DRASTICALLY DIFFERENT behaviour. We measured it.
+
+THREE — the winning formula is principle-driven. Giving the model the
+scientific principles balances RIGOUR — high True Negatives — with
+COVERAGE — high recall.
+
+[Move to limitations.] And being honest with the limits:
+
+- Few validated papers — limits statistical power.
+- That's why we couldn't responsibly fine-tune: ceiling left on the
+  table.
+- Rare classes — PB5 and PB6 — low sample sizes, directionally correct
+  but not statistically tight.
+
+These aren't excuses. They're the NEXT piece of work."
+
+
+================================================================================
+7 · FUTURE WORK + CLOSE  (target 1:30)
+================================================================================
+
+[Closing slide.]
+
+"Four steps, in priority order.
+
+ONE — close the data gap with a HUMAN-IN-THE-LOOP labelling campaign
+with UPV researchers themselves. A few hundred validated labels on the
+rare classes unlocks everything downstream.
+
+TWO — with that data, supervised fine-tuning of SPECTER2 on
+UPV-flavoured text. We expect another five-to-ten Top-1 points.
+
+THREE — production-grade deployment. Today the prototype runs natively
+on a single machine; the roadmap is PostgreSQL, vLLM, and containerised
+deployment.
+
+FOUR — temporal analysis: how has UPV's research portfolio shifted
+across the Planetary Boundaries over the last twenty years? That's not
+a classifier anymore — that's a STRATEGIC-PLANNING tool. That's the
+real product.
+
+[Pause. Step toward the panel.]
+
+"To close — fifty thousand papers, a hundred days without sleep, six
+interns who quite liked their summers. We didn't read the papers. WE
+TAUGHT A MACHINE TO. And what we built is not a classifier — it's the
+foundation of how UPV will, from now on, see itself in the planet's
+mirror.
+
+Thank you. Happy to take your questions."
+
+[Hold eye contact. The first question is theirs to ask.]
+
+
+================================================================================
+TIMING SUMMARY
+================================================================================
+
+  Section                                              Target    Cumulative
+  ---------------------------------------------------  --------  ----------
+  1 · Intro                                            1:30      1:30
+  2 · Objectives                                       1:00      2:30
+  3 · Methodology (Transformers + LLMs + Agents +      5:00      7:30
+      Metrics)
+  4 · Results                                          2:30      10:00
+  5 · Demo                                             2:00      12:00
+  6 · Conclusions & Limitations                        1:30      13:30
+  7 · Future Work + close                              1:30      15:00
+
+
+================================================================================
+DELIVERY NOTES
+================================================================================
+
+- NUMBERS ARE PUNCHLINES — say them slowly: "seventy-two point one
+  percent", not "72.1".
+
+- THREE DELIBERATE LAUGHS in the intro: 100 days without sleep / ruins
+  an intern's summer / we are the interns. Pause after each. Don't
+  laugh first.
+
+- DON'T READ THE SLIDES — the slides are scaffolding. You are the
+  signal.
+
+- THE DEMO IS THE RISKIEST SECTION — pre-open all four tabs in the
+  browser before you start. If the live demo breaks, narrate over a
+  screenshot and move on.
+
+- STOP TALKING AFTER "THANK YOU." The first question is theirs to ask.

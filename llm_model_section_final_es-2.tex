@@ -1,0 +1,1336 @@
+% Fragmento LaTeX generado desde docs/report/llm_model_section_final_es.md.
+% Requiere, en el documento principal: \usepackage{booktabs}
+% Recomendado: \usepackage{array}
+% Para figuras: \usepackage{graphicx}
+% Las figuras se esperan en una carpeta llamada figures/ junto al main.tex.
+% Las figuras se insertan sin entorno flotante para respetar el orden exacto en Overleaf.
+
+\makeatletter
+\newcommand{\llmfixedfigure}[4]{%
+\begin{center}
+\refstepcounter{figure}\label{#4}%
+\includegraphics[width=#1]{#2}
+\par\vspace{2pt}
+{\small\textbf{Figura~\thefigure.} #3}
+\end{center}
+}
+\makeatother
+
+\section{Sección para el report final: clasificación LLM de Planetary Boundaries}
+
+\begin{quote}
+Esta sección está pensada para integrarse en el informe final de UPV-EARTH dentro de los apartados de metodología, modelos, evaluación e iteración. Está escrita con foco en la parte de modelos de la rúbrica: elección técnica justificada, comparación de alternativas, protocolo de evaluación, mejora incremental, limitaciones y valor real del sistema.
+\end{quote}
+
+\subsection{Objetivo de modelado}
+
+La parte LLM del proyecto UPV-EARTH aborda la clasificación automática de publicaciones científicas de la UPV respecto al marco de las 9 Planetary Boundaries (PBs). La unidad de análisis es el abstract limpio de cada publicación, enriquecido con metadatos auxiliares cuando están disponibles. La salida del sistema no es una etiqueta temática genérica, sino una decisión científica estructurada: una PB primaria, posibles PBs secundarias, una lista de PBs rechazadas y una explicación textual del razonamiento.
+
+Desde el inicio se descartó tratar el problema como una simple búsqueda de palabras clave. En un corpus politécnico aparecen términos como \emph{water}, \emph{climate}, \emph{aerosol}, \emph{soil}, \emph{energy} o \emph{biodiversity} en contextos muy distintos. Un paper puede mencionar el cambio climático como motivación de fondo sin estudiar ninguna variable climática; otro puede ser de ingeniería hidráulica y usar \emph{water} sin tratar consumo global de agua dulce; otro puede hablar de sostenibilidad o política ambiental sin medir procesos biofísicos. El riesgo principal era por tanto el positivity bias o green hallucination: asignar PBs a cualquier documento con vocabulario ambiental superficial.
+
+Por esa razón, el problema se formuló como una tarea de clasificación científica con abstención. El modelo debe poder responder \texttt{None} cuando no hay una PB activamente estudiada. En términos operativos, una PB se considera activa si el abstract mide, modela o impone experimentalmente una variable relacionada con esa frontera. Esta definición fue clave para separar tres niveles que suelen confundirse:
+
+\begin{itemize}
+\item \textbf{Mención contextual}: el abstract usa vocabulario ambiental como motivación, pero no lo estudia.
+\item \textbf{Afinidad temática}: el abstract pertenece a un área próxima, como ingeniería, agricultura o planificación urbana, pero no cuantifica el proceso PB.
+\item \textbf{Activación PB real}: el abstract mide, modela o manipula una variable que encaja con la definición y la lógica de activación de una PB.
+\end{itemize}
+
+Esta distinción convirtió el prompt en una pieza metodológica central, no en un simple envoltorio de inferencia.
+
+\subsection{Datos, ground truth y protocolo de validación}
+
+El desarrollo se realizó sobre el corpus curado definido en la entrega M2. La muestra inicial de 1,000 documentos se filtró mediante deduplicación y umbral mínimo de 500 caracteres en el abstract, produciendo una vista minable de 696 documentos con abstract suficientemente informativo. Para la fase final también existe un corpus institucional ampliado de 31,634 documentos limpios, pero la evaluación controlada de modelos se hizo sobre el subconjunto manualmente validado, porque es el único que permite medir rendimiento de forma honesta.
+
+El ground truth contiene 208 filas revisadas manualmente, 206 \texttt{doc\_ids} únicos y columnas \texttt{1stpb}, \texttt{2ndpb} y \texttt{3rdpb}. Al cruzarlo con los CSV actuales de inferencia se obtienen normalmente 150 filas evaluables y 149 \texttt{doc\_ids} únicos. La diferencia se debe a que el ground truth conserva algún documento duplicado con criterios de etiquetado distintos; esto se mantiene para ser consistente con los notebooks de análisis, pero se documenta como fuente de ruido.
+
+Para evitar mezclar resultados antiguos con resultados finales, se usaron tres protocolos separados:
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{p{0.22\linewidth}p{0.15\linewidth}p{0.27\linewidth}p{0.27\linewidth}}
+\toprule
+\textbf{Fuente} & \textbf{n usado} & \textbf{Uso} & \textbf{Comparabilidad} \\
+\midrule
+M2, Tabla 5.2
+&
+Benchmark M2
+&
+Comparar Llama 8B, Qwen 14B y Gemma 26B.
+&
+Usa \emph{Flexible Agreement} y \emph{Rigorousness}; no se mezcla con Top-1/Jaccard finales.
+\\[2pt]
+
+\texttt{reporte\_zero\_shot.md}
+&
+150 filas
+&
+Documentar el baseline Qwen 14B sin ejemplos.
+&
+Fuente correcta para las métricas publicadas de zero-shot: Exact Match 54.0\%, Top-1 63.3\%, Hit@K 56.6\%, Jaccard 0.476, True Negative 84.3\% y positivity bias 15.7\%.
+\\[2pt]
+
+\texttt{problema\_few\_shot.pdf}
+&
+150 filas
+&
+Diagnosticar el primer few-shot contrastivo v1 frente al baseline zero-shot.
+&
+Fuente correcta para el v1 histórico: Exact Match 49.3\%, Top-1 57.3\%, Hit@K 50.5\%, Jaccard 0.407, True Negative 82.4\% y positivity bias 17.6\%.
+\\[2pt]
+
+Notebook v1--v4
+&
+147 filas, 146 \texttt{doc\_ids}
+&
+Comparar v1--v4 en igualdad de condiciones.
+&
+Excluye los 3 calibration cases de v4:
+\texttt{b9e1bf330baf},
+\texttt{9153f4dcf3d6},
+\texttt{f21bc832abc6}.
+\\[2pt]
+
+CSVs del sistema final
+&
+150 filas, 149 \texttt{doc\_ids}
+&
+Evaluar la arquitectura final explicada al cierre de la sección.
+&
+Se recalcula con la misma lógica de métricas para que sea comparable con el notebook.
+\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+El ground truth tiene naturaleza multi-etiqueta: un paper puede pertenecer a PB1 y PB4, o a PB9 y PB1, etc. Sin embargo, la evaluación principal se hizo sobre la primera PB humana (\texttt{1stpb}) frente a la PB primaria del modelo. Para no perder información multi-etiqueta, también se midieron métricas relajadas:
+
+\begin{itemize}
+\item \textbf{Top-1 estricto}: la PB primaria del modelo coincide exactamente con \texttt{1stpb}.
+\item \textbf{Top-2 global}: la primera PB humana aparece como primaria o secundaria, incluyendo los aciertos \texttt{None -> None}.
+\item \textbf{Hit@K PB-only}: la primera PB humana aparece como primaria o secundaria, pero calculado solo sobre documentos donde el humano sí asignó una PB.
+\item \textbf{Exact Match de conjunto}: el conjunto de PBs predicho coincide con el conjunto humano.
+\item \textbf{Jaccard}: solapamiento entre conjunto humano y conjunto predicho.
+\item \textbf{Hamming Loss}: fracción de errores sobre las 9 PBs posibles.
+\item \textbf{True Negative / Rigorousness}: proporción de documentos humanos \texttt{None} que el modelo rechaza correctamente.
+\item \textbf{Positivity Bias}: proporción de documentos humanos \texttt{None} a los que el modelo asigna alguna PB.
+\item \textbf{PB-only accuracy}: rendimiento sobre documentos donde sí hay PB humana.
+\item \textbf{None-only accuracy}: rendimiento sobre documentos sin PB humana.
+\end{itemize}
+
+Esta batería de métricas evita optimizar una única cifra. En este problema, subir recall asignando PBs a casi todo no sirve, porque contamina el mapa institucional. Tampoco sirve rechazar casi todo como \texttt{None}, porque se pierden contribuciones reales. La evaluación debe capturar el equilibrio entre cobertura y rigor.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{p{0.18\linewidth}p{0.28\linewidth}p{0.28\linewidth}p{0.18\linewidth}}
+\toprule
+Métrica & Definición operativa & Qué diagnostica & Riesgo si se optimiza sola \\
+\midrule
+Top-1 estricto & \texttt{pred\_primary} coincide con \texttt{1stpb}. & Calidad de la decisión principal que aparecería en un dashboard institucional. & Penaliza casos multi-PB donde el modelo acierta una PB secundaria razonable. \\
+Top-2 global & \texttt{1stpb} aparece como primaria o secundaria, contando también \texttt{None -> None}. & Cobertura comparable en la tabla global. & Puede parecer alto si hay muchos \texttt{None} correctamente rechazados. \\
+Hit@K PB-only & \texttt{1stpb} aparece como primaria o secundaria solo en documentos con PB humana. & Capacidad de no perder papers relevantes para revisión. & No mide falsos positivos sobre documentos irrelevantes. \\
+Exact Match & El conjunto predicho coincide con el conjunto humano. & Precisión multi-etiqueta completa. & Muy severa con ground truth incompleto o discutible. \\
+Jaccard & Intersección dividida por unión entre conjunto humano y predicho. & Solapamiento parcial en papers que tocan varias fronteras. & Puede parecer aceptable aunque la primaria esté mal. \\
+None-only accuracy & Documentos humanos \texttt{None} rechazados como \texttt{None}. & Rigor y control de \emph{green hallucination}. & Favorece modelos excesivamente conservadores. \\
+PB-only accuracy & Documentos con PB humana clasificados con la PB primaria correcta. & Recall real sobre contribuciones relevantes. & Favorece asignar PB a demasiados documentos. \\
+Positivity bias & Fracción de \texttt{None} humanos convertidos en alguna PB. & Contaminación potencial del mapa institucional. & Si se minimiza demasiado, se pierden contribuciones reales. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Esta tabla fue útil durante el desarrollo porque obligó a separar dos objetivos que a veces compiten: descubrir investigación relevante y no inflar artificialmente el impacto ambiental de la UPV. Por eso las versiones se compararon siempre con al menos una métrica de acierto, una métrica de rechazo y una métrica multi-etiqueta.
+
+\subsection{Marco de referencia PB como base del prompt}
+
+La pieza semántica central del sistema es \texttt{corpus\_PB/data/pb\_reference.csv}. Este archivo operacionaliza las 9 Planetary Boundaries en columnas utilizables por modelos y módulos deterministas:
+
+\begin{itemize}
+\item \texttt{pb\_code} y \texttt{pb\_name}: identificador y nombre de la frontera.
+\item \texttt{short\_definition}: definición científica breve.
+\item \texttt{core\_keywords}, \texttt{extended\_keywords}, \texttt{applied\_keywords\_upv}: vocabulario estratificado.
+\item \texttt{activation\_logic}: condiciones bajo las cuales la PB debe activarse.
+\item \texttt{exclusion\_notes}: condiciones que obligan a rechazar la PB aunque haya vocabulario superficial.
+\item \texttt{source\_basis}: trazabilidad hacia documentos de referencia del proyecto.
+\end{itemize}
+
+La evolución metodológica importante fue pasar de \emph{definiciones de PB} a \emph{reglas de activación y exclusión}. Por ejemplo:
+
+\begin{itemize}
+\item PB1 no se activa por cualquier paper de energía; requiere emisiones, calentamiento, forzamiento radiativo, escenarios climáticos o impacto climático explícito.
+\item PB2 no se activa por cualquier estudio marino; requiere acidificación, pH, carbonato, aragonito o efectos de acidez.
+\item PB4 no se activa por agricultura en general; requiere nitrógeno, fósforo, eutrofización, fertilización o alteración de ciclos biogeoquímicos.
+\item PB5 no se activa por calidad de agua o tratamiento de aguas; requiere cantidad, extracción, escasez, caudal, riego o presión sobre agua dulce.
+\item PB7 no se activa por \emph{naturaleza} o \emph{conservación} genérica; requiere biodiversidad, especies, integridad ecosistémica, diversidad funcional/genética, pérdida de hábitat, etc.
+\item PB8 exige sustancia o entidad novedosa concreta: plásticos, PFAS, pesticidas, fármacos, nanomateriales, sustancias persistentes o tóxicas.
+\item PB9 exige partículas o aerosoles: PM2.5, PM10, AOD, black carbon, sulfate aerosols, aerosol-cloud interactions, etc.
+\end{itemize}
+
+Estas reglas se inyectan dinámicamente en cada prompt, de modo que la decisión del LLM queda anclada en el marco del proyecto y no solo en el conocimiento pre-entrenado del modelo.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{p{0.08\linewidth}p{0.27\linewidth}p{0.28\linewidth}p{0.29\linewidth}}
+\toprule
+PB & Señales que activan & Señales que no bastan & Criterio práctico usado en prompts \\
+\midrule
+PB1 & Emisiones de GEI, calentamiento, forzamiento radiativo, escenarios climáticos, impactos climáticos modelados. & Energía, eficiencia, movilidad o sostenibilidad sin variable climática explícita. & Activar solo si el clima es variable medida, modelo, escenario o tratamiento, no si aparece como motivación general. \\
+PB2 & pH oceánico, carbonatos, aragonito, acidificación marina, respuesta biogeoquímica a acidez. & Estudios marinos generales, biodiversidad marina sin química de carbonato. & Si la variable operacional es acidez/carbonato, PB2 puede superar a PB7 o PB1. \\
+PB3 & Ozono estratosférico, ODS, CFCs, halones, agotamiento de ozono, radiación UV asociada. & Ozono troposférico o calidad del aire urbana sin capa estratosférica. & Exigir capa de ozono estratosférica o sustancias agotadoras; no confundir con smog fotoquímico. \\
+PB4 & Nitrógeno, fósforo, fertilización, eutrofización, lixiviación, deposición de nutrientes. & Agricultura o productividad vegetal sin ciclo N/P. & Activar por flujo biogeoquímico medido, aunque el vector físico sea polvo, lluvia o escorrentía. \\
+PB5 & Extracción, escasez, caudal, disponibilidad, riego, sequía hidrológica, presión sobre agua dulce. & Calidad de agua, tratamiento de aguas o contaminantes acuáticos sin cantidad/disponibilidad. & Separar agua como recurso físico de agua como medio contaminado. \\
+PB6 & Cobertura del suelo, deforestación, urbanización, conversión agrícola, fragmentación, cambio de uso del suelo. & Localización rural/urbana mencionada solo como contexto. & Activar cuando el paper cuantifica transformación espacial o funcional del territorio. \\
+PB7 & Biodiversidad, especies, abundancia, riqueza, hábitat, diversidad funcional/genética, integridad ecosistémica. & Naturaleza, paisaje, conservación o servicios ecosistémicos de forma genérica. & Activar si el paper mide respuesta biológica/ecológica, aunque el driver sea PB1 o uso del suelo. \\
+PB8 & Plásticos, pesticidas, fármacos, PFAS, nanomateriales, metales pesados, compuestos persistentes/tóxicos. & Residuos, materiales o economía circular sin entidad contaminante concreta. & Exigir sustancia o clase de contaminante; ampliar vocabulario desde errores. \\
+PB9 & PM2.5, PM10, AOD, black carbon, sulfatos, aerosoles, aerosol-cloud interactions. & Contaminación atmosférica genérica sin partículas/aerosoles. & Si se cuantifican partículas o aerosoles, PB9 no debe degradarse automáticamente a PB1. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Selección del modelo base: Llama, Qwen y Gemma}
+
+El primer paso de la parte LLM no fue diseñar la cascada ni iterar prompts few-shot, sino decidir qué modelo local era viable como clasificador principal. En M2 se compararon tres escalas de modelo bajo un protocolo zero-shot inicial: Llama 3.1 8B, Qwen 2.5 14B y Gemma 4 26B. La comparación pertenece al protocolo antiguo de M2, por lo que no debe mezclarse directamente con las métricas finales v1--v4; aun así, es metodológicamente importante porque justifica por qué el resto del trabajo se construyó alrededor de Qwen.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{0.23\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.15\linewidth}}
+\toprule
+Modelo M2 & Flexible Agreement & Rigorousness & Positivity Bias & Tiempo medio \\
+\midrule
+Llama 3.1 8B & 60.27\% & 0.00\% & 10.96\% & 3.08 s/doc \\
+Qwen 2.5 14B & 52.05\% & 38.36\% & 0.00\% & 6.12 s/doc \\
+Gemma 4 26B & 47.95\% & 39.73\% & 0.00\% & 22.90 s/doc \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{0.22\linewidth}p{0.32\linewidth}p{0.32\linewidth}}
+\toprule
+Modelo M2 & Agreement visual & Latencia visual \\
+\midrule
+Llama 3.1 8B & \rule{3.50cm}{0.8ex} 60.27\% & \rule{0.51cm}{0.8ex} 3.08 s \\
+Qwen 2.5 14B & \rule{3.02cm}{0.8ex} 52.05\% & \rule{1.02cm}{0.8ex} 6.12 s \\
+Gemma 4 26B & \rule{2.78cm}{0.8ex} 47.95\% & \rule{3.80cm}{0.8ex} 22.90 s \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La lectura correcta de esta tabla no es que Llama fuese el mejor modelo científico por tener más agreement flexible. De hecho, Llama tenía 0.00\% de rigorousness: no filtraba bien los documentos irrelevantes. Gemma era útil como auditor conceptual porque detectaba rutas químicas o biofísicas más profundas, por ejemplo relacionando SO2 con sulfatos particulados o distinguiendo un estudio literario sobre crisis climática de un paper climático real. Sin embargo, Gemma era demasiado lento para escalar: 22.9 s/documento frente a unos 6.1 s/documento de Qwen.
+
+Por tanto, Qwen 2.5 14B fue seleccionado como compromiso operativo. No era el modelo con mayor agreement flexible bruto, pero sí ofrecía una combinación más defendible de razonamiento, capacidad de abstención, estabilidad en Ollama, latencia razonable y facilidad de control mediante prompts estructurados y JSON. Esta decisión condicionó todo lo posterior: las iteraciones zero-shot/few-shot no son una comparación abstracta de LLMs, sino el proceso de convertir Qwen 14B en un clasificador científicamente útil para Planetary Boundaries.
+
+\subsection{Infraestructura de inferencia}
+
+Los modelos se ejecutaron localmente mediante Ollama. Esto fue importante por tres motivos: coste cero por llamada, privacidad del corpus institucional y reproducibilidad en una VM controlada. Los runners usan Python, peticiones HTTP al endpoint local de Ollama y guardado incremental en CSV para no perder ejecuciones largas.
+
+Las decisiones técnicas más relevantes fueron:
+
+\begin{itemize}
+\item \textbf{Modelos locales open-weight}: \texttt{qwen2.5:14b} como clasificador principal, \texttt{qwen2.5:3b} como modelo auxiliar ligero en la fase final y \texttt{gemma4:26b} como referencia cualitativa grande.
+\item \textbf{Temperatura 0.0}: se prioriza determinismo y comparabilidad entre versiones.
+\item \textbf{JSON mode}: las salidas se fuerzan a JSON para poder parsear \texttt{primary\_pb}, \texttt{secondary\_pbs}, \texttt{rejected\_pbs}, \texttt{confidence} y \texttt{reasoning\_process}.
+\item \textbf{Preflight de modelos}: el pipeline comprueba que Ollama responde y que los modelos están descargados antes de empezar, evitando runs corruptos por errores 404.
+\item \textbf{Guardado incremental}: cada fila se escribe inmediatamente en CSV para tolerar caídas.
+\item \textbf{Pipeline resumible}: los doc\_ids ya procesados se omiten salvo que se use \texttt{--no-resume}.
+\item \textbf{Control de VRAM}: \texttt{keep\_alive=10m} evita que modelos cargados indefinidamente bloqueen la GPU.
+\end{itemize}
+
+La explicación generada por el LLM se guarda como parte del output. Esto no es solo \emph{texto bonito}: permite auditoría cualitativa de errores, identificación de patrones de fallo y revisión humana posterior.
+
+\subsection{Evolución de modelos y prompts}
+
+La evolución de los modelos y/o prompts puede resumirse como un proceso de calibración entre dos fallos opuestos:
+
+\begin{itemize}
+\item \textbf{Sobre-asignación}: el modelo ve PBs en cualquier paper con lenguaje ambiental.
+\item \textbf{Infra-asignación}: el modelo se vuelve tan estricto que rechaza papers realmente relevantes.
+\end{itemize}
+
+\subsubsection{Mapa de iteraciones}
+
+La siguiente tabla resume la lógica experimental. Cada versión cambió una hipótesis concreta del prompt o de la arquitectura; por tanto, las métricas no son una colección de pruebas aisladas, sino una secuencia de aprendizaje.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{p{0.14\linewidth}p{0.21\linewidth}p{0.25\linewidth}p{0.25\linewidth}p{0.10\linewidth}}
+\toprule
+Versión & Hipótesis & Cambio técnico & Qué se observó & Decisión \\
+\midrule
+Zero-shot estricto & Un buen marco PB con exclusiones basta para clasificar. & Reglas completas, rol de evaluator, salida JSON y temperatura 0.0. & Buen rechazo de \texttt{None}, pero muchos falsos negativos en PB reales. & Mantener rigor, mejorar recall. \\
+Few-shot v1 & Los ejemplos corregirán casos frontera. & Casos contrastivos dentro del prompt. & El modelo copió patrones y colapsó PB7; los ejemplos actuaron como plantillas rígidas. & Descartar esta familia de ejemplos. \\
+V2 CoT guiado & Un checklist deductivo fuerza razonamiento completo. & Extracción de métricas, mapeo, exclusión, jerarquización. & Sube PB-only, pero explota el positivity bias. & Conservar checklist parcial, añadir filtro de foco. \\
+V3 focus filter & Separar contexto de objeto operacional reducirá falsos positivos. & Verificación background-vs-focus y reglas para textos sociales/gobernanza. & Recupera rigor, pero pierde algunos PB reales. & Mantener principio, recalibrar casos difíciles. \\
+V4 principle-driven & La primaria debe ser la variable medida/modelada, no la narrativa dominante. & Prompt XML, calibration cases no copiables, regla de objeto operacional. & Mejor single-model: 72.1\% Top-1 y 0.688 Jaccard. & Baseline final single-model. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Baseline zero-shot estricto}
+
+El primer baseline fuerte fue \texttt{qwen2.5:14b} con un prompt zero-shot estructurado. Incluía rol de evaluador científico, reglas PB, exclusiones, extracción conceptual y salida JSON. El objetivo era medir si un LLM mediano podía aplicar el marco PB sin ejemplos.
+
+La fuente de estos resultados es el reporte \texttt{nlp/llm/outputs/studies/reporte\_zero\_shot.md}, calculado sobre \texttt{qwen2.5\_14b\_zeroshot.csv}. En la tabla comparativa posterior aparecen algunas métricas recomputadas desde CSV para alinear definiciones entre sistemas; por ejemplo, el Jaccard recomputado allí cuenta el caso \texttt{None -> None} como solapamiento de conjuntos y por eso no coincide con el Jaccard publicado en este reporte. Para describir el baseline aislado se usan aquí las cifras del reporte zero-shot.
+
+Resultados reportados sobre 150 filas:
+
+\begin{itemize}
+\item Exact Match: \textbf{54.0\%}
+\item Top-1: \textbf{63.3\%}
+\item Hit@K: \textbf{56.6\%}
+\item True Negative / rigorousness: \textbf{84.3\%}
+\item Positivity bias: \textbf{15.7\%}
+\item Jaccard reportado: \textbf{0.476}
+\item Hamming loss: \textbf{0.064}
+\end{itemize}
+
+El comportamiento fue conservador. Rechazaba bien documentos irrelevantes, pero perdía demasiados papers con PB real. Los errores más frecuentes fueron \texttt{PB1 -> None}, \texttt{PB7 -> None} y \texttt{PB9 -> None}. Este baseline demostró que las reglas de exclusión funcionaban, pero también que el modelo se \emph{acobardaba} ante casos complejos.
+
+\subsubsection{Few-shot v1: el fallo del ejemplo rígido}
+
+La siguiente hipótesis fue añadir ejemplos few-shot para enseñar casos frontera. Intuitivamente, esto debería ayudar. Empíricamente ocurrió lo contrario.
+
+La fuente correcta para el primer v1 no es el notebook v1--v4, sino \texttt{problema\_few\_shot.pdf}, que analiza \texttt{eval\_qwen2.5\_14b\_FEWSHOT\_208.csv} sobre 150 documentos y lo compara directamente contra el zero-shot anterior. El notebook v1--v4 se mantiene después para comparar todas las variantes con el mismo filtro de 147 filas, pero el diagnóstico histórico de por qué se abandonó el primer few-shot sale del PDF.
+
+Resultados del PDF sobre 150 filas:
+
+\begin{itemize}
+\item Exact Match: \textbf{49.3\%}, frente a 54.0\% en zero-shot.
+\item Top-1: \textbf{57.3\%}, frente a 63.3\% en zero-shot.
+\item Hit@K: \textbf{50.5\%}, frente a 56.6\% en zero-shot.
+\item True Negative: \textbf{82.4\%}, frente a 84.3\% en zero-shot.
+\item Positivity bias: \textbf{17.6\%}, frente a 15.7\% en zero-shot.
+\item PB7 recall: \textbf{0\%}
+\item Jaccard reportado: \textbf{0.407}, frente a 0.476 en zero-shot.
+\end{itemize}
+
+El análisis cualitativo reveló el \emph{efecto loro}: el modelo reutilizaba frases del prompt en vez de razonar sobre el abstract. En particular, el PDF documenta una frase repetida en la columna \texttt{llm\_reasoning}: \emph{Applying the Anti-Overfiltering clause, ecological responses to climate drivers are valid biophysical metrics. Therefore, I must not over-reject.} También detecta el colapso de PB7: la clase pasa de un recall del 23\% en zero-shot a 0\% en v1, porque el modelo internalizó la regla espuria de que PB7 debía quedar subordinada a PB1. La tercera señal fue la \emph{trampa social}: en 19 casos clasificados como \texttt{None}, el modelo justificó el rechazo diciendo que el texto era político o económico, aunque algunos abstracts sí contenían métricas biofísicas válidas. Esta iteración es valiosa precisamente porque muestra una decisión negativa justificada: no todo few-shot mejora un LLM; ejemplos mal diseñados pueden producir sobreajuste narrativo.
+
+\subsubsection{Few-shot v2 / zero-shot CoT: checklist deductivo}
+
+Para corregir v1, se eliminaron los ejemplos rígidos y se sustituyeron por un algoritmo deductivo obligatorio:
+
+\begin{enumerate}
+\item Extraer métricas físicas, químicas, biológicas o ecológicas explícitas.
+\item Mapear cada métrica candidata a PBs.
+\item Aplicar reglas de exclusión.
+\item Jerarquizar primaria y secundarias.
+\item Emitir JSON.
+\end{enumerate}
+
+Resultados en el mismo protocolo apples-to-apples de 147 filas:
+
+\begin{itemize}
+\item Top-1: \textbf{63.9\%}
+\item PB-only accuracy: \textbf{69.1\%}
+\item None-only accuracy: \textbf{54.0\%}
+\item Positivity bias: \textbf{46.0\%}
+\item Jaccard: \textbf{0.594}
+\end{itemize}
+
+V2 solucionó parte del problema de recall: encontraba muchos más papers con PB real. Pero lo hizo a costa de disparar falsos positivos. El positivity bias subió a casi la mitad de los documentos humanos \texttt{None}, lo que hacía la versión inaceptable para producción. Esta iteración enseñó que un checklist demasiado imperativo puede empujar al modelo a \emph{pescar} cualquier métrica posible.
+
+\subsubsection{Few-shot v3: filtro background-vs-focus}
+
+V3 mantuvo el razonamiento paso a paso, pero reforzó la distinción entre lo que el paper realmente mide/modela y lo que aparece solo como contexto. También añadió una reverificación para textos sociales, legales, de gobernanza, educación o software.
+
+Resultados en el mismo protocolo apples-to-apples de 147 filas:
+
+\begin{itemize}
+\item Top-1: \textbf{64.6\%}
+\item PB-only accuracy: \textbf{57.7\%}
+\item None-only accuracy: \textbf{78.0\%}
+\item Positivity bias: \textbf{22.0\%}
+\item Jaccard: \textbf{0.596}
+\end{itemize}
+
+V3 corrigió gran parte del exceso de positividad de v2, pero volvió a perder recall en algunas clases. Es una versión más equilibrada que v2, aunque todavía por debajo del potencial del modelo.
+
+\subsubsection{V4 principle-driven: objeto operacional y calibration cases}
+
+La versión v4 fue el salto principal. Se reformuló el prompt con etiquetas XML y con un principio explícito: la PB primaria es la variable que el paper cuantifica, modela o impone experimentalmente, no la PB más mencionada retóricamente en la introducción.
+
+La diferencia con v1 es importante. V4 no usa ejemplos como plantillas de respuesta, sino como calibration cases. Además, el prompt prohíbe reutilizar frases de esos casos. Los tres documentos usados como calibración se excluyen de la evaluación para no medir memorización.
+
+El prompt introduce confusiones frecuentes:
+
+\begin{itemize}
+\item Aerosoles, PM y AOD son PB9, no PB1.
+\item PB1 requiere clima activo: medido, modelado o impuesto como escenario/tratamiento.
+\item Papers de gestión de agua con clima solo como motivación son PB5, no PB1.
+\item Respuestas ecológicas y biodiversidad pueden ser PB7 primaria.
+\item Nutrientes N/P apuntan a PB4.
+\end{itemize}
+
+Resultados sobre 147 filas cruzadas:
+
+\begin{itemize}
+\item Top-1: \textbf{72.1\%}
+\item PB-only accuracy: \textbf{70.1\%}
+\item None-only accuracy: \textbf{76.0\%}
+\item Top-2 global: \textbf{74.8\%}
+\item Hit@K PB-only: \textbf{74.2\%}
+\item Exact Match de conjunto: \textbf{60.5\%}
+\item Jaccard: \textbf{0.688}
+\item Hamming loss: \textbf{0.061}
+\item Positivity bias: \textbf{24.0\%}
+\item Macro-F1: \textbf{0.679}
+\item Weighted-F1: \textbf{0.718}
+\item Tiempo medio por inferencia: aproximadamente \textbf{5 s/documento} en el análisis comparativo.
+\end{itemize}
+
+V4 fue la mejor versión single-model. Su mejora no viene de sacrificar una métrica por otra: gana claramente en las métricas de acierto y se mantiene razonablemente alto en rechazo de \texttt{None}. Frente a v3, el análisis pareado mostró 15 documentos donde v4 acierta y v3 falla, frente a solo 4 donde ocurre lo contrario. Por tanto, la mejora no es un artefacto agregado, sino una ganancia real a nivel documento.
+
+\subsubsection{Matrices de confusión de las versiones few-shot}
+
+Para entender de verdad qué cambió entre prompts, no basta con mirar Top-1. Las matrices normalizadas permiten ver hacia dónde se fuga cada clase humana. Se calculan con el protocolo del notebook v1--v4: 147 filas, excluyendo los tres calibration cases de v4. Cada fila suma 1, por lo que la diagonal es el recall de esa PB y las celdas fuera de diagonal muestran el tipo de confusión.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{p{0.12\linewidth}p{0.10\linewidth}p{0.58\linewidth}p{0.14\linewidth}}
+\toprule
+Versión & Top-1 & Principales celdas fuera de la diagonal & Lectura \\
+\midrule
+v1 & 58.5\% & \texttt{PB1 -> None} 10; \texttt{PB7 -> None} 8; \texttt{PB8 -> None} 6; \texttt{PB3 -> None} 4; \texttt{PB4 -> None} 4. & Conservadora y colapsada en PB7/PB8. \\
+v2 & 63.9\% & \texttt{None -> PB1} 9; \texttt{PB7 -> None} 5; \texttt{PB1 -> None} 3; \texttt{None -> PB7} 3; \texttt{None -> PB9} 2. & Gana recall, pero introduce alucinación verde. \\
+v3 & 64.6\% & \texttt{PB1 -> None} 11; \texttt{PB7 -> None} 6; \texttt{None -> PB9} 3; \texttt{None -> PB1} 3; \texttt{PB8 -> None} 3. & Recupera rigor, pero vuelve a ser demasiado cauta. \\
+v4 & 72.1\% & \texttt{PB1 -> None} 4; \texttt{PB1 -> PB9} 3; \texttt{None -> PB1} 3; \texttt{PB7 -> None} 3; \texttt{None -> PB7} 3. & Mejor equilibrio entre recall y rechazo de \texttt{None}. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\tiny
+\setlength{\tabcolsep}{2.4pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+\multicolumn{11}{c}{\textbf{v1: matriz normalizada, fila humano / columna LLM}} \\
+\midrule
+Humano $\backslash$ LLM & None & PB1 & PB2 & PB3 & PB4 & PB5 & PB6 & PB7 & PB8 & PB9 \\
+\midrule
+None & 0.84 & 0.06 & 0.04 & 0.02 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.04 \\
+PB1  & 0.42 & 0.50 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.04 & 0.00 & 0.04 \\
+PB2  & 0.12 & 0.00 & 0.88 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB3  & 0.50 & 0.12 & 0.00 & 0.25 & 0.12 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB4  & 0.44 & 0.11 & 0.11 & 0.00 & 0.33 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB5  & 0.25 & 0.50 & 0.00 & 0.00 & 0.00 & 0.25 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB6  & 0.50 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.50 & 0.00 & 0.00 & 0.00 \\
+PB7  & 0.67 & 0.17 & 0.00 & 0.00 & 0.00 & 0.00 & 0.08 & 0.00 & 0.00 & 0.08 \\
+PB8  & 0.86 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.14 & 0.00 \\
+PB9  & 0.19 & 0.00 & 0.00 & 0.00 & 0.05 & 0.00 & 0.00 & 0.00 & 0.00 & 0.76 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\tiny
+\setlength{\tabcolsep}{2.4pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+\multicolumn{11}{c}{\textbf{v2: matriz normalizada, fila humano / columna LLM}} \\
+\midrule
+Humano $\backslash$ LLM & None & PB1 & PB2 & PB3 & PB4 & PB5 & PB6 & PB7 & PB8 & PB9 \\
+\midrule
+None & 0.54 & 0.18 & 0.04 & 0.02 & 0.02 & 0.02 & 0.04 & 0.06 & 0.04 & 0.04 \\
+PB1  & 0.12 & 0.67 & 0.00 & 0.04 & 0.00 & 0.00 & 0.00 & 0.08 & 0.00 & 0.08 \\
+PB2  & 0.12 & 0.00 & 0.88 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB3  & 0.12 & 0.12 & 0.00 & 0.62 & 0.12 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB4  & 0.00 & 0.00 & 0.22 & 0.00 & 0.56 & 0.00 & 0.00 & 0.22 & 0.00 & 0.00 \\
+PB5  & 0.00 & 0.50 & 0.00 & 0.00 & 0.00 & 0.50 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB6  & 0.25 & 0.00 & 0.00 & 0.00 & 0.00 & 0.25 & 0.50 & 0.00 & 0.00 & 0.00 \\
+PB7  & 0.42 & 0.08 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.42 & 0.00 & 0.08 \\
+PB8  & 0.14 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.86 & 0.00 \\
+PB9  & 0.00 & 0.00 & 0.00 & 0.00 & 0.05 & 0.00 & 0.00 & 0.00 & 0.05 & 0.90 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\tiny
+\setlength{\tabcolsep}{2.4pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+\multicolumn{11}{c}{\textbf{v3: matriz normalizada, fila humano / columna LLM}} \\
+\midrule
+Humano $\backslash$ LLM & None & PB1 & PB2 & PB3 & PB4 & PB5 & PB6 & PB7 & PB8 & PB9 \\
+\midrule
+None & 0.78 & 0.06 & 0.02 & 0.02 & 0.02 & 0.00 & 0.00 & 0.04 & 0.00 & 0.06 \\
+PB1  & 0.46 & 0.42 & 0.04 & 0.00 & 0.00 & 0.00 & 0.00 & 0.04 & 0.00 & 0.04 \\
+PB2  & 0.12 & 0.12 & 0.75 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB3  & 0.12 & 0.00 & 0.00 & 0.75 & 0.12 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB4  & 0.11 & 0.00 & 0.22 & 0.00 & 0.56 & 0.00 & 0.00 & 0.11 & 0.00 & 0.00 \\
+PB5  & 0.25 & 0.25 & 0.00 & 0.00 & 0.25 & 0.25 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB6  & 0.50 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.50 & 0.00 & 0.00 & 0.00 \\
+PB7  & 0.50 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.08 & 0.33 & 0.00 & 0.08 \\
+PB8  & 0.43 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.57 & 0.00 \\
+PB9  & 0.10 & 0.00 & 0.00 & 0.00 & 0.05 & 0.00 & 0.00 & 0.00 & 0.00 & 0.86 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\tiny
+\setlength{\tabcolsep}{2.4pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+\multicolumn{11}{c}{\textbf{v4 principle: matriz normalizada, fila humano / columna LLM}} \\
+\midrule
+Humano $\backslash$ LLM & None & PB1 & PB2 & PB3 & PB4 & PB5 & PB6 & PB7 & PB8 & PB9 \\
+\midrule
+None & 0.76 & 0.06 & 0.04 & 0.02 & 0.02 & 0.02 & 0.00 & 0.06 & 0.00 & 0.02 \\
+PB1  & 0.17 & 0.67 & 0.00 & 0.00 & 0.04 & 0.00 & 0.00 & 0.00 & 0.00 & 0.12 \\
+PB2  & 0.12 & 0.00 & 0.75 & 0.00 & 0.12 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB3  & 0.12 & 0.12 & 0.00 & 0.62 & 0.12 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB4  & 0.11 & 0.00 & 0.00 & 0.00 & 0.89 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB5  & 0.25 & 0.25 & 0.00 & 0.00 & 0.00 & 0.50 & 0.00 & 0.00 & 0.00 & 0.00 \\
+PB6  & 0.25 & 0.00 & 0.00 & 0.00 & 0.00 & 0.25 & 0.50 & 0.00 & 0.00 & 0.00 \\
+PB7  & 0.25 & 0.08 & 0.00 & 0.00 & 0.00 & 0.08 & 0.08 & 0.42 & 0.00 & 0.08 \\
+PB8  & 0.14 & 0.00 & 0.00 & 0.00 & 0.14 & 0.00 & 0.00 & 0.00 & 0.71 & 0.00 \\
+PB9  & 0.05 & 0.00 & 0.00 & 0.00 & 0.05 & 0.00 & 0.00 & 0.00 & 0.00 & 0.90 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La evolución se ve claramente en las matrices. V1 mantiene un buen rechazo de \texttt{None} (0.84), pero a costa de mandar a \texttt{None} PB1, PB3, PB4, PB7 y PB8; es decir, aprendió a abstenerse demasiado. V2 corrige parte de ese problema y mejora PB1, PB7, PB8 y PB9, pero su fila \texttt{None} cae a 0.54: casi la mitad de documentos irrelevantes reciben alguna PB. V3 recupera rechazo de \texttt{None} (0.78), pero vuelve a perder PB1 y PB7 por exceso de filtro. V4 conserva un rechazo razonable (0.76) y mejora las diagonales de PB4 (0.89), PB8 (0.71) y PB9 (0.90), por eso es la mejor solución single-model.
+
+\paragraph{Lectura cualitativa de algunas confusiones}
+
+\begin{itemize}
+\item \textbf{\texttt{PB1 -> PB9}}. No siempre es un error claro. Muchos papers humanos PB1 pertenecen a clima, pero el objeto operacional real son aerosoles, mineral dust, cloud condensation nuclei, PM2.5 o black carbon. Bajo el criterio de v4, PB9 puede ser más defendible como primaria y PB1 quedar como contexto climático.
+\item \textbf{\texttt{None -> PB9}}. Algunos casos parecen positivity bias, pero otros apuntan a infra-etiquetado humano. Si el abstract mide PM2.5, AOD o black carbon, el razonamiento del LLM suele ser fuerte aunque el ground truth diga \texttt{None}.
+\item \textbf{\texttt{PB7 -> None}}. En papers conceptuales, de comunicación o filosofía ambiental, \texttt{None} puede estar mejor justificado que PB7 si no se mide biodiversidad. En papers con especies, ecosistemas o respuestas ecológicas cuantificadas, sí es un fallo real del modelo.
+\item \textbf{\texttt{PB8 -> None}}. Es una debilidad de cobertura: heavy metals, plásticos o contaminantes no siempre activan PB8 porque el vocabulario de \texttt{pb\_reference.csv} es incompleto.
+\end{itemize}
+
+\subsubsection{Anatomía de prompts}
+
+Para que la evolución no quede como una explicación abstracta, se incluyen aquí extractos en forma de prompt. Los bloques no son decoración: son parte del modelo, porque fijan el contrato de inferencia, el tipo de razonamiento permitido y la estructura de salida. En zero-shot, v2, v3 y v4 se han usado los runners/notebooks del repositorio, omitiendo únicamente el bloque largo \texttt{pb\_rules}. En v1 se representa el contrato contrastivo responsable de los patrones diagnosticados en \texttt{problema\_few\_shot.pdf}: copia de la cláusula anti-overfiltering, subordinación de PB7 a PB1 y rechazo social/económico usado como comodín.
+
+\paragraph{Prompt zero-shot: baseline estricto}
+
+{\footnotesize
+\begin{verbatim}
+You are a strict and precise scientific evaluator analyzing research
+abstracts from the Universitat Politecnica de Valencia (UPV) against
+the Planetary Boundaries (PBs) framework.
+
+Your task is to identify the Planetary Boundaries affected by the
+research. You must strictly apply the activation rules and evaluate
+the exclusion rules.
+
+CRITICAL GUARDRAILS:
+1. Do not force a match if the scientific connection is weak, purely
+   theoretical, or merely thematic.
+2. Conversely, do not over-reject if the explicit biophysical metric
+   is present.
+
+### INSTRUCTIONS (ZERO-SHOT):
+Step 1: Concept Extraction. Identify the core scientific metrics,
+biophysical impacts, and specific chemical/physical substances measured
+in the abstract.
+Step 2: Exclusion Check (CRITICAL). Apply the EXCLUSION RULE for every
+PB you consider.
+Step 3: Anti-Overfiltering Clause. DO NOT OVER-REJECT. If the abstract
+explicitly measures, models, or analyzes the exact physical metrics of
+a boundary, you MUST assign that PB.
+Step 4: Similarity Matching & Hierarchy. Assign the SINGLE most dominant
+Planetary Boundary as the primary_pb.
+Step 5: JSON Output. Output ONLY valid JSON.
+
+{
+  "reasoning_process": "...",
+  "primary_pb": {"pb_code": "PBX", "confidence": "High/Medium/Low"} or null,
+  "secondary_pbs": [{"pb_code": "PBY", "confidence": "High/Medium/Low"}],
+  "rejected_pbs": ["PBZ", "PBW"]
+}
+\end{verbatim}
+}
+
+Este prompt era estricto y relativamente conservador. Su virtud fue controlar el ruido de documentos sin PB; su límite fue que la combinación de exclusiones y jerarquía única provocó muchos falsos negativos en PB1, PB7 y PB9.
+
+\paragraph{Prompt v1: few-shot contrastivo}
+
+{\footnotesize
+\begin{verbatim}
+You are a strict scientific evaluator analyzing UPV research abstracts
+against the Planetary Boundaries framework.
+
+Use the contrastive examples below to calibrate your decision.
+
+Example 1 - Ecological responses under climate drivers:
+If a paper analyzes ecological responses to climate drivers, climate is
+the primary boundary and biosphere integrity is secondary.
+Reasoning cue: Applying the Anti-Overfiltering clause, ecological
+responses to climate drivers are valid biophysical metrics. Therefore,
+do not over-reject.
+
+Example 2 - Boundary overlap:
+If an abstract mixes several PB signals, choose the dominant global
+driver as primary and place downstream ecological effects as secondary.
+
+Example 3 - Social/economic/policy text:
+If the abstract is mainly political, economic, governance-oriented or
+social, and does not clearly measure a biophysical variable, output None.
+
+Task:
+Classify the abstract into one primary PB, optional secondary PBs and
+rejected PBs. Return only JSON with reasoning_process, primary_pb,
+secondary_pbs and rejected_pbs.
+\end{verbatim}
+}
+
+Este v1 explica los síntomas medidos. El ejemplo ecológico introdujo una regla demasiado fuerte: PB7 quedó como sombra de PB1, lo que llevó el recall de PB7 a 0\%. Además, el ejemplo social/económico se convirtió en una salida fácil hacia \texttt{None}. El modelo no solo aprendió los criterios; aprendió también la retórica de los ejemplos, y por eso aparecen frases copiadas en \texttt{llm\_reasoning}.
+
+\paragraph{Prompt v2: checklist deductivo real}
+
+{\footnotesize
+\begin{verbatim}
+You are a strict scientific evaluator analyzing research abstracts from
+the Universitat Politecnica de Valencia (UPV) against the Planetary
+Boundaries (PBs) framework.
+
+Your task: identify the Planetary Boundaries that the research actually
+measures or models.
+
+### YOUR ANALYTICAL ALGORITHM (mandatory deductive checklist)
+
+Execute these steps internally, in order, ON THE REAL TEXT BELOW. Do not
+invent metrics that are not in the abstract. Do not reuse rhetoric from
+these instructions in your output.
+
+Step 1 - BIOPHYSICAL EXTRACTION
+   List every explicit physical, chemical, biological, ecological or
+   environmental metric, variable, model, sample, dataset or measurement
+   that appears in the abstract. Quote them.
+
+Step 2 - CANDIDATE MAPPING
+   For EACH extracted metric, map it to the PB whose Core Definition /
+   Activation Logic it triggers. A paper can map to several PBs.
+   - Biosphere/ecological responses -> PB7 is a legitimate PRIMARY
+     candidate, not just a side effect of PB1.
+   - Particulate matter, PM2.5, PM10, aerosols, AOD, black carbon -> PB9,
+     NOT PB1.
+   - "Climate" or "warming" alone is NOT enough for PB1.
+
+Step 3 - EXCLUSION CHECK
+   "Socio-economic" rejection is ONLY valid when there is NO biophysical
+   metric in Step 1.
+
+Step 4 - HIERARCHY
+   Select as primary_pb the boundary that is the dominant analytical focus.
+
+Step 5 - OUTPUT
+   Output ONLY valid JSON.
+\end{verbatim}
+}
+
+La intuición de v2 era correcta: obligar al modelo a nombrar variables antes de elegir una PB. El problema fue que el imperativo de extracción producía una presión excesiva a encontrar algo clasificable. Si el abstract contenía cualquier métrica ambiental débil, el modelo tendía a convertirla en PB activa.
+
+\paragraph{Prompt v3: filtro de foco real}
+
+{\footnotesize
+\begin{verbatim}
+Step 1 - BIOPHYSICAL EXTRACTION & VALIDATION
+   List the physical, chemical, biological, or ecological metrics that
+   this specific research ACTUALLY MEASURES, MODELS, or ANALYZES. Quote
+   them.
+
+   - CRITICAL DISTINCTION: Differentiate between "background context"
+     and "research focus". If the abstract merely mentions "climate
+     change", "warming", or "emissions" as the background reason for a
+     purely economic, social, legal, or governance study, IT DOES NOT COUNT.
+
+   - OPERATIONAL CRITERION: A metric counts as "actually analyzed" only
+     if the abstract reports a number, a comparison, a model output, or a
+     measurement methodology around it.
+
+Step 2 - CANDIDATE MAPPING
+   - Biosphere/ecological responses (species, biodiversity, ecosystems)
+     -> PB7 is a legitimate PRIMARY candidate.
+   - Particulate matter, PM2.5, PM10, aerosols, AOD -> PB9, NOT PB1.
+   - "Climate" or "warming" alone is NOT enough for PB1.
+
+Step 3 - EXCLUSION CHECK
+   Re-verify: Is the paper purely social science, policy, or theoretical
+   computing? If yes, and the biophysical terms were just background
+   context, discard the PB to prevent positivity bias.
+\end{verbatim}
+}
+
+V3 corrigió el exceso de v2 introduciendo una pregunta previa: qué hace realmente el paper. Esta regla fue especialmente importante en abstracts de gobernanza, educación, diseño urbano o sostenibilidad, donde el lenguaje ambiental puede ser intenso aunque no haya una frontera planetaria medida.
+
+\paragraph{Prompt v4: principio de objeto operacional real}
+
+{\footnotesize
+\begin{verbatim}
+<system_role>
+You are an expert scientific evaluator analyzing research abstracts from
+the Universitat Politecnica de Valencia (UPV) against the Planetary
+Boundaries (PBs) framework. Your judgment matters more than rigid
+rule-following. Use the provided framework as a reasoning aid, not a script.
+</system_role>
+
+<task>
+Your goal is to identify the Planetary Boundaries that the research
+actually MEASURES or MODELS, strictly separating real biophysical analysis
+from mere background or motivational context.
+</task>
+
+<instructions>
+1. Identify the *operational object*: Determine the exact variable being
+   measured, modelled, or experimentally manipulated.
+2. Match with PB: The primary PB is the one being analytically resolved,
+   not the one mentioned in the introduction.
+3. Apply EXCLUSION RULES: If the abstract is purely social, legal,
+   governance, education, philosophy, or pure-software theory, and the
+   biophysical terms are only motivational, the verdict must be "None".
+4. Check common confusions:
+   - Aerosols / PM / AOD belong to PB9, not PB1.
+   - "Climate" or "warming" alone is not enough for PB1.
+   - Biodiversity / ecosystem responses are a legitimate primary candidate
+     for PB7.
+   - Nutrients (N, P) point to PB4.
+   - Water quantity/quality point to PB5.
+</instructions>
+
+<calibration_cases>
+These cases share one principle: the primary PB is whatever variable the
+paper quantifies or models, regardless of the introduction's rhetorical
+framing. Use them ONLY to calibrate your judgment, NOT to mimic their wording.
+
+- Case A: A paper studies the central carbon metabolism of anammox bacteria
+  using 13C isotope tracing. Focus: Nitrogen biogeochemistry. Primary PB: PB4.
+- Case B: A paper verifies the WRF forecast model comparing initial
+  conditions against radar data. It mentions "changing climate" in the
+  opening. Focus: Forecast-model accuracy. Primary PB: None.
+- Case C: A paper quantifies detection data for 24 mammal species in response
+  to human footprint. Focus: Ecological response of biodiversity. Primary PB:
+  PB7. PB6 is just a contextual driver.
+</calibration_cases>
+
+<constraints>
+- DO NOT reuse phrases from the calibration cases.
+- Write your own reasoning, citing the abstract's own terms.
+- DO NOT output any markdown formatting.
+</constraints>
+\end{verbatim}
+}
+
+La diferencia crítica de v4 es que los ejemplos ya no enseñan frases, sino límites de decisión. Esto redujo el \emph{efecto loro} de v1 y evitó que el modelo tratase los calibration cases como plantillas. También hizo explícita una regla científica difícil: una PB puede aparecer como causa global, pero la etiqueta primaria debe seguir el objeto operacional del paper.
+
+\subsection{Comparativa single-model: zero-shot y few-shot}
+
+Una vez elegida la familia Qwen, la comparación justa antes de introducir agentes debe limitarse a sistemas single-model: el baseline zero-shot y las versiones v1--v4 del prompt. Esta tabla no incluye cascada, extractor, scorer ni critic, porque esos componentes aún no forman parte del modelo explicado en este punto de la memoria. En v1--v4 se usa el protocolo del notebook \texttt{comparacion\_fewshot\_v1\_v2\_v3\_v4\_principle.ipynb}; zero-shot se muestra sobre las 150 filas del reporte original y se marca como baseline de referencia.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{0.22\linewidth}p{0.05\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}}
+\toprule
+Sistema & n eval & Top-1 & PB-only & None-only & Hit@K PB-only & Exact set & Jaccard & Hamming $\downarrow$ & Positivity bias $\downarrow$ \\
+\midrule
+Qwen 14B zero-shot & 150 & 63.3\% & 52.5\% & 84.3\% & 56.6\% & 56.0\% & 0.626 & 0.064 & 15.7\% \\
+Qwen 14B v1 contrastivo & 147 & 58.5\% & 45.4\% & \textbf{84.0\%} & 50.5\% & 53.1\% & 0.581 & 0.067 & 16.0\% \\
+Qwen 14B v2 CoT guiado & 147 & 63.9\% & 69.1\% & 54.0\% & 72.2\% & 50.3\% & 0.594 & 0.071 & 46.0\% \\
+Qwen 14B v3 focus filter & 147 & 64.6\% & 57.7\% & 78.0\% & 61.9\% & 52.4\% & 0.596 & 0.073 & 22.0\% \\
+Qwen 14B v4 principle & 147 & \textbf{72.1\%} & \textbf{70.1\%} & 76.0\% & \textbf{74.2\%} & \textbf{60.5\%} & \textbf{0.688} & \textbf{0.061} & 24.0\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La comparación single-model deja dos conclusiones. Primero, v1 demuestra que añadir ejemplos no garantiza mejora: reduce Top-1 y colapsa PB7 aunque mantiene buen rechazo de \texttt{None}. Segundo, v4 es la primera versión claramente superior: mejora Top-1, PB-only, Exact Match y Jaccard sin caer en el positivity bias extremo de v2. Por eso v4 se toma como baseline single-model final antes de plantear una arquitectura multi-agente.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{0.22\linewidth}p{0.30\linewidth}p{0.30\linewidth}}
+\toprule
+Sistema clave & Top-1 estricto & Positivity bias \\
+\midrule
+Zero-shot & \rule{3.08cm}{0.8ex} 63.3\% & \rule{0.85cm}{0.8ex} 15.7\% \\
+v2 CoT & \rule{3.11cm}{0.8ex} 63.9\% & \rule{2.50cm}{0.8ex} 46.0\% \\
+v3 focus filter & \rule{3.14cm}{0.8ex} 64.6\% & \rule{1.20cm}{0.8ex} 22.0\% \\
+v4 principle & \rule{3.50cm}{0.8ex} 72.1\% & \rule{1.30cm}{0.8ex} 24.0\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Este gráfico de barras en LaTeX deja ver visualmente la conclusión: v4 no gana por volverse más permisivo como v2, sino por subir Top-1 manteniendo el sesgo de positividad en una zona razonable.
+
+\subsection{Arquitectura multi-agente final}
+
+La iteración final exploró una cascada multi-agente implementada en \texttt{nlp/llm/runners/pipeline\_agentes.py}. La idea no era reemplazar el prompt v4, sino enriquecerlo con señales independientes.
+
+\llmfixedfigure{0.98\linewidth}{figures/fig1_architecture.png}{Arquitectura de la cascada multi-agente. La clave de diseño es que cada bloque tiene una responsabilidad acotada: extracción, evidencia léxica, juicio científico y crítica asimétrica.}{fig:cascade-architecture}
+
+\llmfixedfigure{0.98\linewidth}{figures/fig2_data_flow.png}{Flujo de datos por documento. Las señales auxiliares se pasan al juez como evidencia no autoritativa para evitar que sustituyan la lectura directa del abstract.}{fig:cascade-flow}
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{p{0.14\linewidth}p{0.22\linewidth}p{0.24\linewidth}p{0.30\linewidth}}
+\toprule
+Bloque & Entrada & Salida & Control de fallo \\
+\midrule
+Agente 1 extractor & Título y abstract. & Listas de especies, métricas, observaciones, metodología y disciplina. & Grounding literal: se descartan strings que no aparecen en el texto. \\
+Scorer léxico & Texto enriquecido y \texttt{pb\_reference.csv}. & Ranking de PBs candidatas con keywords activadoras. & Pesos simples y trazables; no decide por sí solo. \\
+Router & Extracción y ranking. & Fast-skip a \texttt{None} o llamada al juez. & Solo salta cuando extractor y scorer coinciden en irrelevancia fuerte. \\
+Agente 3 juez & Abstract, reglas PB, casos v4 y señales auxiliares. & PB primaria, secundarias, rechazadas, confianza y razonamiento. & Señales auxiliares marcadas como falibles para reducir anclaje. \\
+Agente 4 critic & Casos \texttt{None} con candidatos léxicos. & Override limitado a \texttt{None -> PBx}. & Crítica asimétrica: no puede degradar aciertos PB ni inventar candidatos. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Agente 1: extractor estructurado (\texttt{qwen2.5:3b})}
+
+El agente pequeño no decide la PB. Extrae campos estructurados:
+
+\begin{itemize}
+\item \texttt{chemical\_species}
+\item \texttt{physical\_metrics}
+\item \texttt{biological\_observations}
+\item \texttt{methodology}: \texttt{measured}, \texttt{modelled}, \texttt{mentioned} o \texttt{none}
+\item \texttt{disciplinary\_frame}: ingeniería, earth sciences, biología, química, social sciences, economics, law/policy, education u other
+\end{itemize}
+
+Para evitar alucinaciones, el prompt exige que cada string extraído aparezca literalmente en el título o abstract. Además, el código aplica un filtro posterior de grounding: cualquier item que no aparezca en el texto se descarta. Esto responde directamente a un fallo observado en prompts anteriores: los modelos pequeños copian ejemplos o inventan variables si se les deja demasiado margen.
+
+\paragraph{Prompt del Agente 1}
+
+{\footnotesize
+\begin{verbatim}
+<system_role>
+You are a fast, structured information extractor inside a multi-agent
+pipeline. A larger expert model runs after you. Your output enriches the
+next model's context; you do NOT make the final decision.
+</system_role>
+
+<task>
+Read the metadata + abstract. Extract structured biophysical information
+into 5 fields. Every item you list must be COPIED VERBATIM from the abstract
+or title text below -- never from these instructions.
+</task>
+
+<rules>
+1. ZERO HALLUCINATION: every string in chemical_species, physical_metrics or
+   biological_observations must be a direct substring of the abstract or title.
+2. Distinguish what the paper measures/models from what it merely mentions.
+3. The disciplinary_frame is the dominant academic angle of the abstract.
+4. Empty arrays are valid and EXPECTED for non-biophysical papers.
+</rules>
+
+<field_definitions>
+- chemical_species: any chemical compound, element, ion, pollutant, gas,
+  mineral or molecular species named in the abstract.
+- physical_metrics: any measured or modelled physical or environmental
+  variable named in the abstract.
+- biological_observations: any living-system observation named in the abstract.
+- methodology: ONE of {"measured", "modelled", "mentioned", "none"}.
+- disciplinary_frame: ONE of {"engineering", "earth_sciences", "biology",
+  "chemistry", "social_sciences", "economics", "law_policy", "education",
+  "other"}.
+</field_definitions>
+
+<output_format>
+{
+  "chemical_species": [],
+  "physical_metrics": [],
+  "biological_observations": [],
+  "methodology": "measured|modelled|mentioned|none",
+  "disciplinary_frame": "engineering|earth_sciences|biology|chemistry|social_sciences|economics|law_policy|education|other"
+}
+</output_format>
+\end{verbatim}
+}
+
+Este prompt es deliberadamente estrecho. No se le pide al modelo pequeño que razone sobre PBs porque en pruebas preliminares tendía a sobreinterpretar. Su valor es producir una capa de evidencia barata, no una decisión semántica final.
+
+\subsubsection{Scorer determinista por vocabulario}
+
+El segundo módulo no usa LLM. Calcula overlap entre \texttt{title + clean\_abstract + top\_terms\_no\_stopwords} y el vocabulario de \texttt{pb\_reference.csv}, con pesos:
+
+\begin{itemize}
+\item \texttt{core\_keywords}: peso 3
+\item \texttt{extended\_keywords}: peso 2
+\item \texttt{applied\_keywords\_upv}: peso 1
+\end{itemize}
+
+Cada keyword cuenta como máximo una vez y se descartan términos de menos de 4 caracteres. El resultado es una lista de candidatos tipo \texttt{PB1(6); PB5(3)} junto con las keywords que activaron la señal.
+
+Este módulo es transparente y barato. Su limitación es la cobertura léxica: si PB8 no contiene heavy metals, un paper sobre Pb, Cu o Mn puede quedar sin candidato aunque sea relevante. Por eso el scorer se usa como pista, no como verdad.
+
+\subsubsection{Router de consenso}
+
+El router solo evita llamar al modelo grande cuando hay consenso fuerte de irrelevancia:
+
+\begin{enumerate}
+\item El Agente 1 devuelve cero items y un marco no biofísico.
+\item El scorer no encuentra candidatos con score suficiente.
+\end{enumerate}
+
+En el último run el fast-skip se activó en 5 casos y no introdujo errores, pero su impacto en coste es pequeño. Su valor principal es demostrar que el sistema puede incorporar rutas baratas sin sacrificar calidad.
+
+\subsubsection{Agente 3: juez experto (\texttt{qwen2.5:14b})}
+
+El Agente 3 es el clasificador principal. Recibe:
+
+\begin{itemize}
+\item El abstract crudo.
+\item Las reglas PB completas.
+\item Los calibration cases v4.
+\item La extracción del Agente 1.
+\item El ranking del scorer.
+\end{itemize}
+
+En la versión final, las señales auxiliares se colocan después del abstract y se etiquetan explícitamente como no autoritativas. Esto fue una corrección importante: en runs previos, el 14B se anclaba demasiado en \texttt{kw\_top} o en la salida del extractor. Si \texttt{kw\_top} empataba PB1 y PB2, el modelo podía elegir PB1 por posición, aunque el abstract tratase ocean acidification. La versión final avisa al modelo de que los empates no son significativos y de que debe resolver leyendo el abstract.
+
+\paragraph{Prompt del Agente 3}
+
+{\footnotesize
+\begin{verbatim}
+<system_role>
+You are an expert scientific evaluator analyzing research abstracts from the
+Universitat Politecnica de Valencia (UPV) against the Planetary Boundaries
+(PBs) framework. Your judgment matters more than rigid rule-following. Use
+the provided framework as a reasoning aid, not a script.
+</system_role>
+
+<task>
+Identify the Planetary Boundaries that the research actually MEASURES,
+MODELS, or treats as an EXPERIMENTAL FORCING. Cleanly separate real
+biophysical analysis from mere background or motivational context.
+</task>
+
+<instructions>
+1. Identify the operational object: the exact variable being measured,
+   modelled or experimentally manipulated.
+2. Match with PB: the primary PB is the one being analytically resolved,
+   not the one mentioned in the introduction.
+3. Apply EXCLUSION RULES: purely social, legal, governance, education,
+   philosophy or pure-software theory with only motivational biophysical
+   terms must be None.
+4. Common confusions:
+   - Aerosols / PM / AOD belong to PB9, not PB1.
+   - PB1 requires climate to be ACTIVE: measured/modelled or imposed as
+     treatment/scenario.
+   - Water-resources management papers with climate as motivation are PB5.
+   - Biodiversity / ecosystem responses are legitimate PB7 candidates.
+   - Nutrients (N, P) point to PB4.
+</instructions>
+
+<auxiliary_signals_for_reference_only>
+The small extractor and keyword scorer have known failure modes and are NOT
+authoritative. Read the abstract first and form your judgment; only consult
+these if genuinely uncertain. NEVER let these signals override what the
+abstract clearly says.
+</auxiliary_signals_for_reference_only>
+
+<output_format>
+{
+  "reasoning_process": "2-3 sentences about what is measured/modelled...",
+  "primary_pb": {"pb_code": "PBX", "confidence": "High/Medium/Low"} or null,
+  "secondary_pbs": [{"pb_code": "PBY", "confidence": "High/Medium/Low"}],
+  "rejected_pbs": ["PBZ", "PBW"]
+}
+</output_format>
+\end{verbatim}
+}
+
+\subsubsection{Agente 4: critic asimétrico}
+
+El critic se invoca solo cuando:
+
+\begin{itemize}
+\item El Agente 3 responde \texttt{None}.
+\item El scorer sí encontró al menos una PB candidata.
+\end{itemize}
+
+El critic solo puede cambiar \texttt{None -> PBx}. No puede degradar \texttt{PBx -> None} ni inventar una PB fuera de los candidatos. Esta asimetría se diseñó a partir de un diagnóstico empírico: una parte de los errores eran falsos negativos, pero no queríamos abrir una segunda pasada que destruyese aciertos o aumentase aún más el positivity bias.
+
+\paragraph{Prompt del critic}
+
+{\footnotesize
+\begin{verbatim}
+<system_role>
+You are a senior reviewer auditing a previous classification decision. The
+previous judge classified the abstract below as "None". A complementary
+keyword scorer disagrees and surfaces one or more candidate PBs that share
+vocabulary with the abstract. Re-read the abstract WITHOUT assuming the
+previous None verdict was correct.
+</system_role>
+
+<task>
+Pick ONE option from this closed set:
+  - "None" -> no PB is actively measured / modelled / imposed.
+  - one of {candidates_set} -> that PB is actively studied.
+You may NOT invent another PB.
+</task>
+
+<rules>
+- Background mentions of climate / aerosols / nutrients in the introduction
+  are NOT enough. Active study is required.
+- Do NOT default to None just because the abstract is technical or dense.
+- The small extractor is UNRELIABLE: use it only as a hint, never as ground
+  truth.
+</rules>
+
+<output_format>
+{
+  "decision": "None" or one of {candidates_set},
+  "confidence": "High" / "Medium" / "Low",
+  "reasoning": "1-2 sentences citing the abstract's terms."
+}
+</output_format>
+\end{verbatim}
+}
+
+En el último run (\texttt{pipeline\_20260510\_192035.log}) la cascada procesó 149 doc\_ids únicos, generó 150 filas de evaluación al cruzar con el GT, activó fast-skip 5 veces, llamó al juez grande 144 veces, invocó el critic 5 veces y produjo 2 overrides. El resultado final fue:
+
+\begin{itemize}
+\item Accuracy vs GT 1st PB: \textbf{107/150 = 71.3\%}
+\item Top-2 global recomputado con la definición del notebook: \textbf{110/150 = 73.3\%}
+\item Hit@K PB-only: \textbf{74/99 = 74.7\%}
+\item Solapamiento amplio informado por el log del runner: \textbf{120/150 = 80.0\%}
+\end{itemize}
+
+La cascada no supera claramente a v4 en Top-1 ni en Top-2 global, pero queda muy cerca y ofrece un diseño más auditable. También mejora levemente el rendimiento PB-only frente a v4 (71.7\% frente a 70.1\%). Este es un resultado honesto y defendible: la arquitectura multi-agente aporta trazabilidad y capacidad de revisión, aunque no siempre aumenta la métrica primaria.
+
+\llmfixedfigure{0.82\linewidth}{figures/fig7_critic_impact.png}{Impacto del critic asimétrico. La figura separa los casos conservados como \texttt{None} y los overrides, mostrando que la crítica se usa como mecanismo puntual de recuperación de falsos negativos, no como segunda clasificación general.}{fig:critic-impact}
+
+\subsection{Comparativa final: single-model frente a cascada}
+
+Una vez explicada la cascada, sí tiene sentido comparar todos los sistemas. Esta tabla junta el baseline zero-shot, las versiones few-shot y las variantes multi-agente. La lectura correcta no es que la cascada sustituya automáticamente a v4, sino que ofrece un compromiso distinto: rendimiento muy cercano al mejor single-model y mayor auditabilidad por trazas intermedias.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{0.22\linewidth}p{0.05\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}p{0.065\linewidth}}
+\toprule
+Sistema & n eval & Top-1 & PB-only & None-only & Hit@K PB-only & Exact set & Jaccard & Hamming $\downarrow$ & Positivity bias $\downarrow$ \\
+\midrule
+Qwen 14B zero-shot & 150 & 63.3\% & 52.5\% & 84.3\% & 56.6\% & 56.0\% & 0.626 & 0.064 & 15.7\% \\
+Qwen 14B v1 contrastivo & 147 & 58.5\% & 45.4\% & \textbf{84.0\%} & 50.5\% & 53.1\% & 0.581 & 0.067 & 16.0\% \\
+Qwen 14B v2 CoT guiado & 147 & 63.9\% & 69.1\% & 54.0\% & 72.2\% & 50.3\% & 0.594 & 0.071 & 46.0\% \\
+Qwen 14B v3 focus filter & 147 & 64.6\% & 57.7\% & 78.0\% & 61.9\% & 52.4\% & 0.596 & 0.073 & 22.0\% \\
+Qwen 14B v4 principle & 147 & \textbf{72.1\%} & 70.1\% & 76.0\% & 74.2\% & \textbf{60.5\%} & \textbf{0.688} & \textbf{0.061} & 24.0\% \\
+Cascada multi-agente base & 150 & 64.0\% & 60.6\% & 70.6\% & 66.7\% & 54.0\% & 0.623 & 0.073 & 29.4\% \\
+Cascada + critic inicial & 150 & 65.3\% & 62.6\% & 70.6\% & 68.7\% & 54.7\% & 0.633 & 0.072 & 29.4\% \\
+Cascada v3 lean + critic (último run) & 150 & 71.3\% & \textbf{71.7\%} & 70.6\% & \textbf{74.7\%} & 58.0\% & 0.666 & 0.064 & 29.4\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La mejor variante estrictamente por Top-1 sigue siendo Qwen v4 single-model, con 72.1\%. La última cascada queda muy cerca, con 71.3\%, y mejora ligeramente el PB-only accuracy (71.7\% frente a 70.1\%). En la métrica flexible sobre documentos con PB humana, la cascada queda prácticamente empatada con v4: 74.7\% Hit@K PB-only frente a 74.2\%. El log del runner de la cascada informa 120/150 = 80.0\% con una comprobación de solapamiento más laxa; al recomputar Top-2 global con la definición del notebook se obtiene 110/150 = 73.3\%.
+
+\begin{itemize}
+\item Para \textbf{batch labeling} donde importa maximizar exactitud primaria, v4 principle-driven es la opción más limpia.
+\item Para \textbf{sistema auditable y human-in-the-loop}, la cascada es más defendible porque produce extracción estructurada, evidencias léxicas, razonamiento del juez y posible revisión del critic.
+\end{itemize}
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{0.22\linewidth}p{0.30\linewidth}p{0.30\linewidth}}
+\toprule
+Sistema clave & Top-1 estricto & Positivity bias \\
+\midrule
+Zero-shot & \rule{3.08cm}{0.8ex} 63.3\% & \rule{0.85cm}{0.8ex} 15.7\% \\
+v2 CoT & \rule{3.11cm}{0.8ex} 63.9\% & \rule{2.50cm}{0.8ex} 46.0\% \\
+v3 focus filter & \rule{3.14cm}{0.8ex} 64.6\% & \rule{1.20cm}{0.8ex} 22.0\% \\
+v4 principle & \rule{3.50cm}{0.8ex} 72.1\% & \rule{1.30cm}{0.8ex} 24.0\% \\
+Cascada v3 lean & \rule{3.46cm}{0.8ex} 71.3\% & \rule{1.60cm}{0.8ex} 29.4\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\llmfixedfigure{0.92\linewidth}{figures/fig3_compare_systems.png}{Comparación visual de sistemas sobre el conjunto de validación. La figura resume la tensión entre accuracy global, rendimiento sobre documentos con PB real y capacidad de rechazo en documentos \texttt{None}.}{fig:llm-system-comparison}
+
+\llmfixedfigure{0.90\linewidth}{figures/fig6_pipeline_vs_v4.png}{Comparación documento a documento entre el baseline v4 y la cascada. Esta visualización es útil para defender que el análisis no se limita a una media agregada: muestra qué sistema acierta o falla en cada paper.}{fig:pipeline-vs-v4}
+
+\llmfixedfigure{0.95\linewidth}{figures/fig5_per_class_f1.png}{Métricas por clase de la cascada. La variación entre PBs muestra que el rendimiento global no debe interpretarse de forma homogénea: PB9 es más estable por su vocabulario físico distintivo, mientras que PB5/PB6/PB8 sufren por bajo soporte o vocabulario incompleto.}{fig:per-class-f1}
+
+\subsection{Diagnóstico de errores}
+
+El análisis de errores final se centra ahora en la cascada multi-agente. Las matrices v1--v4 se han movido a la sección de modelos few-shot, porque ahí explican mejor la evolución de prompts. Aquí queda solo la lectura de errores del sistema final y sus mitigaciones.
+
+\subsubsection{Matriz numérica de la cascada final}
+
+La matriz siguiente usa las 150 filas evaluables de la cascada v3 lean + critic. Se muestran conteos absolutos, no proporciones, porque en el sistema final interesa auditar cuántos documentos reales habría que revisar en cada familia de error.
+
+\begin{center}
+\tiny
+\setlength{\tabcolsep}{2.6pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+\multicolumn{11}{c}{\textbf{Matriz de confusión: cascada v3 lean + critic, 150 filas}} \\
+\midrule
+Humano $\backslash$ Modelo & None & PB1 & PB2 & PB3 & PB4 & PB5 & PB6 & PB7 & PB8 & PB9 \\
+\midrule
+None & 36 & 4 & 1 & 2 & 2 & 1 & 0 & 1 & 0 & 4 \\
+PB1  & 5  & 16 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 2 \\
+PB2  & 1  & 0 & 7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+PB3  & 1  & 1 & 0 & 5 & 1 & 0 & 0 & 0 & 0 & 0 \\
+PB4  & 0  & 0 & 1 & 0 & 8 & 0 & 0 & 1 & 0 & 0 \\
+PB5  & 0  & 2 & 0 & 0 & 0 & 2 & 0 & 0 & 0 & 0 \\
+PB6  & 1  & 0 & 0 & 0 & 0 & 1 & 2 & 0 & 0 & 0 \\
+PB7  & 2  & 1 & 0 & 0 & 0 & 0 & 1 & 8 & 0 & 1 \\
+PB8  & 3  & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 0 \\
+PB9  & 1  & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 19 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Lectura técnica de las confusiones}
+
+\begin{itemize}
+\item \textbf{\texttt{PB1 -> None}}. En la cascada quedan 5 falsos negativos de PB1. Suelen ser papers de clima donde el abstract habla de escenarios, modelos o impactos, pero no formula la variable climática con la claridad que exige el principio de objeto operacional.
+\item \textbf{\texttt{PB1 -> PB9}}. La cascada confunde 2 casos PB1 como PB9. No siempre es un error claro: si el objeto medido son aerosoles, mineral dust, cloud condensation nuclei, PM2.5 o black carbon, PB9 puede ser más defendible como primaria y PB1 quedar como contexto climático.
+\item \textbf{\texttt{None -> PB9}}. Hay 4 casos donde el humano anotó \texttt{None} y la cascada predijo PB9. Parte puede ser positivity bias, pero algunos razonamientos citan PM2.5, AOD o black carbon medidos de forma explícita; esos casos son candidatos a reanotación humana.
+\item \textbf{\texttt{PB7 -> None}}. La cascada reduce este problema respecto a v4, pero aún pierde 2 casos. Cuando el paper es conceptual o de comunicación ambiental, \texttt{None} puede estar mejor justificado; cuando hay especies, ecosistemas o respuestas ecológicas cuantificadas, sí es un fallo real.
+\item \textbf{\texttt{PB8 -> None}}. Es una debilidad de cobertura: heavy metals, plásticos o contaminantes no siempre activan PB8 porque el vocabulario de \texttt{pb\_reference.csv} es incompleto.
+\end{itemize}
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{p{0.13\linewidth}p{0.17\linewidth}p{0.36\linewidth}p{0.26\linewidth}}
+\toprule
+Doc & Celda & Evidencia del razonamiento & Lectura crítica \\
+\midrule
+\texttt{8581e74341ad} & \texttt{None -> PB9} & El modelo cita PM2.5, black carbon y AOD como variables medidas para estimar aerosoles superficiales. & Probable infra-etiquetado humano: PB9 es defendible porque la variable operacional son aerosoles/partículas, no solo contexto ambiental. \\
+\texttt{6c517c5bda80} & \texttt{PB1 -> PB9} & El razonamiento identifica mineral dust en ice cores como objeto medido. & La etiqueta humana PB1 puede venir del contexto paleoclimático, pero PB9 primaria es coherente si se prioriza la variable medida. \\
+\texttt{496666e9b6da} & \texttt{PB1 -> PB9} & La cascada razona sobre aerosol activation schemes, cloud condensation nuclei y cloud droplet number concentration. & No es un fallo semántico puro: el humano tenía PB9 como secundaria; el desacuerdo está en la jerarquía primaria. \\
+\texttt{3d6573117d0b} & \texttt{PB7 -> None} & El modelo rechaza porque el abstract es filosófico/ético y no mide variables de biodiversidad. & Aquí el LLM parece más alineado con la regla operacional que el ground truth: candidato claro a reanotación. \\
+\texttt{cb831c750a69} & \texttt{PB7 -> None} & El razonamiento indica que el paper trata especies extintas como herramienta de comunicación para conservación. & Aunque habla de especies amenazadas, no mide biodiversidad; \texttt{None} es defendible. \\
+\texttt{6adf36ff1a69} & \texttt{PB8 -> None} & El abstract mide efectos de cobre, plomo y manganeso en plantas; la cascada no activa PB8 con suficiente fuerza. & Fallo real del sistema: PB8 necesita vocabulario de heavy metals y contaminantes en \texttt{pb\_reference.csv}. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Esta revisión cambia la interpretación de la accuracy. Algunas celdas fuera de la diagonal son errores genuinos, pero otras son discrepancias de criterio entre anotador humano y regla operacional del sistema. Por eso el informe no debería presentar la matriz de confusión como verdad absoluta, sino como herramienta de auditoría: las celdas gruesas indican dónde mejorar el prompt, y los casos donde el razonamiento del LLM es más específico que la etiqueta humana indican dónde revisar el ground truth.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{p{0.18\linewidth}p{0.17\linewidth}p{0.25\linewidth}p{0.32\linewidth}}
+\toprule
+Familia de error & Frecuencia aproximada & Causa principal & Mitigación propuesta \\
+\midrule
+\texttt{PBx -> None} & 15 casos & Prompt demasiado conservador o scorer sin vocabulario suficiente. & Critic más amplio y expansión de \texttt{pb\_reference.csv} desde falsos negativos. \\
+\texttt{None -> PBx} & 15 casos & Positivity bias o ground truth humano discutible en papers con aerosoles/contaminantes reales. & Reanotación doble y etiqueta \texttt{Uncertain} para discrepancias científicas. \\
+\texttt{PBx -> PBy} & 24 casos & Confusión entre driver global y variable medida; anclaje en señales auxiliares. & Reforzar objeto operacional y bajar autoridad de \texttt{kw\_top}. \\
+Errores de parseo & No dominante & JSON mode y validación redujeron fallos de formato. & Mantener contratos JSON y tests de parser antes de runs largos. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\llmfixedfigure{0.92\linewidth}{figures/fig8_failure_taxonomy.png}{Taxonomía de fallos observada en el análisis de la cascada. El valor metodológico de la taxonomía es que convierte errores agregados en acciones concretas de mejora.}{fig:failure-taxonomy}
+
+Además de contar errores, se revisaron documentos concretos. Esta revisión cualitativa fue imprescindible porque algunas discrepancias no son simples fallos del modelo, sino ambigüedades del propio marco de anotación.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{0.12\linewidth}p{0.20\linewidth}p{0.18\linewidth}p{0.20\linewidth}p{0.22\linewidth}}
+\toprule
+Doc & Fenómeno observado & Predicción problemática & Lectura humana/técnica & Lección de prompt \\
+\midrule
+\texttt{0866b31f} & Estudio literario con crisis climática como tema cultural. & PB1 en modelos menos estrictos. & \texttt{None}: no mide clima ni variable biofísica. & Excluir humanities/policy si no hay métrica ambiental. \\
+\texttt{733ba5fc} & pH oceánico y química de acidificación. & PB1 por contexto climático. & PB2 como objeto operacional. & Separar driver climático de variable química medida. \\
+\texttt{260cc670} & Deposición atmosférica asociada a nutrientes. & PB9 por vector aerosol. & PB4 si el resultado principal son flujos N/P. & Distinguir vector físico de ciclo biogeoquímico medido. \\
+\texttt{7e7db277} & Emisiones de SO2 y formación de partículas. & \texttt{None} en versiones conservadoras. & PB9 si la evidencia particulada es explícita. & Añadir inferencias químicas permitidas cuando el abstract las formula. \\
+\texttt{6adf36ff} & Metales pesados y contaminantes tóxicos. & \texttt{None} por vocabulario PB8 incompleto. & PB8 como entidad novedosa/contaminante. & Expandir PB8 con heavy metals, Pb, Cu, Mn y sinónimos. \\
+\texttt{9153f4dc} & Simulación meteorológica sin cambio climático activo. & PB1 por vocabulario atmosférico. & \texttt{None} si solo es weather modelling. & No confundir meteorología operacional con PB1. \\
+\texttt{5b69b4b1} & Base de datos sobre ozono. & \texttt{None} por filtro excesivo. & PB3 si la capa de ozono estratosférico es el objeto. & Separar ozono estratosférico de calidad del aire troposférica. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Falsos positivos por ground truth discutible}
+
+Algunos casos donde el humano etiquetó \texttt{None} y el modelo predijo una PB no son necesariamente errores obvios del modelo. Por ejemplo, papers sobre PM2.5, black carbon, aerosol optical depth o aerosoles urbanos pueden haber sido marcados como \texttt{None} en la validación inicial, pero desde el marco PB9 sí contienen variables activas. Esto sugiere ruido de ground truth y falta de doble anotación independiente.
+
+\subsubsection{Confusión macro-driver vs micro-impact}
+
+Varios fallos ocurren cuando el abstract menciona cambio climático como driver, pero el fenómeno medido pertenece a otra PB. Ejemplos:
+
+\begin{itemize}
+\item Warming como causa, pero impacto real en genes microbianos o ecosistemas: PB7 puede ser primaria.
+\item Clima como escenario, pero variable operacional de agua: PB5.
+\item Dust o aerosoles como vector, pero medición principal de nutrientes: PB4.
+\end{itemize}
+
+V4 mejora este problema con el principio de \emph{operational object}.
+
+\subsubsection{Anclaje en señales auxiliares}
+
+La cascada introdujo una fuente nueva de error: si el scorer o el extractor proponen una PB incorrecta, el juez 14B puede anclarse en ella. Esto explica que la primera cascada rindiera peor que v4. La mitigación fue reordenar el prompt, mover señales auxiliares al final y declararlas explícitamente como falibles.
+
+\subsubsection{Vocabulario incompleto en PB8 y PB1}
+
+PB8 tiene baja cobertura cuando aparecen contaminantes como heavy metals no recogidos en la lista de novel entities. PB1 también puede perder paleoclimate proxies o indicadores indirectos si no aparecen términos clásicos de climate change. La mejora natural es expandir \texttt{pb\_reference.csv} mediante minería de errores.
+
+\subsubsection{Clases con bajo soporte}
+
+PB5 y PB6 tienen soporte muy bajo en la validación final (\texttt{n=4} cada una en varias evaluaciones). No se deben sacar conclusiones fuertes por PB individual con tan pocos ejemplos. Para estas clases conviene informar macro-F1, pero también advertir que la incertidumbre estadística es alta.
+
+\subsection{Comparación con modelos embedding/BERT}
+
+Además de LLMs, el proyecto evaluó baselines de embeddings y modelos tipo BERT/SciBERT/SPECTER en \texttt{nlp/bert\_finetuning/outputs/}. La mejor referencia no generativa actual es \texttt{baseline\_semantic\_tfidf} top-1, con:
+
+\begin{itemize}
+\item Micro-F1: \textbf{0.484}
+\item Macro-F1: \textbf{0.439}
+\item Jaccard: \textbf{0.367}
+\item Exact Match: \textbf{0.280}
+\item LRAP: \textbf{0.730}
+\end{itemize}
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{0.25\linewidth}p{0.12\linewidth}p{0.12\linewidth}p{0.12\linewidth}p{0.12\linewidth}p{0.12\linewidth}}
+\toprule
+Modelo / estrategia & Micro-F1 & Macro-F1 & Jaccard & Exact Match & LRAP \\
+\midrule
+Baseline lexical threshold/delta & 0.485 & 0.402 & -- & 0.473 & -- \\
+Baseline semantic TF-IDF top-1 & 0.484 & 0.439 & 0.367 & 0.280 & 0.730 \\
+BERT top-1 & 0.349 & 0.341 & 0.260 & 0.193 & 0.638 \\
+SciBERT top-2 & 0.348 & 0.373 & -- & 0.053 & 0.617 \\
+SPECTER threshold/delta & 0.405 & 0.399 & -- & 0.313 & 0.648 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La lectura técnica de esta tabla es que los modelos embedding funcionan bien como recuperadores de similitud semántica, pero no resuelven completamente la decisión normativa. La frontera entre \texttt{None} y PB activa depende de exclusiones, jerarquía causal y objeto medido, no solo de cercanía vectorial. Por eso el diseño final no reemplaza los embeddings por LLMs de forma dogmática: toma la parte fuerte de cada familia. El scorer conserva la transparencia léxica; el LLM aporta lectura contextual y razonamiento de abstención.
+
+También se evaluaron BERT, RoBERTa, SciBERT y SPECTER. SPECTER con threshold/delta alcanzó Micro-F1 \textbf{0.405} y Macro-F1 \textbf{0.399}, y el baseline lexical threshold/delta alcanzó Micro-F1 \textbf{0.485}. Estos resultados muestran dos cosas:
+
+\begin{enumerate}
+\item Los métodos transparentes son sorprendentemente competitivos en vocabulario científico.
+\item Los LLMs aportan una capa que los embeddings no capturan bien: capacidad de rechazar usos contextuales, explicar la decisión y distinguir objeto operacional frente a motivación.
+\end{enumerate}
+
+La solución final no abandona las señales léxicas; las incorpora como scorer determinista dentro de la cascada.
+
+\subsection{Limitaciones}
+
+Las limitaciones principales son:
+
+\begin{itemize}
+\item \textbf{Ground truth limitado y ruidoso}: 150 filas evaluables no bastan para estimar con precisión clases minoritarias. Hay duplicados y casos discutibles.
+\item \textbf{Sin acuerdo inter-anotador}: falta medir cuán consistente sería la clasificación humana entre varios revisores.
+\item \textbf{Dependencia del abstract}: algunos papers pueden requerir full text para decidir correctamente.
+\item \textbf{Auto-confianza no calibrada}: \texttt{High/Medium/Low} es útil como señal cualitativa, pero no equivale a probabilidad real.
+\item \textbf{Prompts largos}: mejoran contexto, pero aumentan coste y pueden introducir lost-in-the-middle.
+\item \textbf{Riesgo de overfitting al subset}: cada iteración se evaluó sobre el mismo conjunto pequeño; la validación externa sería el siguiente paso.
+\item \textbf{Salida multi-etiqueta infraexplotada}: la cascada predice secundarias, pero gran parte del análisis sigue usando la primera PB humana como referencia principal.
+\end{itemize}
+
+Estas limitaciones no invalidan el sistema; delimitan su modo de uso. El clasificador no debe presentarse como autoridad final automática, sino como herramienta de priorización y auditoría para curación humana.
+
+\subsection{Valor del enfoque}
+
+El valor del componente LLM no es únicamente subir una métrica. Aporta:
+
+\begin{itemize}
+\item \textbf{Escalabilidad}: permite pasar de revisión manual de decenas de papers a procesamiento de miles.
+\item \textbf{Auditabilidad}: cada decisión incluye razonamiento y evidencias intermedias.
+\item \textbf{Flexibilidad científica}: las reglas PB pueden editarse sin reentrenar un modelo.
+\item \textbf{Privacidad}: la inferencia local evita enviar abstracts institucionales a APIs externas.
+\item \textbf{Human-in-the-loop}: casos con baja confianza o discrepancias pueden priorizarse para revisión.
+\item \textbf{Reutilización}: la arquitectura se puede adaptar a SDGs, áreas estratégicas UPV u otros marcos de impacto.
+\end{itemize}
+
+Para el producto UPV-EARTH, el uso realista es un sistema de screening: el modelo propone PBs, justifica la decisión y permite que un experto revise casos límite. Esto reduce carga manual y mejora trazabilidad institucional, pero evita presentar el LLM como juez final infalible.
+
+\subsection{Encaje con la rúbrica de modelos}
+
+La parte LLM encaja especialmente en los criterios de modelado, evaluación y mejora iterativa de la rúbrica. La siguiente tabla puede usarse como puente directo entre el trabajo técnico y lo que se espera justificar en el report final.
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{p{0.20\linewidth}p{0.31\linewidth}p{0.31\linewidth}p{0.12\linewidth}}
+\toprule
+Criterio defendible & Evidencia en el proyecto & Cómo se argumenta en la memoria & Artefactos \\
+\midrule
+Elección del modelo & Comparación entre Qwen 14B, Gemma 26B y baselines BERT/TF-IDF. & Qwen se elige por equilibrio entre calidad, latencia, coste local y estabilidad JSON. & Runners, tablas de métricas, logs. \\
+Diseño metodológico & Prompts con reglas PB, activación/exclusión, objeto operacional y abstención. & El prompt es parte del modelo porque codifica la definición científica de etiqueta. & Sección 5.6, \texttt{pb\_reference.csv}. \\
+Evaluación cuantitativa & Top-1, PB-only, None-only, Top-2 global, Hit@K PB-only, Exact Match, Jaccard, Hamming y positivity bias. & No se optimiza una métrica única; se evalúa precisión, cobertura y rigor. & CSVs de inferencia y notebooks de análisis. \\
+Iteración justificada & v1 empeora por ejemplos rígidos; v2 aumenta recall pero sesga; v3 recupera rigor; v4 mejora global. & Cada cambio responde a un fallo observado, no a tuning arbitrario. & Tabla de iteraciones y análisis pareado. \\
+Arquitectura avanzada & Cascada con extractor, scorer, router, juez y critic. & El sistema final prioriza auditabilidad y revisión humana además de accuracy. & \texttt{pipeline\_agentes.py}, figuras 1--2. \\
+Análisis crítico & Taxonomía de errores, casos cualitativos, límites de ground truth. & Se reconocen ruido, bajo soporte de clases y necesidad de reanotación. & Figuras 4, 8 y tabla de casos. \\
+Impacto práctico & Screening escalable sobre corpus institucional ampliado. & El modelo reduce carga manual y ofrece trazabilidad sin sustituir juicio experto. & Outputs y propuesta human-in-the-loop. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Próximos pasos técnicos}
+
+Los siguientes pasos más defendibles son:
+
+\begin{enumerate}
+\item \textbf{Reanotación doble del ground truth}: al menos dos revisores independientes y cálculo de acuerdo.
+\item \textbf{Evaluación multi-etiqueta completa}: usar todas las columnas \texttt{1stpb}, \texttt{2ndpb}, \texttt{3rdpb}, no solo primaria.
+\item \textbf{Expansión de \texttt{pb\_reference.csv} desde errores}: heavy metals para PB8, paleoclimate proxies para PB1, términos de conservación para PB7.
+\item \textbf{Critic ampliado}: permitir revisión no solo de \texttt{None -> PBx}, sino también de casos de baja confianza o desacuerdo fuerte con \texttt{kw\_top}.
+\item \textbf{Calibración de abstención}: introducir estado \texttt{Uncertain} para enviar a humano.
+\item \textbf{Destilación de razonamientos Gemma $\rightarrow$ Qwen}: usar Gemma como auditor offline para mejorar prompts o crear datos débiles.
+\item \textbf{Evaluación externa}: aplicar el sistema a un subconjunto nuevo del corpus institucional ampliado.
+\end{enumerate}
+
+\subsection{Archivos de trazabilidad}
+
+Los artefactos principales están versionados en el repositorio:
+ 
+
+\begin{itemize}
+\item Reglas PB: \texttt{corpus\_PB/data/pb\_reference.csv}
+\item Ground truth: \texttt{nlp/llm/outputs/ground\_truth/validacion\_real.csv}
+\item Zero-shot runner: \texttt{nlp/llm/runners/qwen\_zeroshot.py}
+\item Reporte zero-shot: \texttt{nlp/llm/outputs/studies/reporte\_zero\_shot.md}
+\item Diagnóstico v1 original: \texttt{problema\_few\_shot.pdf}
+\item V2 runner: \texttt{nlp/llm/runners/qwen\_fewshot\_v2.py}
+\item V3 runner/notebook: \texttt{nlp/llm/runners/qwen\_fewshot\_v3.ipynb}
+\item V4 runner/notebook: \texttt{nlp/llm/runners/qwen\_fewshot\_v4.ipynb}
+\item Cascada: \texttt{nlp/llm/runners/pipeline\_agentes.py}
+\item Critic post-hoc: \texttt{nlp/llm/runners/apply\_critic.py}
+\item Análisis v1-v4: \texttt{nlp/llm/analysis/comparacion\_fewshot\_v1\_v2\_v3\_v4\_principle.ipynb}
+\item Análisis cascada: \texttt{nlp/llm/analysis/pipeline\_cascada\_analysis.ipynb}
+\item Reporte cascada: \texttt{docs/report/multi\_agent\_pipeline\_report.md}
+\item Figuras listas en Overleaf: \texttt{figures/}
+\end{itemize}
+
+\subsection{Texto breve para cerrar la sección en el paper}
+
+En síntesis, la evolución del componente LLM muestra una mejora incremental real y bien diagnosticada. El sistema pasó de prompts ingenuos con sesgo de positividad a un clasificador principle-driven basado en reglas explícitas de activación/exclusión, salida JSON y auditoría por razonamiento. Qwen 2.5 14B v4 alcanzó el mejor Top-1 single-model (72.1\%), mientras que la cascada multi-agente final alcanzó 71.3\% Top-1, 73.3\% Top-2 global y 74.7\% Hit@K PB-only, añadiendo trazabilidad mediante extracción estructurada, scoring determinista y critic asimétrico. El resultado final no debe interpretarse como una sustitución completa del juicio experto, sino como una herramienta escalable y auditable para priorizar, explicar y revisar la contribución científica de la UPV al marco de Planetary Boundaries.

@@ -1,0 +1,414 @@
+================================================================================
+GUION DE LOCUCIÓN — VÍDEO UPV-EARTH (2:20)
+Versión técnica · ES + EN · pensada para narrar SOBRE el vídeo
+================================================================================
+
+Cómo usarlo:
+  · La narración NO repite el texto en pantalla — añade contexto técnico y
+    vende el producto. La pantalla muestra el QUÉ; tú cuentas el CÓMO.
+  · Números, lentos: "treinta mil quinientos ocho", no "30.508".
+  · Tres puntos donde respiras: antes del Hook, después del Reveal, y dos
+    veces dentro del Stack (los marco con [Pausa]).
+  · Cierras el Stack con "podemos profundizar en las preguntas" — eso te abre
+    la puerta a contestar TODO lo técnico en Q&A sin tener que meterlo aquí.
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              VERSIÓN ESPAÑOL                                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+────────────────────────────────────────────────────────────────────────────────
+0:00 – 0:06   APERTURA
+────────────────────────────────────────────────────────────────────────────────
+
+[Pantalla blanca. La frase aparece letra a letra.]
+[Dos segundos de silencio antes de hablar.]
+
+  «La ciencia del clima tiene un problema de lectura.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:06 – 0:16   MANIFIESTO
+────────────────────────────────────────────────────────────────────────────────
+
+  «Nueve límites planetarios.
+
+  Cincuenta mil papers publicados por la UPV.
+
+  Y ningún investigador puede leerlos todos a mano.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:16 – 0:22   REVEAL
+────────────────────────────────────────────────────────────────────────────────
+
+[El wordmark UPV-EARTH crece con glow.]
+
+  «Esto es UPV-EARTH.
+
+  [Beat.]
+
+  No es un mockup. Es un producto de inteligencia artificial real,
+  funcionando sobre datos reales.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:22 – 0:36   DASHBOARD                                              (14s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «Empezamos por la limpieza. Cuarenta y cinco mil papers en bruto;
+  aplicamos un criterio de calidad — abstract superior a quinientos
+  caracteres — y se quedan treinta mil quinientos ocho. Todos indexados
+  con SPECTER2.
+
+  Cobertura por cada uno de los nueve límites, distribución temporal,
+  métricas de calidad. En directo.
+
+  La foto ejecutiva de la actividad científica de la universidad.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:36 – 0:48   ANÁLISIS EXPLORATORIO                                  (12s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «Detrás de los KPIs, el EDA completo del corpus. Calidad de abstracts,
+  pares de palabras frecuentes, producción anual apilada por boundary.
+
+  Y, al final, la proyección UMAP: cogemos cada embedding de seiscientas
+  sesenta y ocho dimensiones de SPECTER2 y lo reducimos a dos.
+
+  Cada punto, un paper; cada color, un límite. La estructura del
+  conocimiento, visualizada — sin haberle dicho al modelo nada sobre los
+  Planetary Boundaries.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:48 – 0:56   CORPUS BROWSER                                          (8s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «Treinta mil papers, buscables por similitud SEMÁNTICA. Bajo el
+  capó: similitud coseno entre embeddings SPECTER2.
+
+  Buscas "agua dulce" y aparecen los papers que HABLAN de agua dulce —
+  aunque no usen esas palabras.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:56 – 1:08   PAPER DETAIL                                           (12s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «Cada paper, abierto en su contexto.
+
+  El boundary asignado por nuestra cascada de agentes, su confianza,
+  los vecinos más cercanos en el espacio de embeddings, las keywords
+  dominantes y su posición exacta en el mapa SPECTER2.
+
+  Detrás de cada predicción — su traza de razonamiento. Trazable,
+  auditable, explicable. No es una caja negra.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+1:08 – 1:28   UPLOAD — EL PIPELINE                  ★ pieza técnica ★ (20s)
+────────────────────────────────────────────────────────────────────────────────
+
+[Mientras se ve el PDF arrastrarse al dropzone.]
+
+  «Y si llega un paper nuevo —»
+
+[Pausa. Esperas al flash blanco / "Pipeline complete".]
+
+  «— hemos construido un pipeline de diez etapas que lo absorbe
+  automáticamente.
+
+  Extracción de texto, detección y limpieza del abstract, embedding con
+  SPECTER2, búsqueda de los vecinos más cercanos en el corpus, scoring
+  contra los nueve límites con un modelo de razonamiento, resumen
+  extractivo y persistencia.
+
+  Cada etapa, trazable. Un investigador sube un PDF y en segundos lo
+  tiene clasificado, resumido y conectado al corpus.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+1:28 – 1:43   CHAT RAG                              ★ pieza técnica ★ (15s)
+────────────────────────────────────────────────────────────────────────────────
+
+[Se abre el chatbot; aparecen las 4 fichas de PDF a la izquierda.]
+
+  «Por encima — el asistente.
+
+  Esto NO es un chatbot que habla de memoria. Es Retrieval-Augmented
+  Generation: el sistema busca fragmentos relevantes en sus propios
+  documentos — la referencia de los Planetary Boundaries, nuestra
+  metodología, papers del corpus, el último PDF subido — y se los
+  inyecta al modelo antes de responder.
+
+  Cada respuesta, anclada en sus fuentes. Cada cita, verificable.
+  Sin alucinaciones.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+1:43 – 2:05   STACK                                 ★ aquí frenas ★  (22s)
+────────────────────────────────────────────────────────────────────────────────
+
+[Diagrama completo con zoom Ken Burns lento.]
+
+  «Y debajo de todo — la ingeniería.
+
+  [Pausa. Deja que se vea el diagrama.]
+
+  SPECTER2, nuestro encoder, viene del Allen Institute for AI —
+  entrenado específicamente sobre el grafo de citas de Semantic Scholar.
+
+  Por eso fue el ganador frente a BERT, RoBERTa y SciBERT en nuestras
+  pruebas: no entiende solo inglés científico — entiende cómo se
+  RELACIONAN los papers entre sí.
+
+  [Pausa.]
+
+  Inferencia local con Qwen 2.5, catorce mil millones de parámetros,
+  vía Ollama y vLLM. Frontend en Next.js, backend en FastAPI, datos en
+  SQLite con Pandas. Todo nativo. Sin Docker. Una sola máquina.
+
+  [Pausa larga.]
+
+  Podemos profundizar en cualquier pieza en las preguntas.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+2:05 – 2:15   VISION                                                 (10s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «El planeta funciona sobre evidencia.
+
+  [Beat.]
+
+  Ahora la evidencia funciona a la velocidad de una pregunta.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+2:15 – 2:20   CIERRE                                                  (5s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «UPV-EARTH.
+
+  [Beat.]
+
+  Disponible ya.»
+
+  [Calla. No llenes el silencio.]
+
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              ENGLISH VERSION                                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+────────────────────────────────────────────────────────────────────────────────
+0:00 – 0:06   OPEN
+────────────────────────────────────────────────────────────────────────────────
+
+[White screen. The sentence reveals letter by letter.]
+[Two seconds of silence before speaking.]
+
+  «Climate science has a reading problem.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:06 – 0:16   MANIFESTO
+────────────────────────────────────────────────────────────────────────────────
+
+  «Nine planetary boundaries.
+
+  Fifty thousand papers published by UPV.
+
+  And no researcher can read them all by hand.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:16 – 0:22   REVEAL
+────────────────────────────────────────────────────────────────────────────────
+
+  «This is UPV-EARTH.
+
+  [Beat.]
+
+  Not a mockup. A real AI product, running on real data.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:22 – 0:36   DASHBOARD                                              (14s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «We start with cleaning. Forty-five thousand raw papers; we apply a
+  quality criterion — abstract longer than five hundred characters —
+  and we're left with thirty thousand five hundred and eight. All
+  indexed with SPECTER2.
+
+  Coverage per boundary, temporal distribution, quality metrics. Live.
+
+  The executive snapshot of the university's scientific output.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:36 – 0:48   EXPLORATORY ANALYSIS                                   (12s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «Behind the KPIs, the full EDA of the corpus. Abstract quality,
+  frequent word pairs, annual production stacked per boundary.
+
+  And, at the bottom, the UMAP projection: we take each seven-hundred-
+  and-sixty-eight-dimensional embedding from SPECTER2 and reduce it
+  to two.
+
+  Every dot is a paper; every colour, a boundary. The structure of the
+  knowledge, visualised — without ever telling the model anything about
+  Planetary Boundaries.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:48 – 0:56   CORPUS BROWSER                                          (8s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «Thirty thousand papers, searchable by SEMANTIC similarity. Under
+  the hood: cosine similarity over SPECTER2 embeddings.
+
+  Search "freshwater" and you get the papers that TALK about
+  freshwater — even when the word never appears.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+0:56 – 1:08   PAPER DETAIL                                           (12s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «Each paper, opened in its context.
+
+  The boundary assigned by our agent cascade, its confidence, the
+  nearest neighbours in embedding space, the dominant keywords, and
+  its exact position on the SPECTER2 map.
+
+  Behind every prediction — its reasoning trace. Traceable, auditable,
+  explainable. No black box.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+1:08 – 1:28   UPLOAD — THE PIPELINE                ★ technical beat ★ (20s)
+────────────────────────────────────────────────────────────────────────────────
+
+[As the PDF lands in the dropzone.]
+
+  «And when a new paper arrives —»
+
+[Pause. Wait for the white flash / "Pipeline complete".]
+
+  «— we built a ten-stage pipeline that absorbs it automatically.
+
+  Text extraction, abstract detection and cleaning, SPECTER2 embedding,
+  nearest-neighbour search across the corpus, boundary scoring with a
+  reasoning LLM, extractive summary, persistence.
+
+  Every stage, traceable. A researcher drops a PDF and within seconds
+  has it classified, summarised, and wired into the corpus.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+1:28 – 1:43   CHAT RAG                             ★ technical beat ★ (15s)
+────────────────────────────────────────────────────────────────────────────────
+
+[The chatbot opens. The four PDF cards animate in on the left.]
+
+  «On top — the assistant.
+
+  This is NOT a chatbot speaking from memory. This is Retrieval-
+  Augmented Generation: the system retrieves relevant chunks from its
+  own documents — the Planetary Boundaries reference, our methodology,
+  papers from the corpus, the PDF we just uploaded — and feeds them to
+  the model BEFORE it answers.
+
+  Every answer, grounded. Every citation, verifiable. No hallucinations.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+1:43 – 2:05   STACK                                ★ slow down here ★ (22s)
+────────────────────────────────────────────────────────────────────────────────
+
+[Full architecture diagram, slow Ken Burns zoom.]
+
+  «And beneath it all — the engineering.
+
+  [Pause. Let the diagram breathe.]
+
+  SPECTER2, our encoder, comes from the Allen Institute for AI —
+  trained specifically on Semantic Scholar's citation graph.
+
+  That's why it won over BERT, RoBERTa, and SciBERT in our benchmarks:
+  it doesn't just understand scientific English — it understands HOW
+  PAPERS RELATE to each other.
+
+  [Pause.]
+
+  Local inference with Qwen 2.5, fourteen billion parameters, via
+  Ollama and vLLM. Next.js frontend, FastAPI backend, SQLite with
+  Pandas for the data. All native. No Docker. One single machine.
+
+  [Long pause.]
+
+  We're happy to go deeper on any of these pieces in the questions.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+2:05 – 2:15   VISION                                                 (10s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «The planet runs on evidence.
+
+  [Beat.]
+
+  Now the evidence runs at the speed of a question.»
+
+
+────────────────────────────────────────────────────────────────────────────────
+2:15 – 2:20   CLOSE                                                   (5s)
+────────────────────────────────────────────────────────────────────────────────
+
+  «UPV-EARTH.
+
+  [Beat.]
+
+  Available now.»
+
+  [Hold the silence. The first question is theirs to ask.]
+
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          NOTAS DE ENTREGA (ES/EN)                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+1.  GANCHOS PARA Q&A — el guion menciona tres piezas técnicas sin agotarlas.
+    Cualquiera de éstas puede ser una pregunta del tribunal — ten una frase
+    de "deep dive" preparada para cada una:
+
+    · SPECTER2: por qué citation graph > masked language modelling para papers
+    · El pipeline de 10 etapas: cuáles son async, cuáles son determinísticas,
+      cómo manejas errores parciales
+    · RAG: chunk size, top-K, qué retriever usas (cosine / hybrid), cómo
+      decides qué documentos están en el pool
+    · Qwen 2.5 14B vs Llama 3.1 vs Gemma — por qué Qwen ganó
+    · La cascada de agentes (Extractor → Scorer → Router → Judge → Critic)
+
+2.  PUNTOS DE VENTA (resúmelos en una frase si te los preguntan):
+    · "No es un mockup, es un producto desplegable hoy."
+    · "Todo nativo, sin Docker, una sola máquina."
+    · "Trazable, auditable, explicable — no es una caja negra."
+    · "Cada cita es verificable: no alucinamos."
+
+3.  LOS NÚMEROS SON REMATES — dilos despacio:
+    · "treinta mil quinientos ocho papers"
+    · "catorce mil millones de parámetros"
+
+4.  EL VÍDEO NO TE ESPERA. Si vas largo en una sección, RECORTA la siguiente.
+    No pelees con el corte.
+
+5.  TRAS "Disponible ya" / "Available now" — CALLA. La pantalla habla por ti.
+    La primera pregunta es del tribunal.

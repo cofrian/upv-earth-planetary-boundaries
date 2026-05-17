@@ -1,0 +1,69 @@
+{
+  "method": "TF-IDF multilabel + top1 fallback",
+  "n_total_papers": 31560,
+  "data": [
+    {
+      "pb": "PB1",
+      "name": "Climate Change",
+      "family": "Atmosphere & Climate",
+      "count": 9928,
+      "pct": 26.25
+    },
+    {
+      "pb": "PB2",
+      "name": "Ocean Acidification",
+      "family": "Atmosphere & Climate",
+      "count": 3934,
+      "pct": 10.4
+    },
+    {
+      "pb": "PB3",
+      "name": "Stratospheric Ozone",
+      "family": "Atmosphere & Climate",
+      "count": 2301,
+      "pct": 6.08
+    },
+    {
+      "pb": "PB4",
+      "name": "Biogeochemical Flows",
+      "family": "Chemical & Biogeochemical",
+      "count": 2114,
+      "pct": 5.59
+    },
+    {
+      "pb": "PB5",
+      "name": "Freshwater Use",
+      "family": "Land, Water & Biosphere",
+      "count": 3514,
+      "pct": 9.29
+    },
+    {
+      "pb": "PB6",
+      "name": "Land-System Change",
+      "family": "Land, Water & Biosphere",
+      "count": 4409,
+      "pct": 11.66
+    },
+    {
+      "pb": "PB7",
+      "name": "Biosphere Integrity",
+      "family": "Land, Water & Biosphere",
+      "count": 3168,
+      "pct": 8.38
+    },
+    {
+      "pb": "PB8",
+      "name": "Novel Entities",
+      "family": "Chemical & Biogeochemical",
+      "count": 2992,
+      "pct": 7.91
+    },
+    {
+      "pb": "PB9",
+      "name": "Aerosol Loading",
+      "family": "Atmosphere & Climate",
+      "count": 5461,
+      "pct": 14.44
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "models": [
+    "llama3.1:8b",
+    "qwen2.5:14b",
+    "gemma4:26b"
+  ],
+  "n_docs": 20,
+  "price_eur_per_kwh": 0.15,
+  "cloud_prices_usd_per_mtok": {
+    "gpt-4o": {
+      "input": 2.5,
+      "output": 10.0
+    },
+    "claude-sonnet": {
+      "input": 3.0,
+      "output": 15.0
+    },
+    "claude-haiku": {
+      "input": 0.8,
+      "output": 4.0
+    }
+  },
+  "usd_eur": 0.92,
+  "ollama_url": "http://localhost:11434/api/generate",
+  "prompt_version": "v4_principle_driven"
+}

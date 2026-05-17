@@ -1,0 +1,599 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.3cm,headheight=14pt]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black!75, urlcolor=blue!70!black, citecolor=accent}
+\usepackage{enumitem}
+\setlist{nosep, leftmargin=1.4em}
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf, labelsep=period}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, calc}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+
+\definecolor{accent}{HTML}{1F4E79}
+\definecolor{accentemerald}{HTML}{38a57a}
+\definecolor{accentdark}{HTML}{0b1310}
+\definecolor{accentpanel}{HTML}{111b17}
+\definecolor{codebg}{HTML}{f7f9fc}
+\definecolor{codekey}{HTML}{B53A1E}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codebg},
+  frame=single, framerule=0.3pt, rulecolor=\color{black!20},
+  breaklines=true, breakatwhitespace=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  xleftmargin=4pt, xrightmargin=4pt,
+  keywordstyle=\color{codekey}\bfseries,
+  commentstyle=\color{black!55}\itshape,
+  stringstyle=\color{accent},
+}
+
+\titleformat{\section}{\large\bfseries\color{accent}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{accent}}{\thesubsection}{0.6em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{UPV-EARTH v1 - Memoria del despliegue}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\newcommand{\modulo}[1]{\texttt{\textcolor{accent}{#1}}}
+\newcommand{\tech}[1]{\textbf{\textcolor{accent}{#1}}}
+\newcommand{\file}[1]{\texttt{\small #1}}
+
+\newtcolorbox{infobox}[1][]{
+  enhanced, breakable, sharp corners, colback=accent!4, colframe=accent!60,
+  boxrule=0.4pt, left=8pt, right=8pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries\color{accent}, #1
+}
+
+\title{\vspace*{-1.2cm}
+\Large\bfseries\textcolor{accent}{UPV-EARTH v1 -- Memoria técnica del despliegue}\\[0.4em]
+\large\textit{Plataforma web para análisis científico y clasificación\\
+del corpus UPV en el marco Planetary Boundaries}}
+\author{\normalsize Equipo UPV-EARTH \\
+\small Frontend Next.js 15 -- Backend FastAPI -- LLM local Qwen + SPECTER2 -- RAG estricto}
+\date{Mayo 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace*{-1em}
+
+\begin{abstract}
+\noindent
+Esta memoria documenta el desarrollo y despliegue del prototipo \emph{UPV-EARTH v1}, una plataforma web institucional que materializa el pipeline analítico descrito en la memoria principal (clasificación multilabel del corpus UPV en las 9 Planetary Boundaries) y lo expone mediante una interfaz interactiva con cinco bloques funcionales: dashboard de corpus, módulo de Exploratory Data Analysis (EDA), explorador de papers con búsqueda y filtros, analizador asíncrono de PDFs y chatbot RAG estricto contextualizado por página. El backend está construido en \tech{FastAPI} con persistencia \tech{SQLite/PostgreSQL}, ingestión de PDFs con \tech{PyMuPDF}, embeddings densos con \tech{SPECTER2} (sentence-transformers) y orquestación de LLMs locales mediante \tech{Ollama} (inferencia PB con Qwen 2.5:14b) y \tech{vLLM} (chat con Qwen3-8B-Instruct, endpoint OpenAI-compatible). El frontend está construido en \tech{Next.js 15 + React 19 + TypeScript + Tailwind} con gráficos \tech{Recharts}. La arquitectura, el diseño visual y el flujo de datos se especificaron mediante \textbf{archivos Markdown que actúan como agentes especializados} (\file{DESIGN.md}, \file{AGENTS.md}, \file{README.md}) consumidos por el flujo de trabajo asistido por IA del equipo durante el desarrollo. El sistema completo está desplegado en un servidor interno UPV (\texttt{158.42.94.34}) y accesible vía VPN universitaria.
+\end{abstract}
+
+\medskip
+\noindent\textbf{Palabras clave:} FastAPI; Next.js; SPECTER2; RAG; LLM local; Qwen; Ollama; vLLM; Planetary Boundaries; observatorio institucional.
+
+\tableofcontents
+\clearpage
+
+% =====================================================================
+\section{Objetivo del prototipo}
+
+UPV-EARTH v1 responde a la pregunta operativa de Milestone 2: \emph{¿puede el pipeline analítico convertirse en una experiencia de usuario realista, accesible vía navegador, que permita a un investigador o a un gestor institucional explorar el perfil PB de la UPV e ingerir nuevos papers para obtener su clasificación?} La respuesta concreta es una aplicación web autónoma desplegable en infraestructura UPV con cinco bloques funcionales accesibles a usuarios autorizados (VPN):
+
+\begin{enumerate}
+\item \textbf{Dashboard corporativo} con KPIs del corpus, distribución PB, evolución temporal y calidad de datos.
+\item \textbf{Módulo de EDA avanzado} con mapa semántico 2D, similaridad PB$\times$PB, perfiles léxicos (wordclouds, TF-IDF) y heatmaps año$\times$PB.
+\item \textbf{Explorador de papers} con búsqueda full-text, filtros combinables (año, journal, PB) y vista de detalle por documento.
+\item \textbf{Analizador asíncrono de PDFs} que ingiere un PDF subido por el usuario, lo procesa por pipeline completo y devuelve la asignación PB con score, top-2/top-3, justificación LLM y comparativa contra el corpus.
+\item \textbf{Chatbot RAG estricto} flotante en toda la aplicación, con contexto adaptado a la página actual.
+\end{enumerate}
+
+El sistema NO es un observatorio definitivo: es un prototipo funcional que demuestra valor institucional y deja todas las piezas en su sitio para escalar a producción.
+
+% =====================================================================
+\section{Arquitectura de alto nivel}
+
+La plataforma sigue una arquitectura de tres niveles con orquestación contenedorizable. La Figura~\ref{fig:arq} muestra la disposición.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  node distance=0.5cm and 0.6cm,
+  service/.style={rectangle, rounded corners=2pt, draw=accent, fill=accent!5,
+                  text width=3.5cm, align=center, minimum height=1cm, font=\small},
+  data/.style={rectangle, draw=accentemerald!70, fill=accentemerald!8,
+               text width=3cm, align=center, minimum height=0.85cm, font=\small},
+  ext/.style={rectangle, rounded corners=2pt, draw=black!50, fill=black!4,
+              text width=3.2cm, align=center, minimum height=1cm, font=\small},
+  arrow/.style={->, >=Stealth, thick, color=accent!70},
+]
+\node[service] (front) {\textbf{Frontend}\\ Next.js 15 + React 19\\ TypeScript + Tailwind\\ Recharts};
+\node[service, right=of front] (back) {\textbf{Backend FastAPI}\\ 17 módulos\\ /api/v1};
+\node[ext, right=of back] (llm) {\textbf{LLM locales}\\ Ollama (Qwen 14B)\\ vLLM (Qwen3-8B)};
+
+\node[data, below=of front] (db) {\textbf{Persistencia}\\ SQLite (dev) /\\ PostgreSQL (prod)};
+\node[data, below=of back] (precomp) {\textbf{Artefactos precomputados}\\ EDA + Embeddings\\ SPECTER2 + 2D map};
+\node[data, below=of llm] (fs) {\textbf{Storage}\\ uploads/\\ PDFs + jobs};
+
+\node[ext, below=0.7cm of db] (proxy) {\textbf{Nginx}\\ reverse proxy + TLS};
+\node[ext, below=0.7cm of fs] (user) {\textbf{Usuario UPV}\\ Browser + VPN};
+
+\draw[arrow] (front) -- (back) node[midway, above, font=\scriptsize] {REST + SSE};
+\draw[arrow] (back) -- (llm) node[midway, above, font=\scriptsize] {HTTP};
+\draw[arrow] (back) -- (db);
+\draw[arrow] (back) -- (precomp);
+\draw[arrow] (back) -- (fs);
+\draw[arrow] (user) -- (proxy);
+\draw[arrow] (proxy) -- (front);
+\draw[arrow] (proxy) -- (back);
+
+\end{tikzpicture}
+\caption{Arquitectura tres-niveles UPV-EARTH v1.}
+\label{fig:arq}
+\end{figure}
+
+\subsection{Stack tecnológico completo}
+
+\begin{table}[h]
+\centering\small
+\begin{tabularx}{\linewidth}{l l X}
+\toprule
+\textbf{Capa} & \textbf{Tecnología} & \textbf{Rol} \\
+\midrule
+Frontend & \tech{Next.js 15.2} (App Router) & SSR/SSG + routing por carpetas \\
+& \tech{React 19} + TypeScript 5.8 & Componentes y estado \\
+& \tech{Tailwind 3.4} & Estilos utility-first, paleta dark-emerald \\
+& \tech{Recharts 2.15} & Gráficos compuestos (línea, área, barras, heatmap, radial) \\
+\midrule
+Backend & \tech{FastAPI 0.115} + Uvicorn & Servidor ASGI, rutas \texttt{/api/v1/*} \\
+& \tech{Pydantic 2.11} & Validación de esquemas request/response \\
+& \tech{SQLAlchemy 2.0} & ORM (Paper, ProcessingJob, PBResult, JobEvent) \\
+& \tech{PyMuPDF 1.25} & Parsing de PDF (texto, metadata, secciones) \\
+& \tech{sentence-transformers 3.4} & Carga del modelo SPECTER2 \\
+& \tech{numpy 2.2 + pandas 2.2} & Vectores, dataframes, agregaciones \\
+& \tech{scikit-learn} & KMeans, UMAP (vía dependencias) \\
+& \tech{psutil} & Telemetría CPU/RAM/GPU \\
+\midrule
+LLMs & \tech{Ollama} + Qwen 2.5:14b & Inferencia PB sobre PDFs subidos \\
+& \tech{vLLM} + Qwen3-8B-Instruct & Chat RAG (endpoint OpenAI-compatible) \\
+\midrule
+Datos & \tech{SQLite} (dev local) & DB liviana, file-based \\
+& \tech{PostgreSQL 16} (Docker) & DB productiva con concurrencia \\
+\midrule
+Infra & \tech{Docker Compose} & Orquestación (backend, frontend, db, nginx, ollama) \\
+& \tech{Nginx} & Reverse proxy, límites de upload, TLS \\
+& \tech{rclone\_drive} & Lectura del corpus desde almacenamiento UPV \\
+\bottomrule
+\end{tabularx}
+\caption{Stack tecnológico completo del prototipo UPV-EARTH v1.}
+\end{table}
+
+% =====================================================================
+\section{Backend: 17 módulos especializados}
+
+El backend FastAPI sigue una arquitectura modular tipo \emph{hexagonal lite}: cada responsabilidad concreta vive en un módulo aislado bajo \file{app/services/}. La Tabla~\ref{tab:modulos} cataloga los 17 módulos.
+
+\begin{table}[h]
+\centering\small
+\begin{tabularx}{\linewidth}{l X}
+\toprule
+\textbf{Módulo} & \textbf{Responsabilidad} \\
+\midrule
+\modulo{pdf\_ingestion} & Validación de PDFs subidos, guardado en \file{data/uploads/}, parsing con PyMuPDF. \\
+\modulo{metadata\_extraction} & Inferencia ligera de metadatos (año, autor, journal) desde el cuerpo del PDF. \\
+\modulo{abstract\_extraction} & Detección del abstract por patrones regex + heurísticas estructurales. \\
+\modulo{text\_cleaning} & Normalización: URLs, HTML, DOIs, copyright editorial, controles de longitud (\(\geq 200\) chars). \\
+\modulo{embedding\_service} & Carga única de SPECTER2 (sentence-transformers), embedding mean-pooled, normalización L2. \\
+\modulo{pb\_inference} & Cálculo de similaridad coseno abstract$\times$catálogo PB, threshold \(\tau{=}0{,}03\), margen \(\delta{=}0{,}08\), top-3 con scores. \\
+\modulo{summarization} & Resumen fallback sin LLM (primeras frases significativas). \\
+\modulo{paper\_repository} & CRUD sobre tabla \texttt{papers}, filtros, búsqueda full-text, detalle. \\
+\modulo{analytics\_service} & KPIs del dashboard (totales, distribuciones, calidad). \\
+\modulo{corpus\_loader} & Carga incremental del corpus UPV desde CSV al arrancar la aplicación. \\
+\modulo{corpus\_quality} & Métricas de calidad del corpus para embeddings (cobertura, longitudes, idiomas). \\
+\modulo{eda\_artifacts} & Lectura cacheada de los artefactos JSON precomputados del AED. \\
+\modulo{embedding\_map} & UMAP 2D del corpus precomputado, scatter plot por PB. \\
+\modulo{models\_benchmark} & Tabla comparativa de modelos (TF-IDF, BERT, SciBERT, SPECTER) servida al frontend. \\
+\modulo{similarity\_search} & Búsqueda de los k vecinos semánticos más próximos (cosine, NumPy / FAISS-ready). \\
+\modulo{system\_metrics} & Telemetría en vivo CPU/RAM/GPU (\texttt{psutil} + \texttt{nvidia-smi}) para el panel de upload. \\
+\modulo{chat\_service} & Sistema RAG con retrievers especializados (ver §\ref{sec:chat}). \\
+\bottomrule
+\end{tabularx}
+\caption{Catálogo completo de módulos del backend.}
+\label{tab:modulos}
+\end{table}
+
+\subsection{Endpoints REST y SSE expuestos}
+
+Todas las rutas viven bajo \texttt{/api/v1/} y están versionadas para permitir evolución futura sin romper clientes existentes. La Tabla~\ref{tab:endpoints} resume los grupos de endpoints.
+
+\begin{table}[h]
+\centering\small
+\begin{tabularx}{\linewidth}{l X}
+\toprule
+\textbf{Grupo} & \textbf{Endpoints principales} \\
+\midrule
+\texttt{uploads} & \texttt{POST /uploads/pdf}: subida + creación de \texttt{processing\_job}. \\
+\texttt{jobs} & \texttt{GET /jobs/\{id\}}: estado del job. \texttt{GET /jobs/\{id\}/events}: stream de eventos pipeline + telemetría CPU/RAM/GPU. \\
+\texttt{papers} & \texttt{GET /papers}: listado paginado con filtros. \texttt{GET /papers/\{id\}}: detalle. \texttt{GET /papers/\{id\}/comparison}: comparativa NLP contra baseline UPV y centroide PB. \texttt{GET /papers/\{id\}/similar}: vecinos semánticos top-k. \\
+\texttt{analytics} & \texttt{GET /analytics/dashboard}: KPIs corpus. \texttt{GET /analytics/eda}: bloque AED. \texttt{GET /analytics/keywords/global}, \texttt{/keywords/pb/\{code\}}. \texttt{GET /analytics/index-status}: estado de artefactos precomputados. \\
+\texttt{chat} & \texttt{POST /chat}: respuesta síncrona. \texttt{POST /chat/stream}: SSE (eventos \texttt{meta} / \texttt{token} / \texttt{done} / \texttt{error}). \texttt{GET /chat/health}: estado del LLM. \\
+\bottomrule
+\end{tabularx}
+\caption{Endpoints expuestos por el backend FastAPI.}
+\label{tab:endpoints}
+\end{table}
+
+\subsection{Flujo asíncrono de ingesta de PDFs}
+
+El flujo completo desde la subida hasta la obtención del veredicto PB pasa por 7 etapas observables y reportadas en vivo al frontend:
+
+\begin{center}
+\begin{tikzpicture}[
+  step/.style={rectangle, rounded corners=1.5pt, draw=accent!60, fill=accent!5,
+               text width=2.0cm, align=center, minimum height=0.7cm, font=\scriptsize},
+  ar/.style={->, >=Stealth, color=accent!60, thick},
+  node distance=0.15cm
+]
+\node[step] (s1) {\textbf{upload}\\ PDF $\to$ disco};
+\node[step, right=of s1] (s2) {\textbf{parse}\\ PyMuPDF};
+\node[step, right=of s2] (s3) {\textbf{metadata}\\ +abstract};
+\node[step, right=of s3] (s4) {\textbf{clean}\\ defensiva};
+\node[step, right=of s4] (s5) {\textbf{embed}\\ SPECTER2};
+\node[step, right=of s5] (s6) {\textbf{PB score}\\ + top-3};
+\node[step, right=of s6] (s7) {\textbf{LLM}\\ Qwen 14B};
+\draw[ar] (s1) -- (s2);
+\draw[ar] (s2) -- (s3);
+\draw[ar] (s3) -- (s4);
+\draw[ar] (s4) -- (s5);
+\draw[ar] (s5) -- (s6);
+\draw[ar] (s6) -- (s7);
+\end{tikzpicture}
+\end{center}
+
+Cada cambio de etapa emite un \emph{evento} al stream SSE (\texttt{GET /jobs/\{id\}/events}) que el frontend renderiza en el componente \modulo{StageTimeline}. En paralelo, \modulo{system\_metrics} publica telemetría CPU/RAM/GPU cada 1\,s en el mismo canal para que el componente \modulo{SystemMetricsCard} muestre carga computacional real.
+
+% =====================================================================
+\section{Chatbot RAG estricto}\label{sec:chat}
+
+El chatbot es uno de los componentes técnicos más cuidados del sistema. Está diseñado como un \textbf{RAG estricto}: el LLM nunca clasifica PBs ni decide similitud, esa lógica vive en los servicios de embedding y similaridad. El LLM solo \emph{explica, resume y conversa} sobre resultados ya calculados.
+
+\subsection{Arquitectura}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  node distance=0.5cm and 0.6cm,
+  block/.style={rectangle, rounded corners=2pt, draw=accent, fill=accent!5,
+                text width=3.3cm, align=center, minimum height=0.85cm, font=\small},
+  ret/.style={rectangle, draw=accentemerald, fill=accentemerald!8,
+              text width=3cm, align=center, minimum height=0.7cm, font=\footnotesize},
+  arrow/.style={->, >=Stealth, thick, color=accent!70}
+]
+\node[block] (q) {Pregunta usuario\\ + scope de página};
+\node[block, right=of q] (router) {Routing semántico\\ \texttt{context\_builder.py}};
+\node[ret, right=of router, yshift=0.9cm] (r1) {\modulo{analytics\_retriever}};
+\node[ret, right=of router, yshift=0.3cm] (r2) {\modulo{methodology\_retriever}};
+\node[ret, right=of router, yshift=-0.3cm] (r3) {\modulo{paper\_retriever}};
+\node[ret, right=of router, yshift=-0.9cm] (r4) {\modulo{pb\_retriever}};
+\node[block, right=4.5cm of router] (prompt) {Prompt ensamblado\\ \texttt{prompt\_templates.py}};
+\node[block, below=of prompt] (llm) {\textbf{vLLM}\\ Qwen3-8B-Instruct};
+\node[block, left=of llm] (out) {Streaming SSE\\ al usuario};
+\draw[arrow] (q) -- (router);
+\draw[arrow] (router) -- (r1);
+\draw[arrow] (router) -- (r2);
+\draw[arrow] (router) -- (r3);
+\draw[arrow] (router) -- (r4);
+\draw[arrow] (r1) -- (prompt);
+\draw[arrow] (r2) -- (prompt);
+\draw[arrow] (r3) -- (prompt);
+\draw[arrow] (r4) -- (prompt);
+\draw[arrow] (prompt) -- (llm);
+\draw[arrow] (llm) -- (out);
+\end{tikzpicture}
+\caption{Arquitectura del chatbot RAG estricto.}
+\end{figure}
+
+Los retrievers especializados son:
+
+\begin{itemize}
+\item \modulo{analytics\_retriever}: cifras del dashboard (totales, distribuciones, evolución temporal).
+\item \modulo{methodology\_retriever}: explicaciones de la metodología (qué es PB1, qué umbrales se usan, qué hace SPECTER).
+\item \modulo{paper\_retriever}: detalle de un paper concreto cuando el usuario pregunta desde su página de detalle.
+\item \modulo{pb\_retriever}: definiciones operativas de cada Planetary Boundary y de su perfil en el corpus UPV.
+\end{itemize}
+
+\subsection{Scope por página: el usuario no pregunta en abstracto}
+
+El frontend usa un \modulo{ChatScopeProvider} (React Context) que envuelve cada página y publica al chatbot el \emph{scope} actual:
+
+\begin{itemize}
+\item En \texttt{/dashboard}: scope global, retrievers de analytics y metodología.
+\item En \texttt{/analysis}: scope EDA, retriever de metodología y artefactos precomputados.
+\item En \texttt{/papers/[id]}: scope paper concreto vía \modulo{PaperChatScope}, retriever de paper + similares.
+\item En \texttt{/upload}: scope inferencia, retriever del job actual y del resultado PB.
+\end{itemize}
+
+Esto permite preguntas como \emph{``¿por qué este paper se clasificó como PB6?''} sin tener que copiar el contenido del paper a la conversación: el contexto se inyecta automáticamente.
+
+\subsection{Endpoints y modo streaming}
+
+\begin{lstlisting}[language=bash, caption={Endpoints del chatbot}]
+GET  /api/v1/chat/health   -> estado del servidor LLM (enabled, available, modelo)
+POST /api/v1/chat          -> respuesta sincrona JSON
+POST /api/v1/chat/stream   -> SSE: meta -> token... -> done | error
+\end{lstlisting}
+
+El streaming permite renderizar la respuesta en tiempo real en el componente \modulo{FloatingChatbot}, mejorando significativamente la sensación de inmediatez sin necesitar conexión WebSocket. Si \texttt{LLM\_ENABLED=false} o el servidor LLM no responde, la UI muestra el banner \emph{``Chatbot no disponible''} sin romper el resto de la plataforma.
+
+% =====================================================================
+\section{Frontend: páginas y componentes}
+
+El frontend está construido sobre \tech{Next.js 15} con \emph{App Router}: cada carpeta dentro de \file{src/app/} representa una ruta. La aplicación tiene cinco páginas principales y un sistema de chatbot persistente que las atraviesa.
+
+\subsection{Páginas}
+
+\begin{table}[h]
+\centering\small
+\begin{tabularx}{\linewidth}{l l X}
+\toprule
+\textbf{Ruta} & \textbf{Archivo} & \textbf{Contenido} \\
+\midrule
+\texttt{/} & \file{app/page.tsx} & Landing con redirección al dashboard. \\
+\texttt{/dashboard} & \file{app/dashboard/page.tsx} & KPIs corpus, distribución PB (donut), evolución temporal, distribución de longitudes. \\
+\texttt{/analysis} & \file{app/analysis/page.tsx} & EDA completo: heatmap similaridad PB$\times$PB, wordclouds, TF-IDF, mapa semántico 2D, calidad corpus. \\
+\texttt{/papers} & \file{app/papers/page.tsx} & Explorador con búsqueda por título/abstract, filtros año + PB, tabla con paginación. \\
+\texttt{/papers/[id]} & \file{app/papers/[id]/page.tsx} & Detalle paper: abstract limpio, scores PB, top similares, comparativa NLP, chatbot con scope. \\
+\texttt{/upload} & \file{app/upload/page.tsx} & Zona de upload PDF, timeline de etapas, telemetría GPU/RAM, resultado con explicación LLM. \\
+\bottomrule
+\end{tabularx}
+\caption{Páginas del frontend.}
+\end{table}
+
+\subsection{Componentes reutilizables}
+
+La aplicación tiene 25+ componentes React tipados que se reutilizan entre páginas. Los más relevantes son:
+
+\begin{table}[h]
+\centering\small
+\begin{tabularx}{\linewidth}{l X}
+\toprule
+\textbf{Componente} & \textbf{Función} \\
+\midrule
+\modulo{KpiCard} & Tarjeta KPI con número dominante (usado en dashboard, upload, detalle). \\
+\modulo{Nav} & Navegación principal con enlaces y branding UPV. \\
+\modulo{FloatingChatbot} & Chatbot persistente en esquina inferior derecha, SSE-driven. \\
+\modulo{ChatScopeProvider} & React Context que publica el scope (página actual + ID si aplica) al chatbot. \\
+\modulo{StageTimeline} & Línea de tiempo vertical con las 7 etapas del pipeline de upload. \\
+\modulo{SystemMetricsCard} & Telemetría en vivo CPU/RAM/GPU con barras de progreso. \\
+\modulo{CleaningPipelineCard} & Visualización de la limpieza aplicada al abstract (URLs/HTML/DOIs eliminados). \\
+\modulo{AbstractValidationCard} & Resultado de validación del abstract (longitud, idioma, secciones detectadas). \\
+\modulo{CorpusLayersCard} & Las cuatro capas del filtro PB (teoría $\to$ keywords $\to$ contexto UPV $\to$ gobernanza algorítmica). \\
+\modulo{CorpusQualityPanel} & Métricas de calidad del corpus para embeddings (cobertura, longitudes, drop reasons). \\
+\modulo{PbFocusCard} & Resultado PB principal con score, top-2 y explicación LLM. \\
+\modulo{PbSimilarityHeatmap} & Heatmap interactivo de similaridad PB$\times$PB (Recharts). \\
+\modulo{PbYearHeatmap} & Heatmap año$\times$PB normalizado (cuota anual). \\
+\modulo{PbWordcloudGallery} & Galería de 9 wordclouds (una por PB). \\
+\modulo{KeywordsToggleCard} & Toggle entre keywords globales y específicas de un PB. \\
+\modulo{KeywordsWithMatches} & Keywords del paper resaltadas si coinciden con el centroide PB. \\
+\modulo{PaperOverlapCard} & Solapamiento de keywords contra baseline UPV y contra centroide PB. \\
+\modulo{TopicClustersCard} & Clusters semánticos KMeans con sus PBs dominantes. \\
+\modulo{AbstractComplexityTable} & Tabla con métricas de complejidad textual del abstract. \\
+\modulo{SimilarPapersList} & Top-k papers más similares al paper actual con score coseno. \\
+\modulo{MethodologyCallout} & Notas metodológicas contextuales (qué significa cada número). \\
+\modulo{PaperChatScope} & Wrapper que inyecta el scope ``paper actual'' al chatbot. \\
+\bottomrule
+\end{tabularx}
+\caption{Componentes principales del frontend.}
+\end{table}
+
+\subsection{Sistema de diseño}
+
+El sistema visual se especifica formalmente en \file{DESIGN.md} y consiste en:
+
+\begin{itemize}
+\item \textbf{Dirección visual}: producto científico premium tipo Vercel/Supabase/Linear; dark-first sobrio con acento verde esmeralda.
+\item \textbf{Paleta}: fondo \texttt{\#040807}, panel principal \texttt{\#0b1310}, acento primario \texttt{\#38a57a}, texto principal \texttt{\#d9efe5}.
+\item \textbf{Principios de UI}: espaciado amplio en dashboards, tablas con contraste controlado, estados de carga/error claros, componentes reutilizables con variantes consistentes.
+\item \textbf{Accesibilidad}: contraste alto en texto interactivo, focus visible, labels legibles en formularios.
+\end{itemize}
+
+% =====================================================================
+\section{Agentes especializados creados con Markdown}\label{sec:md_agents}
+
+Una decisión metodológica diferencial del proyecto fue el uso de \textbf{archivos Markdown como agentes especializados} que guían el flujo de trabajo asistido por IA del equipo durante el desarrollo. No son simple documentación: son \emph{contratos de comportamiento} consumidos por las herramientas de codificación con LLM (Claude Code, Cursor, GitHub Copilot Workspace).
+
+\subsection{Tres MD en el corazón del proyecto}
+
+\begin{table}[h]
+\centering\small
+\begin{tabularx}{\linewidth}{l X}
+\toprule
+\textbf{Archivo} & \textbf{Papel funcional} \\
+\midrule
+\file{DESIGN.md} & \textbf{Agente de UI/UX}. Define paleta, tipografía, principios de UI, especificaciones de dashboard, explorador, upload, motion, responsive y accesibilidad. Cualquier prompt al LLM para generar un componente nuevo debe respetar este contrato (verde esmeralda, dark sobre dark, no admin genérico, espaciado amplio). \\
+\file{AGENTS.md} & \textbf{Agente de arquitectura backend}. Define los 17 módulos, el flujo de datos asincrono, las rutas \texttt{/api/v1}, la persistencia, la evolución por fases (v1 implementada, fase futura con persist embeddings + similarity\_search). Es la \emph{fuente de verdad} sobre qué se ha implementado y qué se ha diseñado. \\
+\file{README.md} & \textbf{Agente de despliegue y operación}. Comandos para arranque local sin Docker, configuración LAN, seed del corpus, precómputo de EDA y embeddings, levantamiento del LLM local (vLLM o llama-cpp), endpoints disponibles, rutas y notas de troubleshooting. \\
+\bottomrule
+\end{tabularx}
+\caption{Archivos Markdown que actúan como agentes especializados.}
+\end{table}
+
+\subsection{Por qué ``agentes'' y no ``documentación''}
+
+La distinción es operativa. Una documentación tradicional describe lo que existe; un agente Markdown \textbf{prescribe} lo que debe existir y se inyecta en cada interacción con la herramienta de IA. Tres consecuencias concretas:
+
+\begin{enumerate}
+\item Cuando un miembro del equipo pide al LLM \emph{``añade un endpoint nuevo''}, el LLM lee \file{AGENTS.md} y respeta el versionado \texttt{/api/v1}, el patrón modular y la convención de respuesta Pydantic.
+\item Cuando se pide \emph{``crea un componente para mostrar X''}, el LLM lee \file{DESIGN.md} y produce un componente con la paleta correcta, espaciado dark-first y sin animaciones ornamentales.
+\item Cuando se quiere arrancar el stack en una máquina nueva, el LLM lee \file{README.md} y ejecuta los comandos en el orden correcto (Ollama primero, backend después, frontend al final, seed antes de servir).
+\end{enumerate}
+
+Este patrón evita el ``drift'' arquitectónico (componentes inconsistentes, endpoints fuera de versión, paletas mezcladas) y reduce drásticamente la fricción cuando alguien retoma una zona de código que no había tocado.
+
+% =====================================================================
+\section{Pre-cómputo y arranque rápido}
+
+Para que el dashboard y el módulo de análisis respondan en milisegundos (no segundos), el sistema usa una estrategia de \textbf{artefactos precomputados} servidos desde disco. Tres scripts dejan listos los datos antes de servir tráfico:
+
+\begin{lstlisting}[language=bash, caption={Scripts de pre-cómputo}]
+python -m scripts.seed_corpus              # carga el CSV del corpus en DB
+python -m scripts.precompute_eda           # genera eda.json (KPIs, distribuciones, drop reasons)
+python -m scripts.precompute_embeddings    # genera embeddings.npy + meta.json (SPECTER2)
+python -m scripts.precompute_2d_projection # genera la proyeccion UMAP 2D para el mapa semantico
+\end{lstlisting}
+
+Los artefactos resultantes se almacenan en \file{mockup/data/seed/precomputed/}:
+
+\begin{itemize}
+\item \file{eda.json}: KPIs corpus, distribuciones PB, top keywords/journals, drop reasons, cobertura.
+\item \file{embeddings.npy}: matriz \texttt{(N, dim)} \texttt{float32} normalizada (SPECTER2).
+\item \file{embeddings\_meta.json}: \texttt{doc\_id}, título, año, journal, abstract, PB asignado, etc.
+\item \file{projection\_2d.npy}: coordenadas UMAP 2D del corpus para el mapa semántico.
+\end{itemize}
+
+El backend los detecta automáticamente al arrancar: si están, los usa como caché; si no, calcula en caliente como \emph{fallback}. El estado de los artefactos se expone en \texttt{GET /api/v1/analytics/index-status} y se muestra en el panel ``Calidad del corpus para embeddings'' del dashboard. Esto permite tres ventajas reales:
+
+\begin{enumerate}
+\item Tiempo de respuesta del dashboard \(\sim 50\,\)ms en lugar de varios segundos.
+\item Reproducibilidad: cualquier máquina con los mismos JSON da el mismo dashboard.
+\item Trazabilidad: el campo \texttt{source} en el status indica si la respuesta es \emph{precomputed} o \emph{computed in flight}.
+\end{enumerate}
+
+% =====================================================================
+\section{Modos de despliegue}
+
+\subsection{Modo local sin Docker (desarrollo)}
+
+Estado actual de la máquina de desarrollo (sin Docker disponible). Tres procesos coexisten:
+
+\begin{lstlisting}[language=bash, caption={Arranque local}]
+# Terminal 1: Ollama con Qwen 2.5:14b
+ollama serve
+ollama pull qwen2.5:14b
+
+# Terminal 2: Backend FastAPI (uvicorn) con SQLite
+export DATABASE_URL='sqlite:///.../mockup/data/seed/upvearth_local.db'
+export PB_REFERENCE_CSV='.../corpus_PB/data/pb_reference.csv'
+export OLLAMA_URL='http://127.0.0.1:11434/api/generate'
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+# Terminal 3: Frontend Next.js dev
+export NEXT_PUBLIC_API_BASE_URL='/api/v1'
+npm run dev -- --hostname 0.0.0.0 --port 3000
+
+# Opcional Terminal 4: LLM chat (vLLM con Qwen3-8B-Instruct)
+python -m vllm.entrypoints.openai.api_server \
+   --model Qwen/Qwen3-8B-Instruct --port 8001
+\end{lstlisting}
+
+Acceso desde otro dispositivo de la misma red WiFi:
+\begin{lstlisting}[language=bash]
+hostname -I                      # obtener IP del host Linux
+# luego desde el otro dispositivo:
+open http://IP_DEL_HOST:3000
+\end{lstlisting}
+
+\subsection{Modo Docker Compose (producción interna)}
+
+Cuando Docker está disponible, el archivo \file{docker-compose.yml} levanta el stack completo:
+
+\begin{lstlisting}[language=bash]
+docker compose -f mockup/docker-compose.yml --env-file mockup/.env up -d --build
+docker compose exec backend python -m scripts.seed_corpus
+\end{lstlisting}
+
+Contenedores orquestados: \texttt{nginx}, \texttt{frontend}, \texttt{backend}, \texttt{db (PostgreSQL)}, \texttt{ollama}. El backend escucha en \texttt{0.0.0.0} dentro del contenedor; Nginx publica en el host con límites de upload y timeouts apropiados para PDFs grandes. URL pública interna: \texttt{http://158.42.94.34} (requiere VPN UPV).
+
+% =====================================================================
+\section{Funcionalidades clave para el usuario final}
+
+Esta sección recapitula las cinco capacidades que el sistema entrega desde el punto de vista del usuario, conectándolas con los módulos backend y componentes frontend que las soportan.
+
+\subsection{Dashboard institucional}
+
+\textbf{Qué ve el usuario}: cuatro KPIs (total papers, abstracts válidos, papers clasificados, longitud media), distribución PB en donut, evolución temporal de publicaciones, distribución de longitud de abstracts. \textbf{Cómo}: frontend \file{app/dashboard/page.tsx} consume \texttt{/api/v1/analytics/dashboard} servido por \modulo{analytics\_service} con datos pre-cacheados de \file{eda.json}.
+
+\subsection{Módulo de EDA avanzado}
+
+\textbf{Qué ve}: heatmap de similaridad PB$\times$PB con scores cosine, galería de wordclouds, top-10 TF-IDF por PB, mapa semántico 2D coloreado por PB asignado, métricas de calidad del corpus (drop reasons, cobertura idiomática, distribución de longitudes). \textbf{Cómo}: \file{app/analysis/page.tsx} compone los componentes \modulo{PbSimilarityHeatmap}, \modulo{PbWordcloudGallery}, \modulo{TopicClustersCard}, \modulo{CorpusQualityPanel}, alimentados por \texttt{/analytics/eda} y la proyección 2D pre-computada.
+
+\subsection{Explorador de papers}
+
+\textbf{Qué ve}: barra de búsqueda sobre título y abstract, filtros combinables (año, PB, journal), tabla paginada con título, año, journal, top PB asignado, badge de confianza. Al hacer clic en un paper: vista de detalle con abstract limpio, scores PB de los 9 PBs, lista de top-5 papers similares (con score cosine), comparativa NLP del paper contra baseline UPV y centroide PB, chatbot contextualizado. \textbf{Cómo}: \file{app/papers/page.tsx} y \file{app/papers/[id]/page.tsx}, con \modulo{SimilarPapersList} alimentado por \modulo{similarity\_search} (cosine sobre embeddings precomputados).
+
+\subsection{Analizador asíncrono de PDFs}
+
+\textbf{Qué ve}: zona de subida segura, timeline en vivo de las 7 etapas (upload $\to$ parse $\to$ metadata $\to$ clean $\to$ embed $\to$ PB score $\to$ LLM), telemetría CPU/RAM/GPU en directo, resultado final con top PB asignado, score, top-2 y explicación generada por Qwen 14B citando keywords detectadas. \textbf{Cómo}: \file{app/upload/page.tsx} hace POST a \texttt{/uploads/pdf}, recibe un \texttt{job\_id} y se suscribe vía SSE a \texttt{/jobs/\{id\}/events}; \modulo{StageTimeline} renderiza los eventos en orden, \modulo{SystemMetricsCard} actualiza la telemetría.
+
+\subsection{Chatbot RAG estricto contextualizado}
+
+\textbf{Qué ve}: botón flotante en esquina inferior, abre panel de chat con streaming token a token, sugerencias contextualizadas según la página, indicador de scope (\emph{``contexto: dashboard global''} / \emph{``contexto: paper X''} / etc.). \textbf{Cómo}: \modulo{FloatingChatbot} + \modulo{ChatScopeProvider} en el frontend; \modulo{chat\_service} en el backend con cuatro retrievers especializados (analytics, methodology, paper, pb) que construyen el contexto antes de llamar al LLM.
+
+% =====================================================================
+\section{Trazabilidad y observabilidad}
+
+El sistema preserva trazabilidad en tres niveles:
+
+\begin{itemize}
+\item \textbf{Por job} (\modulo{JobEvent}): cada etapa del pipeline emite un evento con timestamp, status (ok/warn/error), payload opcional y métricas CPU/RAM/GPU del momento. Recuperable vía \texttt{GET /jobs/\{id\}/events?limit=200}. Esto permite auditoría post-mortem de cualquier inferencia: por qué un PDF tardó 12s, en qué etapa.
+\item \textbf{Por paper} (\modulo{PBResult}): el resultado PB se persiste con scores de los 9 PBs, top-1, top-2, threshold aplicado, modelo usado, y, si \texttt{LLM\_ENABLED=true}, el \texttt{llm\_reasoning} con la cadena de pensamiento del LLM.
+\item \textbf{Por chat} (no persistido por privacidad, pero observable en logs en modo debug): el contexto inyectado por los retrievers se loguea para poder reproducir respuestas problemáticas sin necesitar la consulta original del usuario.
+\end{itemize}
+
+% =====================================================================
+\section{Limitaciones conocidas y trabajo futuro}
+
+\subsection{Limitaciones declaradas}
+
+\begin{itemize}
+\item \textbf{Tamaño de corpus en demo local}: el SQLite local sirve los 696 papers de Milestone 2; para los 31.560 del corpus completo se recomienda PostgreSQL en Docker.
+\item \textbf{Latencia del LLM}: Qwen 14B en GPU RTX 4500 Ada da inferencias en 6--8\,s por paper. Aceptable para uso interactivo individual pero no para procesar batch sobre miles de PDFs sin colas.
+\item \textbf{Chatbot no persiste historial}: cada conversación es efímera (decisión consciente para reducir riesgo de fuga de datos sensibles).
+\item \textbf{Single tenant}: no hay sistema de autenticación; el control de acceso vive en la VPN UPV y el firewall del servidor interno.
+\end{itemize}
+
+\subsection{Trabajo futuro identificado en \texttt{AGENTS.md}}
+
+\begin{itemize}
+\item Persistir embeddings por paper en base de datos vectorial (\tech{pgvector} o \tech{FAISS}) en lugar de archivo \file{.npy} en disco.
+\item Endpoint \texttt{POST /api/v2/similarity/search} con contrato top-k vecinos, distancia y metadatos.
+\item Sistema de autenticación con tokens UPV para auditoría individual.
+\item Colas de procesamiento batch (\tech{Celery} o \tech{RQ}) para ingestión masiva de PDFs.
+\item Fine-tune de SPECTER sobre las anotaciones humanas (ver memoria de clasificación) para mejorar precisión sin cambiar la arquitectura del frontend.
+\end{itemize}
+
+% =====================================================================
+\section{Conclusiones}
+
+UPV-EARTH v1 demuestra que el pipeline analítico subyacente al proyecto puede convertirse en una experiencia institucional usable, mantenible y extensible. Los puntos diferenciales del prototipo son cuatro:
+
+\begin{enumerate}
+\item \textbf{RAG estricto bien delimitado}: el LLM nunca clasifica, solo explica resultados ya calculados. Esto separa cleanamente la lógica determinista (embeddings, scoring) de la lógica conversacional, evitando alucinaciones críticas.
+\item \textbf{Scope contextual del chatbot}: el usuario no pregunta en abstracto, pregunta sobre lo que está viendo. La página inyecta su contexto al chat.
+\item \textbf{Agentes Markdown}: \file{DESIGN.md}, \file{AGENTS.md} y \file{README.md} actúan como contratos de comportamiento consumidos por la IA de desarrollo, no solo como documentación humana. Esto reduce drift y acelera contribuciones nuevas.
+\item \textbf{Telemetría y trazabilidad por job}: cada inferencia es auditable etapa a etapa, con métricas de hardware en vivo. Es la diferencia entre ``funciona'' y ``puedo defender ante un revisor por qué tardó X y produjo Y''.
+\end{enumerate}
+
+El sistema está listo para escalar a observatorio institucional definitivo. Las piezas técnicas críticas (FastAPI modular, RAG estricto, agentes MD, pre-cómputo de artefactos, telemetría) están en su sitio. Las decisiones pendientes son políticas (autenticación, retención de logs, escalado a 31k papers) más que técnicas.
+
+\vfill
+\hrule height 0.3pt
+\medskip
+\small\textit{Acceso al prototipo: \url{http://158.42.94.34:3000/dashboard} (requiere VPN UPV). Código fuente: \url{https://github.com/cofrian/UPV_EARTH_PROYECTOIII}, carpeta \file{mockup/}.}
+
+\end{document}

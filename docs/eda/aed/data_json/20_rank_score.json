@@ -1,0 +1,58 @@
+{
+  "summary": [
+    {
+      "model": "tfidf",
+      "score_norm_global": 0.768,
+      "rank_1st_avg": 2.21,
+      "rank_2nd_avg": 3.19,
+      "pct_1st_in_top1": 63.3,
+      "pct_1st_in_top2": 76.5,
+      "pct_1st_in_top3": 82.7
+    },
+    {
+      "model": "bert-base",
+      "score_norm_global": 0.656,
+      "rank_1st_avg": 2.46,
+      "rank_2nd_avg": 3.53,
+      "pct_1st_in_top1": 44.9,
+      "pct_1st_in_top2": 64.3,
+      "pct_1st_in_top3": 79.6
+    },
+    {
+      "model": "specter",
+      "score_norm_global": 0.65,
+      "rank_1st_avg": 2.5,
+      "rank_2nd_avg": 3.44,
+      "pct_1st_in_top1": 43.9,
+      "pct_1st_in_top2": 67.3,
+      "pct_1st_in_top3": 76.5
+    },
+    {
+      "model": "lexical",
+      "score_norm_global": 0.637,
+      "rank_1st_avg": 3.34,
+      "rank_2nd_avg": 3.56,
+      "pct_1st_in_top1": 46.9,
+      "pct_1st_in_top2": 55.1,
+      "pct_1st_in_top3": 62.2
+    },
+    {
+      "model": "scibert",
+      "score_norm_global": 0.626,
+      "rank_1st_avg": 2.59,
+      "rank_2nd_avg": 2.97,
+      "pct_1st_in_top1": 37.8,
+      "pct_1st_in_top2": 63.3,
+      "pct_1st_in_top3": 80.6
+    },
+    {
+      "model": "roberta",
+      "score_norm_global": 0.374,
+      "rank_1st_avg": 4.1,
+      "rank_2nd_avg": 5.97,
+      "pct_1st_in_top1": 12.2,
+      "pct_1st_in_top2": 24.5,
+      "pct_1st_in_top3": 53.1
+    }
+  ]
+}

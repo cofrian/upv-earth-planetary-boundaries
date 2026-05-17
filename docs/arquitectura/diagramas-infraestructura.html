@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>UPV-EARTH — Infraestructura y Procesos</title>
+<style>
+  @page { size: A3 landscape; margin: 10mm; }
+  body {
+    margin: 0; padding: 24px;
+    background: #0a1410;
+    color: #e6f4ed;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  h1 { color: #34d399; font-size: 28px; margin: 0 0 6px; }
+  h2 {
+    color: #6ee7b7; font-size: 20px; margin: 32px 0 8px;
+    border-bottom: 1px solid rgba(52, 211, 153, 0.3); padding-bottom: 6px;
+  }
+  p.subtitle { color: #a9c5b7; margin: 0 0 24px; font-size: 14px; }
+  .legend {
+    background: rgba(15, 30, 22, 0.6);
+    border: 1px solid rgba(52, 211, 153, 0.25);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #cfe7d9;
+  }
+  .legend b { color: #34d399; }
+  svg { background: #0f1e16; border-radius: 12px; display: block; max-width: 100%; height: auto; }
+  .card {
+    background: rgba(15, 30, 22, 0.5);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .card h3 { color: #6ee7b7; margin: 0 0 6px; font-size: 15px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  code { background: rgba(0,0,0,0.4); padding: 1px 6px; border-radius: 4px; color: #fde68a; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>UPV-EARTH — Mockup: Infraestructura y procesos</h1>
+<p class="subtitle">Diagramas para defensa técnica del TFG. Todo corre nativo en una sola máquina (sin Docker).</p>
+
+<div class="legend">
+  <b>Leyenda de colores:</b> &nbsp;
+  🟦 Frontend (navegador / Next.js) &nbsp;·&nbsp;
+  🟩 Backend (FastAPI + Python) &nbsp;·&nbsp;
+  🟪 LLM (Ollama + Qwen 2.5 14B) &nbsp;·&nbsp;
+  🟧 Almacenamiento (SQLite + ficheros) &nbsp;·&nbsp;
+  🟨 Modelo de embeddings (SPECTER en RAM)
+</div>
+
+<!-- ====================================================================== -->
+<!-- DIAGRAMA 1: INFRAESTRUCTURA GENERAL                                    -->
+<!-- ====================================================================== -->
+
+<h2>1 · Infraestructura: 3 procesos en una sola máquina</h2>
+
+<svg viewBox="0 0 1400 880" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#34d399"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#fb923c"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c084fc"/>
+    </marker>
+  </defs>
+
+  <!-- TÍTULO USUARIO -->
+  <g>
+    <rect x="600" y="20" width="200" height="50" rx="10" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+    <text x="700" y="42" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="bold">USUARIO</text>
+    <text x="700" y="60" text-anchor="middle" fill="#94a3b8" font-size="11">navegador web</text>
+  </g>
+
+  <!-- Flecha usuario → frontend -->
+  <line x1="700" y1="70" x2="700" y2="120" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="710" y="100" fill="#a9c5b7" font-size="11">HTTP :3000</text>
+
+  <!-- Caja HOST LINUX -->
+  <rect x="40" y="120" width="1320" height="720" rx="14" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="60" y="148" fill="#94a3b8" font-size="13" font-weight="bold">🖥️ HOST LINUX (una sola máquina, sin Docker)</text>
+
+  <!-- ============= FRONTEND (azul) ============= -->
+  <g>
+    <rect x="80" y="170" width="380" height="220" rx="10" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+    <text x="100" y="195" fill="#93c5fd" font-size="14" font-weight="bold">🟦 PROCESO 1 — Next.js dev server</text>
+    <text x="100" y="218" fill="#cfe7d9" font-size="12">PID 3049864 · Puerto :3000</text>
+    <text x="100" y="234" fill="#cfe7d9" font-size="12">Path: mockup/frontend/</text>
+
+    <line x1="90" y1="246" x2="450" y2="246" stroke="#475569" stroke-width="1"/>
+
+    <text x="100" y="266" fill="#e6f4ed" font-size="12" font-weight="bold">Stack:</text>
+    <text x="110" y="284" fill="#cfe7d9" font-size="11">• Next.js 15.2.4 (App Router)</text>
+    <text x="110" y="300" fill="#cfe7d9" font-size="11">• React 19 + TypeScript 5.8</text>
+    <text x="110" y="316" fill="#cfe7d9" font-size="11">• Tailwind 3.4 + Recharts 2.15</text>
+    <text x="100" y="340" fill="#e6f4ed" font-size="12" font-weight="bold">Rutas servidas:</text>
+    <text x="110" y="356" fill="#cfe7d9" font-size="11">/dashboard · /papers · /papers/[id]</text>
+    <text x="110" y="372" fill="#cfe7d9" font-size="11">/upload · /analysis · /benchmark</text>
+  </g>
+
+  <!-- Flecha frontend → backend -->
+  <line x1="460" y1="280" x2="600" y2="280" stroke="#34d399" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="475" y="270" fill="#a9c5b7" font-size="11" font-weight="bold">fetch /api/v1/*</text>
+  <text x="475" y="298" fill="#a9c5b7" font-size="10">(rewrite Next.js → 127.0.0.1:8000)</text>
+
+  <!-- ============= BACKEND (verde) ============= -->
+  <g>
+    <rect x="600" y="170" width="440" height="430" rx="10" fill="#14532d" stroke="#22c55e" stroke-width="2"/>
+    <text x="620" y="195" fill="#86efac" font-size="14" font-weight="bold">🟩 PROCESO 2 — Uvicorn + FastAPI</text>
+    <text x="620" y="218" fill="#cfe7d9" font-size="12">PID 3049660 · Puerto :8000</text>
+    <text x="620" y="234" fill="#cfe7d9" font-size="12">.venv/bin/python -m uvicorn app.main:app</text>
+
+    <line x1="610" y1="246" x2="1030" y2="246" stroke="#475569" stroke-width="1"/>
+
+    <text x="620" y="266" fill="#e6f4ed" font-size="12" font-weight="bold">Stack:</text>
+    <text x="630" y="284" fill="#cfe7d9" font-size="11">• FastAPI 0.115 + Uvicorn 0.34</text>
+    <text x="630" y="300" fill="#cfe7d9" font-size="11">• SQLAlchemy 2.0 + Pydantic 2.11</text>
+    <text x="630" y="316" fill="#cfe7d9" font-size="11">• PyMuPDF 1.25 (parser PDF)</text>
+    <text x="630" y="332" fill="#cfe7d9" font-size="11">• sentence-transformers 3.4</text>
+    <text x="630" y="348" fill="#cfe7d9" font-size="11">• NumPy 2.2 + pandas 2.2</text>
+
+    <text x="620" y="378" fill="#e6f4ed" font-size="12" font-weight="bold">En RAM al arrancar:</text>
+    <!-- subcaja: modelo embeddings -->
+    <rect x="630" y="390" width="400" height="40" rx="6" fill="#713f12" stroke="#facc15" stroke-width="1.5"/>
+    <text x="640" y="408" fill="#fde68a" font-size="11" font-weight="bold">🟨 Modelo SPECTER (~430 MB)</text>
+    <text x="640" y="423" fill="#fde68a" font-size="10">allenai/specter · 768-d · max 512 tokens</text>
+
+    <!-- subcaja: matriz embeddings -->
+    <rect x="630" y="438" width="400" height="40" rx="6" fill="#713f12" stroke="#facc15" stroke-width="1.5"/>
+    <text x="640" y="456" fill="#fde68a" font-size="11" font-weight="bold">🟨 Matriz embeddings (~15 MB)</text>
+    <text x="640" y="471" fill="#fde68a" font-size="10">np.ndarray (N × 768) · vector store en RAM</text>
+
+    <text x="620" y="500" fill="#e6f4ed" font-size="12" font-weight="bold">Endpoints expuestos (40+):</text>
+    <text x="630" y="518" fill="#cfe7d9" font-size="11">/papers · /papers/{id}/similar</text>
+    <text x="630" y="534" fill="#cfe7d9" font-size="11">/analytics/* (corpus, PB, distrib...)</text>
+    <text x="630" y="550" fill="#cfe7d9" font-size="11">/uploads/pdf · /jobs/{id}</text>
+    <text x="630" y="566" fill="#cfe7d9" font-size="11">/chat · /chat/stream (SSE)</text>
+    <text x="630" y="582" fill="#cfe7d9" font-size="11">/docs (OpenAPI auto-generado)</text>
+  </g>
+
+  <!-- Flecha backend → ollama -->
+  <line x1="1040" y1="280" x2="1170" y2="280" stroke="#c084fc" stroke-width="2.5" marker-end="url(#arrow-purple)"/>
+  <text x="1050" y="270" fill="#c4b5fd" font-size="11" font-weight="bold">HTTP :11434</text>
+  <text x="1050" y="298" fill="#c4b5fd" font-size="10">/api/generate (pipeline)</text>
+  <text x="1050" y="312" fill="#c4b5fd" font-size="10">/v1/chat/completions (chat)</text>
+
+  <!-- ============= OLLAMA (morado) ============= -->
+  <g>
+    <rect x="1170" y="170" width="170" height="430" rx="10" fill="#3b0764" stroke="#a855f7" stroke-width="2"/>
+    <text x="1185" y="195" fill="#d8b4fe" font-size="13" font-weight="bold">🟪 PROCESO 3</text>
+    <text x="1185" y="213" fill="#d8b4fe" font-size="13" font-weight="bold">Ollama</text>
+    <text x="1185" y="234" fill="#cfe7d9" font-size="11">PID 2448130</text>
+    <text x="1185" y="250" fill="#cfe7d9" font-size="11">Puerto :11434</text>
+
+    <line x1="1180" y1="262" x2="1330" y2="262" stroke="#475569" stroke-width="1"/>
+
+    <text x="1185" y="282" fill="#e6f4ed" font-size="11" font-weight="bold">Modelo activo:</text>
+    <rect x="1185" y="290" width="145" height="35" rx="5" fill="#581c87"/>
+    <text x="1192" y="306" fill="#e9d5ff" font-size="11" font-weight="bold">qwen2.5:14b</text>
+    <text x="1192" y="320" fill="#c4b5fd" font-size="10">9 GB (Q4 cuantizado)</text>
+
+    <text x="1185" y="348" fill="#e6f4ed" font-size="11" font-weight="bold">2 modos de uso:</text>
+    <text x="1192" y="366" fill="#c4b5fd" font-size="10">• temp=0.0 + JSON</text>
+    <text x="1200" y="380" fill="#c4b5fd" font-size="10">  (pipeline PB)</text>
+    <text x="1192" y="398" fill="#c4b5fd" font-size="10">• temp=0.2 + stream</text>
+    <text x="1200" y="412" fill="#c4b5fd" font-size="10">  (chatbot RAG)</text>
+
+    <text x="1185" y="438" fill="#e6f4ed" font-size="11" font-weight="bold">Otros descargados:</text>
+    <text x="1192" y="454" fill="#c4b5fd" font-size="10">gemma4:26b (17 GB)</text>
+    <text x="1192" y="468" fill="#c4b5fd" font-size="10">llama3.1:8b (4.9 GB)</text>
+    <text x="1192" y="482" fill="#c4b5fd" font-size="10">qwen3:4b (2.5 GB)</text>
+    <text x="1192" y="496" fill="#c4b5fd" font-size="10">+ 3 más (no activos)</text>
+
+    <text x="1185" y="525" fill="#e6f4ed" font-size="11" font-weight="bold">Bin:</text>
+    <text x="1192" y="541" fill="#c4b5fd" font-size="10">~/ollama-root/bin/</text>
+    <text x="1185" y="565" fill="#e6f4ed" font-size="11" font-weight="bold">Pesos:</text>
+    <text x="1192" y="581" fill="#c4b5fd" font-size="10">~/.ollama/</text>
+  </g>
+
+  <!-- Flecha backend → almacenamiento -->
+  <line x1="800" y1="610" x2="800" y2="650" stroke="#fb923c" stroke-width="2.5" marker-end="url(#arrow-orange)"/>
+  <text x="810" y="635" fill="#fdba74" font-size="11" font-weight="bold">lectura/escritura disco</text>
+
+  <!-- ============= ALMACENAMIENTO (naranja) ============= -->
+  <g>
+    <rect x="80" y="650" width="1260" height="170" rx="10" fill="#7c2d12" stroke="#f97316" stroke-width="2"/>
+    <text x="100" y="675" fill="#fed7aa" font-size="14" font-weight="bold">🟧 ALMACENAMIENTO EN DISCO — sistema de ficheros de la máquina</text>
+
+    <!-- SQLite -->
+    <rect x="100" y="690" width="280" height="115" rx="8" fill="#9a3412" stroke="#fb923c"/>
+    <text x="115" y="710" fill="#fed7aa" font-size="12" font-weight="bold">📊 SQLite</text>
+    <text x="115" y="728" fill="#fed7aa" font-size="10">upvearth_local.db</text>
+    <text x="115" y="744" fill="#fdba74" font-size="10">mockup/data/seed/</text>
+    <line x1="110" y1="752" x2="370" y2="752" stroke="#fb923c" stroke-width="0.5"/>
+    <text x="115" y="768" fill="#fed7aa" font-size="10">Tablas:</text>
+    <text x="125" y="784" fill="#fdba74" font-size="10">papers · pb_results</text>
+    <text x="125" y="799" fill="#fdba74" font-size="10">processing_jobs · ingestion_events</text>
+
+    <!-- Vector store -->
+    <rect x="395" y="690" width="280" height="115" rx="8" fill="#9a3412" stroke="#fb923c"/>
+    <text x="410" y="710" fill="#fed7aa" font-size="12" font-weight="bold">🧮 Vector store</text>
+    <text x="410" y="728" fill="#fed7aa" font-size="10">embeddings.npy + meta.json</text>
+    <text x="410" y="744" fill="#fdba74" font-size="10">mockup/data/seed/precomputed/</text>
+    <line x1="405" y1="752" x2="665" y2="752" stroke="#fb923c" stroke-width="0.5"/>
+    <text x="410" y="768" fill="#fed7aa" font-size="10">Matriz NumPy (N × 768)</text>
+    <text x="410" y="784" fill="#fdba74" font-size="10">Se carga al arrancar uvicorn</text>
+    <text x="410" y="799" fill="#fdba74" font-size="10">Búsqueda: matrix @ query.T</text>
+
+    <!-- PDFs uploads -->
+    <rect x="690" y="690" width="280" height="115" rx="8" fill="#9a3412" stroke="#fb923c"/>
+    <text x="705" y="710" fill="#fed7aa" font-size="12" font-weight="bold">📄 PDFs subidos</text>
+    <text x="705" y="728" fill="#fed7aa" font-size="10">uploads/</text>
+    <text x="705" y="744" fill="#fdba74" font-size="10">mockup/data/uploads/</text>
+    <line x1="700" y1="752" x2="960" y2="752" stroke="#fb923c" stroke-width="0.5"/>
+    <text x="705" y="768" fill="#fed7aa" font-size="10">{uuid}_{filename}.pdf</text>
+    <text x="705" y="784" fill="#fdba74" font-size="10">Max 30 MB · solo .pdf</text>
+    <text x="705" y="799" fill="#fdba74" font-size="10">Parseados con PyMuPDF</text>
+
+    <!-- Catálogo PB -->
+    <rect x="985" y="690" width="335" height="115" rx="8" fill="#9a3412" stroke="#fb923c"/>
+    <text x="1000" y="710" fill="#fed7aa" font-size="12" font-weight="bold">📑 Catálogo Planetary Boundaries</text>
+    <text x="1000" y="728" fill="#fed7aa" font-size="10">pb_reference.csv</text>
+    <text x="1000" y="744" fill="#fdba74" font-size="10">corpus_PB/data/  (read-only)</text>
+    <line x1="995" y1="752" x2="1315" y2="752" stroke="#fb923c" stroke-width="0.5"/>
+    <text x="1000" y="768" fill="#fed7aa" font-size="10">9 PBs · pb_code · pb_name</text>
+    <text x="1000" y="784" fill="#fdba74" font-size="10">short_definition · core_keywords</text>
+    <text x="1000" y="799" fill="#fdba74" font-size="10">applied_keywords_upv</text>
+  </g>
+
+</svg>
+
+<div class="card">
+  <h3>Lo que NO está corriendo (aunque exista en el repo)</h3>
+  <div class="grid2">
+    <div>
+      <b>❌ Docker / Docker Compose</b><br>
+      Existe <code>docker-compose.yml</code> con 5 servicios, pero la máquina no soporta Docker.
+    </div>
+    <div>
+      <b>❌ PostgreSQL</b><br>
+      <code>psycopg2-binary</code> está en requirements pero SQLAlchemy abre SQLite local.
+    </div>
+    <div>
+      <b>❌ Nginx</b><br>
+      El frontend Next.js hace de proxy al backend mediante rewrites internos.
+    </div>
+    <div>
+      <b>❌ vLLM / servidor de chat separado</b><br>
+      No hay nada en :8001. El chat reusa el mismo Ollama via API OpenAI-compatible.
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- DIAGRAMA 2: FLUJO DE UPLOAD DE PAPER                                   -->
+<!-- ====================================================================== -->
+
+<h2>2 · Proceso: subir un PDF y clasificarlo en un Planetary Boundary</h2>
+
+<svg viewBox="0 0 1400 1050" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#34d399"/>
+    </marker>
+  </defs>
+
+  <!-- Columnas verticales (lifelines) -->
+  <g font-size="13" font-weight="bold" text-anchor="middle">
+    <rect x="60"   y="30" width="160" height="36" rx="6" fill="#1e293b" stroke="#64748b"/>
+    <text x="140" y="54" fill="#e2e8f0">USUARIO</text>
+
+    <rect x="280"  y="30" width="160" height="36" rx="6" fill="#1e3a5f" stroke="#3b82f6"/>
+    <text x="360" y="54" fill="#93c5fd">FRONTEND</text>
+
+    <rect x="500"  y="30" width="160" height="36" rx="6" fill="#14532d" stroke="#22c55e"/>
+    <text x="580" y="54" fill="#86efac">BACKEND</text>
+
+    <rect x="720"  y="30" width="160" height="36" rx="6" fill="#713f12" stroke="#facc15"/>
+    <text x="800" y="54" fill="#fde68a">SPECTER (RAM)</text>
+
+    <rect x="940"  y="30" width="160" height="36" rx="6" fill="#3b0764" stroke="#a855f7"/>
+    <text x="1020" y="54" fill="#d8b4fe">OLLAMA</text>
+
+    <rect x="1160" y="30" width="200" height="36" rx="6" fill="#7c2d12" stroke="#f97316"/>
+    <text x="1260" y="54" fill="#fed7aa">DISCO (SQLite/FS)</text>
+  </g>
+
+  <!-- Líneas verticales -->
+  <line x1="140" y1="66" x2="140" y2="1020" stroke="#475569" stroke-dasharray="4 4"/>
+  <line x1="360" y1="66" x2="360" y2="1020" stroke="#475569" stroke-dasharray="4 4"/>
+  <line x1="580" y1="66" x2="580" y2="1020" stroke="#475569" stroke-dasharray="4 4"/>
+  <line x1="800" y1="66" x2="800" y2="1020" stroke="#475569" stroke-dasharray="4 4"/>
+  <line x1="1020" y1="66" x2="1020" y2="1020" stroke="#475569" stroke-dasharray="4 4"/>
+  <line x1="1260" y1="66" x2="1260" y2="1020" stroke="#475569" stroke-dasharray="4 4"/>
+
+  <!-- Paso 1: usuario arrastra PDF -->
+  <line x1="140" y1="90" x2="360" y2="90" stroke="#34d399" stroke-width="2" marker-end="url(#arrow2)"/>
+  <text x="250" y="82" text-anchor="middle" fill="#a9c5b7" font-size="11">arrastra PDF a /upload</text>
+
+  <!-- Paso 2: POST /uploads/pdf -->
+  <line x1="360" y1="130" x2="580" y2="130" stroke="#34d399" stroke-width="2" marker-end="url(#arrow2)"/>
+  <text x="470" y="122" text-anchor="middle" fill="#a9c5b7" font-size="11">POST /api/v1/uploads/pdf</text>
+  <text x="470" y="146" text-anchor="middle" fill="#a9c5b7" font-size="10">FormData(file)</text>
+
+  <!-- Validación y save -->
+  <rect x="540" y="160" width="80" height="50" rx="4" fill="#16a34a" opacity="0.4"/>
+  <text x="580" y="180" text-anchor="middle" fill="#dcfce7" font-size="11">validate</text>
+  <text x="580" y="200" text-anchor="middle" fill="#dcfce7" font-size="11">.pdf, ≤30MB</text>
+
+  <!-- Guardar PDF -->
+  <line x1="580" y1="225" x2="1260" y2="225" stroke="#34d399" stroke-width="2" marker-end="url(#arrow2)"/>
+  <text x="900" y="217" text-anchor="middle" fill="#a9c5b7" font-size="11">save PDF a data/uploads/{uuid}_{name}.pdf</text>
+
+  <!-- Crear job -->
+  <line x1="580" y1="260" x2="1260" y2="260" stroke="#34d399" stroke-width="2" marker-end="url(#arrow2)"/>
+  <text x="900" y="252" text-anchor="middle" fill="#a9c5b7" font-size="11">INSERT processing_jobs (status='pending')</text>
+
+  <!-- Respuesta inmediata -->
+  <line x1="580" y1="295" x2="360" y2="295" stroke="#34d399" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrow2)"/>
+  <text x="470" y="287" text-anchor="middle" fill="#a9c5b7" font-size="11">{ job_id, status }</text>
+
+  <!-- ¡INICIA BACKGROUND TASK! -->
+  <rect x="450" y="320" width="260" height="30" rx="4" fill="#22c55e" opacity="0.3"/>
+  <text x="580" y="340" text-anchor="middle" fill="#bbf7d0" font-size="12" font-weight="bold">⚙️ BackgroundTask · _run_pipeline()</text>
+
+  <!-- Stage 1: parse_pdf -->
+  <rect x="450" y="365" width="260" height="40" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="580" y="382" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Stage 1 · parse_pdf (10%)</text>
+  <text x="580" y="397" text-anchor="middle" fill="#cfe7d9" font-size="10">fitz extrae texto del PDF</text>
+
+  <!-- Stage 2: extract_abstract -->
+  <rect x="450" y="415" width="260" height="40" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="580" y="432" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Stage 2 · extract_abstract (25%)</text>
+  <text x="580" y="447" text-anchor="middle" fill="#cfe7d9" font-size="10">heurística detecta sección "Abstract"</text>
+
+  <!-- Stage 3: clean_text -->
+  <rect x="450" y="465" width="260" height="40" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="580" y="482" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Stage 3 · clean_text (35%)</text>
+  <text x="580" y="497" text-anchor="middle" fill="#cfe7d9" font-size="10">normalize + clean → ¿len &gt; 500?</text>
+
+  <!-- Stage 5: embedding → SPECTER -->
+  <rect x="450" y="525" width="260" height="40" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="580" y="542" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Stage 5 · generate_embedding (55%)</text>
+  <line x1="710" y1="545" x2="800" y2="545" stroke="#facc15" stroke-width="2" marker-end="url(#arrow2)"/>
+  <rect x="730" y="570" width="140" height="35" rx="4" fill="#713f12" stroke="#facc15"/>
+  <text x="800" y="588" text-anchor="middle" fill="#fde68a" font-size="11">SPECTER.encode()</text>
+  <text x="800" y="600" text-anchor="middle" fill="#fde68a" font-size="9">vector 768-d normalizado L2</text>
+
+  <!-- Stage 6: similarity_search -->
+  <rect x="450" y="620" width="260" height="40" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="580" y="637" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Stage 6 · similarity_search (65%)</text>
+  <text x="580" y="652" text-anchor="middle" fill="#cfe7d9" font-size="10">cosine top-8 contra matriz corpus</text>
+
+  <!-- Stage 7: pb_scoring -->
+  <rect x="450" y="670" width="260" height="40" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="580" y="687" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Stage 7 · pb_scoring (78%)</text>
+  <text x="580" y="702" text-anchor="middle" fill="#cfe7d9" font-size="10">cosine vs 9 firmas PB (CSV)</text>
+
+  <!-- Stage 8: llm_reasoning → Ollama -->
+  <rect x="450" y="725" width="260" height="40" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="580" y="742" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Stage 8 · llm_reasoning (85%)</text>
+  <line x1="710" y1="745" x2="1020" y2="745" stroke="#c084fc" stroke-width="2" marker-end="url(#arrow2)"/>
+  <rect x="940" y="770" width="160" height="50" rx="4" fill="#3b0764" stroke="#a855f7"/>
+  <text x="1020" y="788" text-anchor="middle" fill="#d8b4fe" font-size="11">qwen2.5:14b</text>
+  <text x="1020" y="803" text-anchor="middle" fill="#d8b4fe" font-size="9">JSON: primary_pb,</text>
+  <text x="1020" y="815" text-anchor="middle" fill="#d8b4fe" font-size="9">secondary_pbs, reasoning</text>
+  <line x1="1020" y1="825" x2="710" y2="760" stroke="#c084fc" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow2)"/>
+
+  <!-- Stage 9: summarize -->
+  <rect x="450" y="835" width="260" height="40" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="580" y="852" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Stage 9 · summarize (92%)</text>
+  <text x="580" y="867" text-anchor="middle" fill="#cfe7d9" font-size="10">resumen extractivo del abstract</text>
+
+  <!-- Stage 10: persist -->
+  <rect x="450" y="885" width="260" height="40" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="580" y="902" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Stage 10 · persist (100%)</text>
+  <line x1="710" y1="905" x2="1260" y2="905" stroke="#34d399" stroke-width="2" marker-end="url(#arrow2)"/>
+  <text x="990" y="897" text-anchor="middle" fill="#a9c5b7" font-size="10">INSERT paper + pb_result</text>
+
+  <!-- Frontend hace polling -->
+  <line x1="360" y1="945" x2="580" y2="945" stroke="#34d399" stroke-width="2" stroke-dasharray="2 2" marker-end="url(#arrow2)"/>
+  <text x="470" y="937" text-anchor="middle" fill="#a9c5b7" font-size="10">polling GET /jobs/{id} cada 2s</text>
+
+  <!-- Resultado final -->
+  <line x1="580" y1="985" x2="360" y2="985" stroke="#34d399" stroke-width="2.5" marker-end="url(#arrow2)"/>
+  <text x="470" y="977" text-anchor="middle" fill="#34d399" font-size="11" font-weight="bold">GET /jobs/{id}/result → completo</text>
+
+  <line x1="360" y1="1010" x2="140" y2="1010" stroke="#34d399" stroke-width="2.5" marker-end="url(#arrow2)"/>
+  <text x="250" y="1003" text-anchor="middle" fill="#34d399" font-size="11" font-weight="bold">render: paper + PB + similares</text>
+
+</svg>
+
+<div class="card">
+  <h3>Cada Stage emite un IngestionEvent (auditoría)</h3>
+  Cada paso del pipeline guarda en la tabla <code>ingestion_events</code> un registro con: <code>event_type</code>, <code>event_payload</code> (modelo usado, chars procesados, duración, etc.) y timestamp. Esto permite reconstruir <b>QUÉ pasó en CADA paper</b> aunque pase tiempo, y debuggear errores específicos sin tener que reprocesar.
+</div>
+
+<!-- ====================================================================== -->
+<!-- DIAGRAMA 3: FLUJO DE CHAT RAG                                          -->
+<!-- ====================================================================== -->
+
+<h2>3 · Proceso: chat RAG · responder pregunta sobre un paper</h2>
+
+<svg viewBox="0 0 1400 820" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#34d399"/>
+    </marker>
+  </defs>
+
+  <!-- Lifelines -->
+  <g font-size="13" font-weight="bold" text-anchor="middle">
+    <rect x="60"   y="30" width="160" height="36" rx="6" fill="#1e293b" stroke="#64748b"/>
+    <text x="140" y="54" fill="#e2e8f0">USUARIO</text>
+
+    <rect x="280"  y="30" width="160" height="36" rx="6" fill="#1e3a5f" stroke="#3b82f6"/>
+    <text x="360" y="54" fill="#93c5fd">FRONTEND</text>
+
+    <rect x="500"  y="30" width="260" height="36" rx="6" fill="#14532d" stroke="#22c55e"/>
+    <text x="630" y="54" fill="#86efac">BACKEND · chat_service</text>
+
+    <rect x="820"  y="30" width="200" height="36" rx="6" fill="#7c2d12" stroke="#f97316"/>
+    <text x="920" y="54" fill="#fed7aa">SQLite + npy + CSV</text>
+
+    <rect x="1080" y="30" width="280" height="36" rx="6" fill="#3b0764" stroke="#a855f7"/>
+    <text x="1220" y="54" fill="#d8b4fe">OLLAMA · qwen2.5:14b</text>
+  </g>
+
+  <line x1="140" y1="66" x2="140" y2="800" stroke="#475569" stroke-dasharray="4 4"/>
+  <line x1="360" y1="66" x2="360" y2="800" stroke="#475569" stroke-dasharray="4 4"/>
+  <line x1="630" y1="66" x2="630" y2="800" stroke="#475569" stroke-dasharray="4 4"/>
+  <line x1="920" y1="66" x2="920" y2="800" stroke="#475569" stroke-dasharray="4 4"/>
+  <line x1="1220" y1="66" x2="1220" y2="800" stroke="#475569" stroke-dasharray="4 4"/>
+
+  <!-- 1. usuario pregunta -->
+  <line x1="140" y1="100" x2="360" y2="100" stroke="#34d399" stroke-width="2" marker-end="url(#arrow3)"/>
+  <text x="250" y="92" text-anchor="middle" fill="#a9c5b7" font-size="11">"¿Qué métricas usa este paper?"</text>
+
+  <!-- 2. POST /chat/stream -->
+  <line x1="360" y1="135" x2="630" y2="135" stroke="#34d399" stroke-width="2" marker-end="url(#arrow3)"/>
+  <text x="495" y="127" text-anchor="middle" fill="#a9c5b7" font-size="11">POST /chat/stream</text>
+  <text x="495" y="151" text-anchor="middle" fill="#a9c5b7" font-size="10">{ question, paper_id }</text>
+
+  <!-- BLOQUE RETRIEVAL -->
+  <rect x="495" y="170" width="270" height="20" fill="#22c55e" opacity="0.25"/>
+  <text x="630" y="185" text-anchor="middle" fill="#bbf7d0" font-size="11" font-weight="bold">▼ build_context_pack() ▼</text>
+
+  <!-- Retriever 1: analytics -->
+  <line x1="630" y1="210" x2="920" y2="210" stroke="#fb923c" stroke-width="2" marker-end="url(#arrow3)"/>
+  <text x="770" y="202" text-anchor="middle" fill="#fdba74" font-size="10">analytics_retriever · SELECT KPIs</text>
+  <line x1="920" y1="230" x2="630" y2="230" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow3)"/>
+  <text x="770" y="245" text-anchor="middle" fill="#fdba74" font-size="10">snapshot del corpus</text>
+
+  <!-- Retriever 2: paper -->
+  <line x1="630" y1="270" x2="920" y2="270" stroke="#fb923c" stroke-width="2" marker-end="url(#arrow3)"/>
+  <text x="770" y="262" text-anchor="middle" fill="#fdba74" font-size="10">paper_retriever · SELECT paper + pb_result + similares (.npy)</text>
+  <line x1="920" y1="290" x2="630" y2="290" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow3)"/>
+  <text x="770" y="305" text-anchor="middle" fill="#fdba74" font-size="10">título, abstract, PB, top-5 similares</text>
+
+  <!-- Retriever 3: pb_retriever -->
+  <line x1="630" y1="330" x2="920" y2="330" stroke="#fb923c" stroke-width="2" marker-end="url(#arrow3)"/>
+  <text x="770" y="322" text-anchor="middle" fill="#fdba74" font-size="10">pb_retriever · lee pb_reference.csv</text>
+  <line x1="920" y1="350" x2="630" y2="350" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow3)"/>
+  <text x="770" y="365" text-anchor="middle" fill="#fdba74" font-size="10">fichas de los PBs relevantes</text>
+
+  <!-- Retriever 4: methodology -->
+  <rect x="500" y="385" width="260" height="35" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="630" y="403" text-anchor="middle" fill="#86efac" font-size="11">methodology_retriever (hardcoded)</text>
+  <text x="630" y="415" text-anchor="middle" fill="#cfe7d9" font-size="9">snippets sobre SPECTER, filtro 500c, RAG</text>
+
+  <!-- Render context block -->
+  <rect x="500" y="435" width="260" height="50" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="630" y="453" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">render_context_block(max=6000ch)</text>
+  <text x="630" y="468" text-anchor="middle" fill="#cfe7d9" font-size="10">markdown compacto:</text>
+  <text x="630" y="481" text-anchor="middle" fill="#cfe7d9" font-size="9">## CORPUS · ## PAPER · ## PB · ## SIMILARES · ## MÉTODO</text>
+
+  <!-- Build messages -->
+  <rect x="500" y="500" width="260" height="55" rx="4" fill="#14532d" stroke="#22c55e"/>
+  <text x="630" y="518" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">build_messages()</text>
+  <text x="630" y="533" text-anchor="middle" fill="#cfe7d9" font-size="10">[ SYSTEM_PROMPT (scope UPV-EARTH),</text>
+  <text x="630" y="546" text-anchor="middle" fill="#cfe7d9" font-size="10">  USER (pregunta + contexto markdown) ]</text>
+
+  <!-- LLM call -->
+  <line x1="760" y1="580" x2="1080" y2="580" stroke="#c084fc" stroke-width="2.5" marker-end="url(#arrow3)"/>
+  <text x="920" y="572" text-anchor="middle" fill="#c4b5fd" font-size="11" font-weight="bold">POST /v1/chat/completions</text>
+  <text x="920" y="595" text-anchor="middle" fill="#c4b5fd" font-size="10">stream=true · temp=0.2 · max_tokens=512</text>
+
+  <!-- LLM responde tokens -->
+  <rect x="1090" y="615" width="260" height="35" rx="4" fill="#3b0764" stroke="#a855f7"/>
+  <text x="1220" y="633" text-anchor="middle" fill="#d8b4fe" font-size="11">qwen2.5:14b genera tokens</text>
+  <text x="1220" y="645" text-anchor="middle" fill="#d8b4fe" font-size="9">SSE: data: {"choices":[{"delta":...}]}</text>
+
+  <!-- Stream tokens hacia atrás -->
+  <line x1="1080" y1="675" x2="760" y2="675" stroke="#c084fc" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrow3)"/>
+  <text x="920" y="667" text-anchor="middle" fill="#c4b5fd" font-size="10">token 1, token 2, ... (streaming)</text>
+
+  <!-- Backend → Frontend SSE -->
+  <line x1="500" y1="710" x2="360" y2="710" stroke="#34d399" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrow3)"/>
+  <text x="425" y="702" text-anchor="middle" fill="#a9c5b7" font-size="10">SSE → cliente</text>
+  <text x="425" y="725" text-anchor="middle" fill="#a9c5b7" font-size="9">{type:"meta"} → {type:"token"}×N → {type:"done"}</text>
+
+  <!-- Frontend → usuario tokens -->
+  <line x1="360" y1="755" x2="140" y2="755" stroke="#34d399" stroke-width="2.5" marker-end="url(#arrow3)"/>
+  <text x="250" y="747" text-anchor="middle" fill="#34d399" font-size="11" font-weight="bold">render token a token</text>
+  <text x="250" y="772" text-anchor="middle" fill="#a9c5b7" font-size="10">(efecto typewriter)</text>
+
+</svg>
+
+<div class="card">
+  <h3>Por qué este chatbot es RAG y no agentic / fine-tuning</h3>
+  <ul style="margin: 6px 0 0 16px; padding: 0;">
+    <li><b>El LLM NO decide qué buscar</b> — el backend recupera el contexto antes de hablarle al modelo.</li>
+    <li><b>El LLM NO genera PBs ni similares</b> — eso ya está calculado en BBDD y se le pasa como contexto.</li>
+    <li><b>Trazabilidad</b>: cada respuesta del LLM está "anclada" al texto que se le inyectó. Sin alucinaciones porque solo dispone de ese contexto.</li>
+    <li><b>Actualizable</b>: añadir papers nuevos al índice tarda segundos, no requiere re-entrenar nada.</li>
+    <li><b>Mismo modelo que el pipeline</b> (qwen2.5:14b en Ollama) → un solo modelo residente en VRAM, dos modos de uso.</li>
+  </ul>
+</div>
+
+<!-- ====================================================================== -->
+<!-- TABLA RESUMEN STACK                                                    -->
+<!-- ====================================================================== -->
+
+<h2>4 · Stack tecnológico — versiones reales en ejecución</h2>
+
+<div class="card">
+  <div class="grid2">
+    <div>
+      <h3>🟦 Frontend</h3>
+      <ul style="margin: 0; padding-left: 16px;">
+        <li>Next.js 15.2.4 (App Router, SSR híbrido)</li>
+        <li>React 19.0.0</li>
+        <li>TypeScript 5.8.2</li>
+        <li>Tailwind CSS 3.4.17</li>
+        <li>Recharts 2.15.2</li>
+      </ul>
+      <h3 style="margin-top: 14px;">🟩 Backend</h3>
+      <ul style="margin: 0; padding-left: 16px;">
+        <li>Python 3.11</li>
+        <li>FastAPI 0.115.12</li>
+        <li>Uvicorn 0.34.1 (ASGI, single worker)</li>
+        <li>SQLAlchemy 2.0.40</li>
+        <li>Pydantic 2.11.3 + pydantic-settings 2.8.1</li>
+        <li>PyMuPDF 1.25.5 (fitz)</li>
+        <li>NumPy 2.2.4 + pandas 2.2.3</li>
+        <li>sentence-transformers 3.4.1</li>
+        <li>requests 2.32.3 (cliente HTTP a Ollama)</li>
+        <li>psutil 7.0.0 (métricas runtime)</li>
+      </ul>
+    </div>
+    <div>
+      <h3>🟧 Almacenamiento</h3>
+      <ul style="margin: 0; padding-left: 16px;">
+        <li>SQLite (single file <code>upvearth_local.db</code>)</li>
+        <li>NumPy <code>.npy</code> en RAM (vector store)</li>
+        <li>Filesystem local para PDFs subidos</li>
+        <li>CSV plano para catálogo PB</li>
+      </ul>
+      <h3 style="margin-top: 14px;">🟨 ML / Embeddings</h3>
+      <ul style="margin: 0; padding-left: 16px;">
+        <li>Modelo: <code>sentence-transformers/allenai-specter</code></li>
+        <li>Dimensión: <b>768</b> (heredado BERT-base)</li>
+        <li>Max input: 512 tokens</li>
+        <li>Normalización: L2</li>
+        <li>Similitud: coseno = producto escalar</li>
+      </ul>
+      <h3 style="margin-top: 14px;">🟪 LLM</h3>
+      <ul style="margin: 0; padding-left: 16px;">
+        <li>Runtime: Ollama (latest)</li>
+        <li>Modelo activo: <code>qwen2.5:14b</code> (9 GB Q4)</li>
+        <li>Context window: 32k tokens</li>
+        <li>Modo pipeline: <code>/api/generate</code>, temp 0.0, JSON</li>
+        <li>Modo chat: <code>/v1/chat/completions</code>, temp 0.2, SSE</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<p style="text-align: center; color: #64748b; margin-top: 40px; font-size: 11px;">
+  UPV-EARTH · Proyecto III · ETSINF UPV — diagramas técnicos para defensa del mockup
+</p>
+
+</body>
+</html>

@@ -1,34 +1,34 @@
 {
   "top1": {
-    "micro_f1": 0.30697674418604654,
-    "macro_f1": 0.25551152334778066,
-    "jaccard_samples": 0.23059360730593606,
-    "exact_match_ratio": 0.0821917808219178,
-    "avg_true_labels": 1.9452054794520548,
+    "micro_f1": 0.298932384341637,
+    "macro_f1": 0.30543772179737094,
+    "jaccard_samples": 0.22333333333333333,
+    "exact_match_ratio": 0.16666666666666666,
+    "avg_true_labels": 0.8733333333333333,
     "avg_pred_labels": 1.0,
-    "abs_cardinality_error": 0.9452054794520548,
-    "lrap": 0.605709706959707
+    "abs_cardinality_error": 0.1266666666666667,
+    "lrap": 0.6168991502324838
   },
   "top2": {
-    "micro_f1": 0.3888888888888889,
-    "macro_f1": 0.30839816311772533,
-    "jaccard_samples": 0.2819634703196347,
-    "exact_match_ratio": 0.0547945205479452,
-    "avg_true_labels": 1.9452054794520548,
+    "micro_f1": 0.3480278422273782,
+    "macro_f1": 0.37304192664019664,
+    "jaccard_samples": 0.22666666666666666,
+    "exact_match_ratio": 0.05333333333333334,
+    "avg_true_labels": 0.8733333333333333,
     "avg_pred_labels": 2.0,
-    "abs_cardinality_error": 0.0547945205479452,
-    "lrap": 0.605709706959707
+    "abs_cardinality_error": 1.1266666666666667,
+    "lrap": 0.6168991502324838
   },
   "threshold_delta": {
-    "tau": 0.2,
-    "delta": 0.01,
-    "micro_f1": 0.40441176470588236,
-    "macro_f1": 0.30872643030079105,
-    "jaccard_samples": 0.2923679060665362,
-    "exact_match_ratio": 0.0821917808219178,
-    "avg_true_labels": 1.9452054794520548,
-    "avg_pred_labels": 1.7808219178082192,
-    "abs_cardinality_error": 0.1643835616438356,
-    "lrap": 0.605709706959707
+    "tau": 0.75,
+    "delta": 0.02,
+    "micro_f1": 0.33970276008492567,
+    "macro_f1": 0.3539268978546584,
+    "jaccard_samples": 0.20990476190476193,
+    "exact_match_ratio": 0.08666666666666667,
+    "avg_true_labels": 0.8733333333333333,
+    "avg_pred_labels": 2.2666666666666666,
+    "abs_cardinality_error": 1.3933333333333333,
+    "lrap": 0.6168991502324838
   }
 }
