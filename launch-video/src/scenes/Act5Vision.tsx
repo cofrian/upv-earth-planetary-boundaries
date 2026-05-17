@@ -76,7 +76,7 @@ const BackdropScreen: React.FC<{src: string; index: number; total: number; scene
 
 export const Act5Vision: React.FC = () => {
   const frame = useCurrentFrame();
-  const SCENE = 360; // 12s
+  const SCENE = 300; // 10s
 
   const fadeIn = interpolate(frame, [0, 22], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const fadeOut = interpolate(frame, [SCENE - 22, SCENE], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});

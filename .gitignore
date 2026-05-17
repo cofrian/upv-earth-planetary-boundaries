@@ -47,3 +47,6 @@ yarn-error.log*
 # Datos locales
 /muestra_pdfs/
 /data/corpus/
+
+# Entregables pesados fuera de GitHub (usar enlace externo o LFS)
+/anterior_entrega/proyecto_III.pptx

@@ -25,8 +25,7 @@ export const ProjectWatermark: React.FC = () => {
           lineHeight: 1.4,
         }}
       >
-        <div>PROYII8</div>
-        <div>UPV EARTH</div>
+        <div>PROYIII8-UPV EARTH</div>
       </div>
     </AbsoluteFill>
   );

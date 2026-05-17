@@ -26,12 +26,12 @@ export const Act1Hook: React.FC = () => {
       <div
         style={{
           color: colors.textMain,
-          fontSize: type.hook.size,
+          fontSize: type.hook.size * 0.85,
           fontWeight: type.hook.weight,
           letterSpacing: type.hook.tracking,
-          lineHeight: 1.05,
+          lineHeight: 1.15,
           textAlign: 'center',
-          maxWidth: 1500,
+          maxWidth: 1200,
         }}
       >
         {TEXT.split('').map((ch, i) => {

@@ -12,17 +12,17 @@ import papersCursor from '../../public/recordings/03-papers.cursor.json';
 import detailCursor from '../../public/recordings/04-paper-detail.cursor.json';
 import chatCursor from '../../public/recordings/06-chat-rag.cursor.json';
 
-// Frame budget (Act 4 total: 3840 frames = 128s @ 30fps)
+// Frame budget (Act 4 total: 3708 frames = 123.6s @ 30fps)
 //   1 Dashboard      540  (18s)
 //   2 Analysis       462  (15.4s)
 //   3 Papers         308  (10.3s)
 //   4 Paper detail   462  (15.4s)
 //   5 Upload PDF     768  (25.6s · jump-cut over the wait, long dwell on results)
 //   6 Chat RAG       576  (19.2s)
-//   7 Stack          832  (27.7s · long dwell to explain the architecture)
-//   subtotal:       3948
+//   7 Stack          700  (23.3s · reduced dwell on architecture)
+//   subtotal:       3816
 //   – 6 crossfades of 18 frames: 108
-//   TOTAL:          3840 ✓
+//   TOTAL:          3708 ✓
 const SCHEDULE = [
   {dur: 540, gap: 18},
   {dur: 462, gap: 18},
@@ -30,7 +30,7 @@ const SCHEDULE = [
   {dur: 462, gap: 18},
   {dur: 768, gap: 18},
   {dur: 576, gap: 18},
-  {dur: 832, gap: 0},
+  {dur: 700, gap: 0},
 ];
 
 function buildStarts() {

@@ -7,12 +7,12 @@ loadFont('normal', {weights: ['400', '500'], subsets: ['latin']});
 
 const WORDMARK = 'UPV-EARTH';
 const TAG = 'Available now.';
-const PROJECT_CODE = 'PROYII8 - UPV EARTH';
+const PROJECT_CODE = 'PROYIII8-UPV EARTH';
 
 export const Act6CTA: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const SCENE = 420; // 14s
+  const SCENE = 330; // 11s
 
   const sLogo = spring({frame, fps, config: motion.reveal});
   const logoScale = interpolate(sLogo, [0, 1], [0.94, 1]);
