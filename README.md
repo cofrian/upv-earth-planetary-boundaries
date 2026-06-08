@@ -2,6 +2,111 @@
 
 Estado actual del trabajo preparado para subir al repositorio del proyecto.
 
+---
+
+## Arranque rápido en local (2 comandos)
+
+La plataforma web (FastAPI + Next.js + Ollama) se levanta en cualquier máquina
+con dos comandos: **set-up** y **launch**. Los scripts detectan el SO, comprueban
+las herramientas que faltan, las instalan, preparan el entorno Python/Node y dejan
+todo listo para arrancar.
+
+| Sistema operativo | Comando de set-up | Comando de launch |
+|---|---|---|
+| **Linux**   | `./setup.sh`   | `./launch.sh`   |
+| **macOS**   | `./setup.sh`   | `./launch.sh`   |
+| **Windows** | `.\setup.ps1`  | `.\launch.ps1`  |
+
+Tras ejecutar `launch`, abre [http://localhost:3000](http://localhost:3000) en el navegador.
+
+### Qué hace `set-up`
+
+Es idempotente: si algo ya está instalado lo detecta y continúa. En orden:
+
+1. **Detecta el SO** y el gestor de paquetes (`apt`/`dnf`/`pacman`/`zypper` en Linux,
+   Homebrew en macOS, `winget` en Windows).
+2. **Python 3.11**: comprueba la versión. Si falta, lo instala (en Ubuntu añade el
+   PPA `deadsnakes` si hace falta).
+3. **Node.js 20+**: comprueba la versión y lo instala desde NodeSource/Homebrew/winget.
+4. **Ollama**: instala el runtime LLM y lo levanta como servicio en segundo plano.
+5. **Entorno virtual de Python** (`.venv/`) y dependencias del backend
+   (`mockup/backend/requirements.txt`).
+6. **Dependencias del frontend** con `npm install` en `mockup/frontend/`.
+7. **Variables de entorno**: copia `mockup/.env.example` a `mockup/.env` si no existe.
+8. **Modelo LLM**: descarga `qwen2.5:14b` con `ollama pull` (~9 GB, una sola vez).
+
+> El modelo Ollama se puede cambiar exportando `OLLAMA_MODEL=otro-modelo` antes
+> de ejecutar `setup`.
+
+### Qué hace `launch`
+
+1. **Preflight**: comprueba que `setup` se ejecutó (venv y `node_modules` presentes).
+2. Arranca **Ollama** si no está corriendo (puerto `11434`).
+3. Arranca el **backend FastAPI** con `uvicorn` (puerto `8000`), con la BD SQLite
+   local en `mockup/data/seed/upvearth_local.db` y todas las variables de
+   entorno necesarias.
+4. Arranca el **frontend Next.js** en modo desarrollo (puerto `3000`).
+5. Espera a que los tres servicios respondan a sus *health checks* y muestra las URLs.
+6. Se queda en foreground vigilando los procesos: `Ctrl+C` los detiene todos limpiamente.
+
+Comandos auxiliares:
+
+```bash
+./launch.sh stop      # detiene todo lo arrancado por el script
+./launch.sh status    # estado de los tres servicios
+./launch.sh restart   # reinicia toda la pila
+```
+
+Equivalente en Windows: `.\launch.ps1 stop|status|restart`.
+
+### Requisitos previos por SO
+
+Los scripts intentan instalar todo, pero estos elementos los gestiona el SO
+y deben existir antes del primer `setup`:
+
+- **Linux**: `curl` y `sudo` (suelen venir preinstalados). El usuario debe poder
+  ejecutar `sudo` para instalar Python, Node y Ollama.
+- **macOS**: nada especial; si falta Homebrew, el script lo instala.
+- **Windows 10/11**: `winget` (App Installer, gratis en Microsoft Store). Antes
+  de la primera ejecución habilita la ejecución de scripts:
+  ```powershell
+  Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+  ```
+
+### Estructura de runtime
+
+Logs y PIDs viven en `.runtime/` (no se commitea):
+
+```
+.runtime/
+├── logs/
+│   ├── ollama.log
+│   ├── backend.log
+│   └── frontend.log
+└── pids/
+    ├── ollama.pid
+    ├── backend.pid
+    └── frontend.pid
+```
+
+### Resolución de problemas
+
+| Síntoma | Causa habitual | Cómo resolver |
+|---|---|---|
+| `setup` falla pidiendo `python3.11` | Versión no disponible en repos | Linux Ubuntu: el script añade el PPA `deadsnakes` automáticamente. Otros: instala Python 3.11 a mano y relanza. |
+| `setup` se cuelga al descargar `qwen2.5:14b` | Modelo grande (~9 GB) | Espera o cancela y vuelve a lanzar; `ollama pull` reanuda. |
+| `launch.sh` dice "venv ausente" | Falta ejecutar `setup` | Ejecuta `./setup.sh` antes. |
+| Puerto 3000/8000 ocupado | Otro proceso usando el puerto | `./launch.sh stop` o cambia los puertos: `BACKEND_PORT=8080 FRONTEND_PORT=3001 ./launch.sh`. |
+| Backend arranca pero el chatbot dice "no disponible" | Ollama no respondió o no tiene el modelo | `ollama list` para verificar; `ollama pull qwen2.5:14b` para descargar. |
+
+### Despliegue con Docker (alternativa)
+
+Si prefieres contenedores en lugar de instalación local, `mockup/docker-compose.yml`
+levanta la pila completa (Postgres + Ollama + backend + frontend + Nginx).
+Detalles en [mockup/README.md](mockup/README.md).
+
+---
+
 ## Documentación
 
 - Guía SSH + VS Code: [docs/guia-ssh-vscode.md](docs/guia-ssh-vscode.md)
