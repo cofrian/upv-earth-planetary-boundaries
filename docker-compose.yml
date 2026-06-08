@@ -1,0 +1,102 @@
+# =============================================================================
+# UPV-EARTH · pila contenerizada y autocontenida (independiente del SO)
+#
+#   docker compose up -d --build      -> construye y arranca toda la plataforma
+#   docker compose down               -> detiene y elimina los contenedores
+#
+# Una vez arriba, abre:  http://localhost:8080
+#
+# No requiere GPU. El backend usa la base de datos SQLite ya incluida y los
+# embeddings precalculados del repo. El LLM (Ollama) es opcional: se activa con
+#   docker compose --profile llm up -d
+# y, la primera vez, se descarga el modelo con:
+#   docker compose exec ollama ollama pull qwen2.5:14b
+# =============================================================================
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: mockup/backend/Dockerfile
+    image: upvearth-backend:local
+    restart: unless-stopped
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      # Persistencia local en SQLite (no necesita Postgres).
+      DATABASE_URL: sqlite:////app/data/seed/upvearth_local.db
+      UPLOAD_DIR: /app/data/uploads
+      PB_REFERENCE_CSV: /app/corpus_PB/data/pb_reference.csv
+      PRECOMPUTED_DIR: /app/data/seed/precomputed
+      EMBEDDINGS_MODEL_NAME: sentence-transformers/allenai-specter
+      CORS_ORIGINS: '["*"]'
+      # LLM opcional vía servicio ollama (perfil "llm").
+      LLM_ENABLED: "true"
+      OLLAMA_URL: http://ollama:11434/api/generate
+      OLLAMA_MODEL_NAME: ${OLLAMA_MODEL:-qwen2.5:14b}
+      LLM_TEMPERATURE: "0.0"
+      LLM_BASE_URL: http://ollama:11434/v1
+      LLM_MODEL: ${OLLAMA_MODEL:-qwen2.5:14b}
+      LLM_API_KEY: ollama
+      LLM_REQUEST_TIMEOUT: "180"
+      LLM_MAX_TOKENS: "512"
+      CHAT_TEMPERATURE: "0.2"
+      HF_HOME: /app/.cache/huggingface
+    volumes:
+      # Datos reales del repo (solo lectura) y zonas de escritura para uploads/seed.
+      - ./data/corpus:/app/data/corpus:ro
+      - ./corpus_PB:/app/corpus_PB:ro
+      - ./mockup/data/uploads:/app/data/uploads
+      - ./mockup/data/seed:/app/data/seed
+      - hf_cache:/app/.cache/huggingface
+    expose:
+      - "8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: mockup/frontend/Dockerfile
+    image: upvearth-frontend:local
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      # El servidor standalone de Next debe escuchar en todas las interfaces
+      # para que nginx (otro contenedor) pueda alcanzarlo.
+      HOSTNAME: 0.0.0.0
+      PORT: "3000"
+      # En navegador las llamadas son relativas y las enruta nginx.
+      NEXT_PUBLIC_API_BASE_URL: /api/v1
+      # En SSR el frontend habla con el backend por la red interna de Docker.
+      API_BASE_URL_INTERNAL: http://backend:8000/api/v1
+    depends_on:
+      backend:
+        condition: service_healthy
+    expose:
+      - "3000"
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./mockup/infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+
+  # ---------------------------------------------------------------------------
+  # LLM opcional. No arranca por defecto. Actívalo con:  --profile llm
+  # ---------------------------------------------------------------------------
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    profiles: ["llm"]
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  hf_cache:
+  ollama_data:

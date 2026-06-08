@@ -4,7 +4,85 @@ Estado actual del trabajo preparado para subir al repositorio del proyecto.
 
 ---
 
-## Arranque rápido en local (2 comandos)
+## Arranque con Docker (recomendado · independiente del SO)
+
+Toda la plataforma (backend FastAPI + frontend Next.js + Nginx) corre dentro de
+contenedores, así que **no depende del sistema operativo** ni de tener Python o
+Node instalados: solo necesitas Docker. Funciona igual en Windows, macOS y Linux.
+
+### Único requisito: Docker
+
+- **Windows / macOS**: instala [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+- **Linux**: instala Docker Engine + plugin Compose:
+  ```bash
+  sudo apt-get update && sudo apt-get install -y docker.io docker-compose-v2
+  sudo systemctl enable --now docker
+  sudo usermod -aG docker "$USER"   # luego cierra sesión y vuelve a entrar
+  ```
+
+### Lanzar la plataforma (un comando)
+
+Desde la raíz del repositorio:
+
+```bash
+docker compose up -d --build
+```
+
+Cuando termine, abre **[http://localhost:8080](http://localhost:8080)**.
+
+Eso construye y arranca tres contenedores:
+
+| Servicio | Imagen | Rol |
+|---|---|---|
+| `backend`  | `python:3.11-slim` | API FastAPI + pipeline PDF→PB (SQLite, sin GPU) |
+| `frontend` | `node:20-alpine`   | UI Next.js |
+| `nginx`    | `nginx:1.27-alpine`| Proxy inverso, publica todo en el puerto `8080` |
+
+La base de datos es **SQLite** (incluida en `mockup/data/seed/`) y los embeddings
+están **precalculados** en el repo, por lo que el dashboard, el explorador de
+papers y la búsqueda de similares funcionan nada más arrancar. No hace falta GPU.
+
+### Comandos útiles
+
+```bash
+docker compose ps          # estado de los contenedores
+docker compose logs -f     # logs en vivo de toda la pila
+docker compose down        # detener y eliminar los contenedores
+docker compose up -d --build   # reconstruir tras cambios de código
+```
+
+### Chatbot / LLM (opcional)
+
+El chatbot RAG usa un modelo servido por **Ollama**. Es opcional y no arranca por
+defecto (un modelo como `qwen2.5:14b` ocupa ~9 GB). El resto de la plataforma
+funciona sin él (la UI muestra "Chatbot no disponible"). Para activarlo:
+
+```bash
+# 1) arranca también el contenedor de Ollama
+docker compose --profile llm up -d
+
+# 2) descarga el modelo una sola vez
+docker compose exec ollama ollama pull qwen2.5:14b
+```
+
+Para usar otro modelo, exporta `OLLAMA_MODEL` antes de levantar la pila
+(por ejemplo `OLLAMA_MODEL=llama3.1:8b docker compose --profile llm up -d`).
+
+### Resolución de problemas (Docker)
+
+| Síntoma | Causa habitual | Cómo resolver |
+|---|---|---|
+| `permission denied ... docker.sock` | El usuario no está en el grupo `docker` | `sudo usermod -aG docker "$USER"` y reinicia la sesión. |
+| Puerto 8080 ocupado | Otro servicio usa el puerto | Cambia el mapeo en `docker-compose.yml` (`"8081:80"`). |
+| El primer `up` tarda mucho | Se descargan imágenes base y dependencias | Es normal solo la primera vez; las siguientes usan caché. |
+| Chatbot "no disponible" | Falta el perfil `llm` o el modelo | Arranca con `--profile llm` y `ollama pull`. |
+
+> Si prefieres ejecutarlo **sin Docker** (instalación nativa con dos comandos
+> `setup`/`launch`), consulta la sección siguiente.
+
+---
+
+## Arranque rápido en local sin Docker (2 comandos)
 
 La plataforma web (FastAPI + Next.js + Ollama) se levanta en cualquier máquina
 con dos comandos: **set-up** y **launch**. Los scripts detectan el SO, comprueban

@@ -1,0 +1,68 @@
+# =============================================================================
+# Contexto de build de Docker. El contexto es la raíz del repo, así que aquí
+# excluimos todo lo pesado o irrelevante para mantener los builds rápidos.
+# Los datos (corpus, seed DB, precomputed) se montan en runtime, no se copian.
+# =============================================================================
+
+# Control de versiones y metadatos
+.git
+.gitignore
+.claude
+.codex
+.cursor
+
+# Entornos / dependencias (se reinstalan dentro de la imagen)
+.venv
+venv
+env
+**/node_modules
+**/.next
+**/.turbo
+__pycache__
+**/__pycache__
+*.pyc
+
+# Runtime local (PIDs, logs, scripts host)
+/.runtime
+/setup.sh
+/setup.ps1
+/launch.sh
+/launch.ps1
+
+# Datos pesados: se montan como volúmenes en runtime (anclados a la raíz del
+# contexto para no afectar a mockup/backend/scripts ni a mockup/frontend).
+/data
+/mockup/data
+/muestra_pdfs
+/muestras
+/muestra_vieja
+/corpus_PB
+/nlp
+/docs
+/figures
+/figures_llm_y_agentes
+/launch-video
+/anterior_entrega
+/scripts
+
+# Notebooks, papers y artefactos de documentación
+*.ipynb
+*.tex
+*.bak
+
+# Multimedia y documentos pesados en la raíz del repo (no necesarios para el build)
+/*.mp3
+/*.jpeg
+/*.jpg
+/*.png
+/*.svg
+/*.pdf
+
+# Cachés de test/type-checkers
+**/.pytest_cache
+**/.mypy_cache
+*.tsbuildinfo
+
+# Mantener explícitamente los assets que el frontend SÍ necesita en el build
+!mockup/frontend/public
+!mockup/frontend/public/**
