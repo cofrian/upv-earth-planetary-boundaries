@@ -1,4 +1,4 @@
-export type MetricItem = {
+﻿export type MetricItem = {
   label: string;
   value: number;
 };
@@ -334,8 +334,4 @@ export type EmbeddingMapResponse = {
   returned: number;
 };
 
-export type PBYearMatrix = {
-  pbs: string[];
-  years: number[];
-  cells: { pb_code: string; year: number; value: number }[];
-};
+
