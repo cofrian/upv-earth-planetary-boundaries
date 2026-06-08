@@ -48,8 +48,8 @@ Fecha: 2026-04-19
 
 ### scripts/
 
-- scripts/aux/compare_sampling_methods.py
-- scripts/aux/prueba_luis.py
+- scripts/auxiliary/compare_sampling_methods.py
+- scripts/auxiliary/prueba_luis.py
 
 ### corpus y muestras
 
@@ -73,7 +73,7 @@ Fecha: 2026-04-19
 
 - Los CSV maestros del pipeline están centralizados en data/corpus.
 - Los activos de prompts están agrupados en prompts.
-- Los scripts auxiliares están agrupados en scripts/aux.
+- Los scripts auxiliares están agrupados en scripts/auxiliary.
 - Los scripts principales de extracción y EDA se mantienen en la raíz para compatibilidad.
 
 ## Pendiente opcional de limpieza

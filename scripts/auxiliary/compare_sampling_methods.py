@@ -3,7 +3,7 @@
 Script para comparar muestreo aleatorio vs muestreo estratificado equilibrado
 
 Uso:
-    python scripts/aux/compare_sampling_methods.py
+    python scripts/auxiliary/compare_sampling_methods.py
 """
 
 import re

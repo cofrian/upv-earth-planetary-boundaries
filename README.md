@@ -122,7 +122,7 @@ Distribución actual resumida:
 - `prompts/`: activos de prompts y contexto de prompt.
 - `docs/eda/`: salidas EDA (tablas, figuras y resumen) y `docs/eda/auditoria/` para control de calidad de la muestra final real.
 - `muestras/`: listados y muestras seleccionadas (aleatoria y balanceada).
-- `scripts/aux/`: scripts auxiliares no críticos para el pipeline principal.
+- `scripts/auxiliary/`: scripts auxiliares no críticos para el pipeline principal.
 - raíz del proyecto: scripts nucleares de extracción y EDA para mantener compatibilidad de ejecución.
 
 Detalle completo y actualizado en: [docs/ORGANIZACION_REPO.md](docs/ORGANIZACION_REPO.md).

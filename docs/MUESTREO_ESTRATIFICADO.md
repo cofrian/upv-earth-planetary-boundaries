@@ -12,7 +12,7 @@ Se ha creado una **copia mejorada** del script de extracción de corpus que gene
 - Función original `build_random_sample()` mantenida para referencia
 - Configuración idéntica al original
 
-### 2. `scripts/aux/compare_sampling_methods.py`
+### 2. `scripts/auxiliary/compare_sampling_methods.py`
 **Script de comparación** que simula ambos métodos y muestra:
 - Distribución por PB en ambos métodos
 - Desviación estándar (mejora del 99.5%)
@@ -45,7 +45,7 @@ Coeficiente de variación:     CV = 0.3%
 
 ### Opción 1: Solo comparar métodos
 ```bash
-uv run --no-project python scripts/aux/compare_sampling_methods.py
+uv run --no-project python scripts/auxiliary/compare_sampling_methods.py
 ```
 
 Esto muestra el análisis comparativo sin modificar nada.
