@@ -1,7 +1,5 @@
 # UPV_EARTH_PROYECTOIII
 
-Estado actual del trabajo preparado para subir al repositorio del proyecto.
-
 ---
 
 ## Arranque con Docker (recomendado · independiente del SO)
