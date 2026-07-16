@@ -9,7 +9,7 @@ against the nine **Planetary Boundaries**, using lexical baselines, scientific
 transformer embeddings, a locally-hosted LLM, and an auditable agent cascade — with a
 web platform that makes every result reviewable.
 
-> **Degree Final Work — BSc Data Science, ETSINF, Universitat Politècnica de València (2025–2026).**
+> **Proyecto III (9,9)— BSc Data Science, ETSINF, Universitat Politècnica de València (2025–2026).**
 > Full report: [`docs/report/UPV-EARTH_report.pdf`](docs/report/UPV-EARTH_report.pdf)
 
 ---
