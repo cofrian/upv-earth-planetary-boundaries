@@ -5,8 +5,8 @@ Fecha: 2026-04-19
 ## Alcance
 
 - Muestra seleccionada (balanceada): [muestras/muestra_seleccionada_1000_balanced.csv](../../../muestras/muestra_seleccionada_1000_balanced.csv)
-- Trazabilidad de procesamiento: [data/corpus/master_corpus_mixto_1000_traceability.csv](../../../data/corpus/master_corpus_mixto_1000_traceability.csv)
-- Corpus final limpio: [data/corpus/master_corpus_mixto_1000_clean.csv](../../../data/corpus/master_corpus_mixto_1000_clean.csv)
+- Trazabilidad de procesamiento: [data/corpus/corpus_1000_traceability.csv](../../../data/corpus/corpus_1000_traceability.csv)
+- Corpus final limpio: [data/corpus/corpus_1000_clean.csv](../../../data/corpus/corpus_1000_clean.csv)
 
 ## Resultado global
 

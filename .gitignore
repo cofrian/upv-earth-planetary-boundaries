@@ -44,9 +44,19 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Datos locales
-/muestra_pdfs/
-/data/corpus/
+# Local data. The versioned 1000-document corpus lives in data/corpus/ and is
+# tracked on purpose so the EDA and model steps are reproducible from a clone.
+# Downloaded PDFs and full-corpus rebuilds are not tracked (size + licensing).
+/data/pdfs/
+/data/corpus/corpus_full_*.csv
 
-# Entregables pesados fuera de GitHub (usar enlace externo o LFS)
-/anterior_entrega/proyecto_III.pptx
+# Runtime state (PIDs, logs) produced by launch.sh / web_services.sh
+/.runtime/
+
+# Remotion build output (regenerate with: npx remotion bundle)
+/launch-video/build/
+
+# Python packaging artifacts
+*.egg-info/
+build/
+dist/

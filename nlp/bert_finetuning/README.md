@@ -45,7 +45,7 @@ Se generan en:
 
 - Validación humana: 108 documentos.
 - Intersección usable con el corpus limpio actual: 73 documentos.
-- Esto está alineado con la trazabilidad de filtros (`master_corpus_mixto_1000_traceability.csv`).
+- Esto está alineado con la trazabilidad de filtros (`corpus_1000_traceability.csv`).
 
 ## Siguiente ajuste recomendado
 

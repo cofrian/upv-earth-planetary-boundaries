@@ -1,4 +1,0 @@
-doc_id,gold_labels,pred_top1,pred_top2,pred_multilabel,pred_multilabel_count,score_PB1,score_PB2,score_PB3,score_PB4,score_PB5,score_PB6,score_PB7,score_PB8,score_PB9
-cb831c750a69,PB7,PB1,PB2,,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-915bef103e53,"PB5,PB7",PB1,PB2,PB1,1,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-915bef103e53,PB1,PB1,PB2,PB1,1,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0

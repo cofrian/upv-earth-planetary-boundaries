@@ -14,9 +14,10 @@ FRONTEND_DIR="$ROOT_DIR/mockup/frontend"
 VENV_PYTHON="$ROOT_DIR/.venv/bin/python"
 
 NODE_BIN_CANDIDATES=(
-  "/home/sortmon/.local/nodeenv-upv-earth/bin"
   "$ROOT_DIR/.nodeenv/bin"
-  "/home/sortmon/.nodeenv/bin"
+  "$HOME/.local/nodeenv-upv-earth/bin"
+  "$HOME/.nodeenv/bin"
+  "$(dirname "$(command -v npm 2>/dev/null || echo /usr/bin/npm)")"
 )
 
 mkdir -p "$PID_DIR" "$LOG_DIR"
@@ -58,9 +59,9 @@ start_backend() {
   (
     cd "$BACKEND_DIR"
     nohup env \
-      DATABASE_URL="sqlite:////home/sortmon/UPV_EARTH_PROYECTOIII/mockup/data/seed/upvearth_local.db" \
-      UPLOAD_DIR="/home/sortmon/UPV_EARTH_PROYECTOIII/mockup/data/uploads" \
-      PB_REFERENCE_CSV="/home/sortmon/UPV_EARTH_PROYECTOIII/corpus_PB/data/pb_reference.csv" \
+      DATABASE_URL="${DATABASE_URL:-sqlite:///$ROOT_DIR/mockup/data/seed/upvearth_local.db}" \
+      UPLOAD_DIR="${UPLOAD_DIR:-$ROOT_DIR/mockup/data/uploads}" \
+      PB_REFERENCE_CSV="${PB_REFERENCE_CSV:-$ROOT_DIR/corpus_PB/data/pb_reference.csv}" \
       EMBEDDINGS_MODEL_NAME="sentence-transformers/allenai-specter" \
       LLM_ENABLED="true" \
       OLLAMA_URL="http://127.0.0.1:11434/api/generate" \

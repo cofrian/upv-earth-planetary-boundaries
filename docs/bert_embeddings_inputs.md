@@ -4,7 +4,7 @@ Este documento deja explícito qué CSV del repositorio se usa para la fase de e
 
 ## Archivo recomendado
 
-- [data/corpus/master_corpus_mixto_1000_clean_enriched.csv](../data/corpus/master_corpus_mixto_1000_clean_enriched.csv)
+- [data/corpus/corpus_1000_clean_enriched.csv](../data/corpus/corpus_1000_clean_enriched.csv)
 
 Motivo: contiene tanto el texto original como columnas de limpieza útiles para preparar el input.
 
@@ -31,11 +31,11 @@ Estas columnas son útiles para análisis exploratorio, no para representar el t
 
 Estado validado en esta sesión:
 
-- En [data/corpus/master_corpus_mixto_1000_clean.csv](../data/corpus/master_corpus_mixto_1000_clean.csv), `top_terms_no_stopwords` no contiene stopwords básicas como `are`, `was`, `were`, `been`, `is`, `be`.
-- En [data/corpus/master_corpus_mixto_1000_clean_enriched.csv](../data/corpus/master_corpus_mixto_1000_clean_enriched.csv), mismo resultado.
+- En [data/corpus/corpus_1000_clean.csv](../data/corpus/corpus_1000_clean.csv), `top_terms_no_stopwords` no contiene stopwords básicas como `are`, `was`, `were`, `been`, `is`, `be`.
+- En [data/corpus/corpus_1000_clean_enriched.csv](../data/corpus/corpus_1000_clean_enriched.csv), mismo resultado.
 
 ## Otros CSV de contexto
 
-- [data/corpus/master_corpus_mixto_1000_traceability.csv](../data/corpus/master_corpus_mixto_1000_traceability.csv): auditoría de filtros (kept/dropped), no es input de embeddings.
+- [data/corpus/corpus_1000_traceability.csv](../data/corpus/corpus_1000_traceability.csv): auditoría de filtros (kept/dropped), no es input de embeddings.
 - [docs/eda/top_unigrams.csv](eda/top_unigrams.csv) y [docs/eda/top_bigrams.csv](eda/top_bigrams.csv): salidas EDA para interpretación temática.
 - [docs/eda/semantic_topic_clusters.csv](eda/semantic_topic_clusters.csv): salida de agrupación semántica, útil para análisis posterior, no para generar embeddings base.

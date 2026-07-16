@@ -6,7 +6,7 @@ Se ha creado una **copia mejorada** del script de extracción de corpus que gene
 
 ## 📁 Archivos Creados
 
-### 1. `extraccion_corpus_mixto_balanced.py`
+### 1. `pipeline/extract_corpus_balanced.py`
 **Archivo principal modificado** que incluye:
 - Nueva función `build_balanced_sample()` para muestreo estratificado
 - Función original `build_random_sample()` mantenida para referencia
@@ -52,13 +52,13 @@ Esto muestra el análisis comparativo sin modificar nada.
 
 ### Opción 2: Generar muestra estratificada
 ```bash
-uv run --no-project python extraccion_corpus_mixto_balanced.py
+uv run --no-project python pipeline/extract_corpus_balanced.py
 ```
 
 Esto genera:
 - **Manifest:** `muestras/muestra_seleccionada_1000_balanced.csv`
-- **Corpus procesado:** `data/corpus/master_corpus_mixto_1000_clean.csv`
-- **Trazabilidad:** `data/corpus/master_corpus_mixto_1000_traceability.csv`
+- **Corpus procesado:** `data/corpus/corpus_1000_clean.csv`
+- **Trazabilidad:** `data/corpus/corpus_1000_traceability.csv`
 
 ## 📊 Ventajas del Muestreo Estratificado
 
@@ -129,7 +129,7 @@ Total: 111*8 + 112*1 = 1,000 ✓
 
 ## 📝 Notas
 
-- El archivo original `extraccion_corpus_mixto.py` **NO se modifica**
+- El archivo original `pipeline/extract_corpus.py` **NO se modifica**
 - Se puede usar cualquiera de los dos scripts según necesidad
 - Ambos generan la misma estructura de datos
 - Solo cambia la distribución por PB

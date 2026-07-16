@@ -57,7 +57,7 @@ def classify_abstract_few_shot(abstract_text):
     #   - Colapso de PB7: recall 23% -> 0% por regla espuria aprendida.
     #   - Trampa Social: rechazo excesivo como "político/económico".
     # Estrategia: eliminar ejemplos prefabricados, forzar checklist analítico
-    # paso a paso sobre el documento real (cf. problema_few_shot.pdf §3).
+    # paso a paso sobre el documento real (cf. docs/report/problema_few_shot.pdf §3).
     # =========================================================================
 
     prompt = f"""You are a strict scientific evaluator analyzing research abstracts from the Universitat Politècnica de València (UPV) against the Planetary Boundaries (PBs) framework.

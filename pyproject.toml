@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "upv-earth-proyectoiii"
+name = "upv-earth"
 version = "0.1.0"
-description = "Base de trabajo para el proyecto UPV Earth"
+description = "Mapping UPV scientific production onto the nine Planetary Boundaries"
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 dependencies = [
@@ -13,8 +13,21 @@ dependencies = [
   "ipykernel>=6.0",
   "ollama>=0.5.0",
   "pandas>=2.0",
+  "matplotlib>=3.7",
   "pymupdf>=1.23",
   "langdetect>=1.0.9",
   "nltk>=3.8",
 ]
+
+[project.optional-dependencies]
+# Lexical, TF-IDF and transformer baselines (nlp/bert_finetuning/).
+models = [
+  "scikit-learn>=1.3",
+  "torch>=2.0",
+  "transformers>=4.35",
+]
+
+[tool.setuptools]
+# The pipeline is a set of runnable scripts, not an importable package.
+py-modules = []
 

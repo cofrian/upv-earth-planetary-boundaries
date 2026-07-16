@@ -150,7 +150,7 @@ El muestreo ESTRATIFICADO EQUILIBRADO garantiza:
 
 Para usar el método estratificado, ejecuta:
 
-    python extraccion_corpus_mixto_balanced.py
+    python pipeline/extract_corpus_balanced.py
 
 Este generará una muestra en:
     muestras/muestra_seleccionada_1000_balanced.csv

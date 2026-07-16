@@ -20,7 +20,7 @@ Esa diferencia es lo que justifica la familia de modelos elegida.
 
 `44.970 raw → 44.593 dedup → 31.634 final → 31.560 usables tras limpieza`.
 
-La pérdida es honesta: duplicados por DOI/título+año, abstracts <500 chars, idiomas no-inglés, registros vacíos. No se descartó nada arbitrariamente — todo está en `master_corpus_mixto_traceability.csv` con `filter_reason`.
+La pérdida es honesta: duplicados por DOI/título+año, abstracts <500 chars, idiomas no-inglés, registros vacíos. No se descartó nada arbitrariamente — todo está en `corpus_1000_traceability.csv` con `filter_reason`.
 
 ### 2.2. Limpieza adicional para inferencia
 
