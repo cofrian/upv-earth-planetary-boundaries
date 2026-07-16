@@ -606,6 +606,12 @@ repository claims, rather than just linting:
 - No developer-specific absolute paths (`/home/<user>/…`) in runnable code.
 - `docker-compose.yml` validates.
 
+### License
+
+[MIT](LICENSE) — covering the code, scripts and documentation authored by the team. It does
+not extend to the third-party research articles and bibliographic records the pipeline
+processes, which keep their own terms.
+
 ### Acknowledgements and references
 
 The Planetary Boundaries framework: Rockström et al. (2009); Steffen et al. (2015);

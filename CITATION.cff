@@ -32,7 +32,8 @@ keywords:
   - nlp
 date-released: "2026-06-08"
 version: "1.0.0"
-repository-code: "https://github.com/cofrian/UPV_EARTH_PROYECTOIII"
+license: MIT
+repository-code: "https://github.com/cofrian/upv-earth-planetary-boundaries"
 
 references:
   - type: report

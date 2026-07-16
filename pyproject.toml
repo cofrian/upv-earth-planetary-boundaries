@@ -7,6 +7,15 @@ name = "upv-earth"
 version = "0.1.0"
 description = "Mapping UPV scientific production onto the nine Planetary Boundaries"
 readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Fernando Martínez Gómez" },
+  { name = "Luis Trigueros Espada" },
+  { name = "Sergio Ortiz Montesinos" },
+  { name = "Sergio Domínguez Miró" },
+  { name = "Maria Montolio Maximiano" },
+  { name = "Alba Sanahuja Batalla" },
+]
 requires-python = ">=3.11,<3.12"
 dependencies = [
   "jupyterlab>=3.6,<4.0",
