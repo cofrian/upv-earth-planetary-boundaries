@@ -1,0 +1,17 @@
+# Guard, not a fix: the shell scripts are currently committed as pure LF and
+# work as-is. This pins that, so a commit from a Windows checkout can't turn
+# them into CRLF, which on Linux fails as: bad interpreter: /usr/bin/env bash^M
+*.sh text eol=lf
+
+# Exclude notebooks from the repository language statistics.
+# Not a claim that they don't matter: they hold the analysis. But Linguist
+# counts raw file bytes, and these notebooks are ~3 MB of base64-encoded output
+# images against ~308 KB of actual code. Left detectable, they report the repo
+# as "Jupyter Notebook" while Python carries twice as much real code (616 KB).
+*.ipynb linguist-detectable=false
+
+# Committed model outputs and corpus data are results, not hand-written source.
+nlp/bert_finetuning/outputs*/** linguist-generated=true
+nlp/llm/outputs/** linguist-generated=true
+data/corpus/*.csv linguist-generated=true
+mockup/data/seed/precomputed/** linguist-generated=true
