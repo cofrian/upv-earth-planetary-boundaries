@@ -592,7 +592,19 @@ Universitat Politècnica de València, 2025–2026.
 Fernando Martínez Gómez · Luis Trigueros Espada · **Sergio Ortiz Montesinos** ·
 Sergio Domínguez Miró · Maria Montolio Maximiano · Alba Sanahuja Batalla
 
-Original team repository: <https://github.com/cofrian/UPV_EARTH_PROYECTOIII>
+This is a six-author team project. Machine-readable metadata for all authors is in
+[`CITATION.cff`](CITATION.cff) — GitHub renders it as a "Cite this repository" button.
+
+### Continuous integration
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) enforces the properties this
+repository claims, rather than just linting:
+
+- The EDA runs **from an unrelated working directory**, proving the scripts are anchored to the repo root and not to the caller's cwd.
+- Its outputs and the enriched corpus are checked to exist and be non-empty.
+- Corpus integrity: 700 cleaned documents, 1,000 traceability rows, unique `doc_id`.
+- No developer-specific absolute paths (`/home/<user>/…`) in runnable code.
+- `docker-compose.yml` validates.
 
 ### Acknowledgements and references
 

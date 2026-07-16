@@ -1,0 +1,57 @@
+cff-version: 1.2.0
+title: "UPV-EARTH: Mapping University Research onto the Planetary Boundaries"
+message: "If you use this work, please cite it as below."
+type: software
+abstract: >-
+  An institutional-intelligence pipeline that classifies the scientific
+  production of the Universitat Politecnica de Valencia against the nine
+  Planetary Boundaries. It combines corpus construction and cleaning, an
+  operational PB ontology with activation and exclusion rules, lexical and
+  scientific-embedding baselines, local LLM classification under an
+  operational-object criterion with abstention, an auditable agent cascade,
+  a web platform for review, and an economic feasibility analysis.
+authors:
+  - family-names: "Martinez Gomez"
+    given-names: "Fernando"
+  - family-names: "Trigueros Espada"
+    given-names: "Luis"
+  - family-names: "Ortiz Montesinos"
+    given-names: "Sergio"
+  - family-names: "Dominguez Miro"
+    given-names: "Sergio"
+  - family-names: "Montolio Maximiano"
+    given-names: "Maria"
+  - family-names: "Sanahuja Batalla"
+    given-names: "Alba"
+keywords:
+  - planetary-boundaries
+  - scientific-document-classification
+  - large-language-models
+  - sustainability
+  - research-assessment
+  - nlp
+date-released: "2026-06-08"
+version: "1.0.0"
+repository-code: "https://github.com/cofrian/UPV_EARTH_PROYECTOIII"
+
+references:
+  - type: report
+    title: "UPV-EARTH"
+    abstract: "Degree Final Work, BSc Data Science."
+    year: 2026
+    month: 6
+    institution:
+      name: "Escola Tecnica Superior d'Enginyeria Informatica, Universitat Politecnica de Valencia"
+    authors:
+      - family-names: "Martinez Gomez"
+        given-names: "Fernando"
+      - family-names: "Trigueros Espada"
+        given-names: "Luis"
+      - family-names: "Ortiz Montesinos"
+        given-names: "Sergio"
+      - family-names: "Dominguez Miro"
+        given-names: "Sergio"
+      - family-names: "Montolio Maximiano"
+        given-names: "Maria"
+      - family-names: "Sanahuja Batalla"
+        given-names: "Alba"

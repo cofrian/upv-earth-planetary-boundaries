@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [main, portfolio-restructure]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pipeline:
+    name: Pipeline reproducibility
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -e .
+
+      # The EDA must run from an unrelated working directory: the scripts are
+      # anchored to the repo root via __file__, not to the caller's cwd.
+      - name: Run EDA from an unrelated cwd
+        run: |
+          mkdir -p "$RUNNER_TEMP/elsewhere"
+          cd "$RUNNER_TEMP/elsewhere"
+          python "$GITHUB_WORKSPACE/pipeline/analyze_corpus_eda.py"
+
+      - name: Check the EDA produced its outputs
+        run: |
+          set -e
+          for f in docs/eda/year_distribution.csv \
+                   docs/eda/null_table.csv \
+                   docs/eda/source_distribution.csv \
+                   data/corpus/corpus_1000_clean_enriched.csv; do
+            test -s "$f" || { echo "missing or empty: $f"; exit 1; }
+            echo "ok: $f"
+          done
+
+      - name: Corpus integrity
+        run: |
+          python - <<'PY'
+          import pandas as pd
+          df = pd.read_csv("data/corpus/corpus_1000_clean.csv")
+          assert len(df) == 700, f"expected 700 cleaned documents, found {len(df)}"
+          for col in ("doc_id", "clean_abstract", "year"):
+              assert col in df.columns, f"missing column: {col}"
+          assert df["doc_id"].is_unique, "doc_id is not unique"
+          trace = pd.read_csv("data/corpus/corpus_1000_traceability.csv")
+          assert len(trace) == 1000, f"expected 1000 traceability rows, found {len(trace)}"
+          print(f"corpus ok: {len(df)} documents, {len(trace)} traceability rows")
+          PY
+
+  static:
+    name: Static checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile all Python sources
+        run: python -m compileall -q pipeline scripts nlp
+
+      - name: Shell syntax
+        run: |
+          for s in setup.sh launch.sh scripts/web_services.sh; do
+            bash -n "$s" && echo "ok: $s"
+          done
+
+      # Guards the property the restructure established: no developer-specific
+      # absolute paths in code that is meant to run on someone else's machine.
+      - name: No hardcoded home paths
+        run: |
+          if grep -rn "/home/sortmon" \
+               --include=*.py --include=*.sh --include=*.ps1 --include=*.yml \
+               pipeline scripts nlp mockup 2>/dev/null; then
+            echo "::error::hardcoded developer path found"
+            exit 1
+          fi
+          echo "ok: no hardcoded developer paths"
+
+  compose:
+    name: Docker compose validity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose file
+        run: |
+          docker compose config -q
+          echo "ok: docker-compose.yml is valid"

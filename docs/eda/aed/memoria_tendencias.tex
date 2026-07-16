@@ -75,7 +75,7 @@ El corpus analizado son \textbf{31.007 abstracts} del corpus limpio UPV-EARTH (\
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{fotos/30_publication_trends.png}
+\includegraphics[width=\linewidth]{figures/30_publication_trends.png}
 \caption{Tendencia de publicación 1990--2024. \textbf{(a)} Volumen anual con pico en 2021. \textbf{(b)} Tasa de crecimiento año a año (verde positivo, rojo negativo). \textbf{(c)} Producción acumulada con hitos marcados. \textbf{(d)} Producción agregada por décadas con promedio anual.}
 \label{fig:trends}
 \end{figure}
@@ -111,7 +111,7 @@ La Figura~\ref{fig:trends} sintetiza el comportamiento temporal de la producció
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.82\linewidth]{fotos/31_top_journals.png}
+\includegraphics[width=0.82\linewidth]{figures/31_top_journals.png}
 \caption{Top 25 journals en los que publica la UPV, tras filtrar artefactos de extracción.}
 \label{fig:journals}
 \end{figure}
@@ -129,7 +129,7 @@ La Figura~\ref{fig:journals} muestra los 25 journals más frecuentes tras aplica
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{fotos/32_length_distribution.png}
+\includegraphics[width=\linewidth]{figures/32_length_distribution.png}
 \caption{Longitud de los abstracts. \textbf{(a)} Histograma global con media y mediana. \textbf{(b)} Boxplot por periodos de 5 años.}
 \label{fig:length}
 \end{figure}
@@ -157,14 +157,14 @@ La distribución de longitud (Figura~\ref{fig:length}) es \textbf{log-normal}, e
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{fotos/33_top_ngrams.png}
+\includegraphics[width=\linewidth]{figures/33_top_ngrams.png}
 \caption{Vocabulario más frecuente: unigramas, bigramas y trigramas (muestra de 20.000 abstracts, tras eliminar stopwords y boilerplate editorial).}
 \label{fig:ngrams}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.82\linewidth]{fotos/35_wordcloud_global.png}
+\includegraphics[width=0.82\linewidth]{figures/35_wordcloud_global.png}
 \caption{Wordcloud global del corpus UPV.}
 \label{fig:wordcloud}
 \end{figure}
@@ -201,7 +201,7 @@ united states (\num{1115}), ocean acidification (984), land cover (975), sustain
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{fotos/34_emerging_terms.png}
+\includegraphics[width=\linewidth]{figures/34_emerging_terms.png}
 \caption{Vocabulario emergente vs en declive. Se compara la frecuencia relativa de cada término entre los abstracts $\leq$2015 y los $\geq$2020. \textbf{(a)} Términos que más crecen. \textbf{(b)} Términos en declive.}
 \label{fig:emerging}
 \end{figure}
@@ -225,14 +225,14 @@ La Figura~\ref{fig:emerging} aplica una métrica de \emph{log-growth}: para cada
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{fotos/36_sources_completeness.png}
+\includegraphics[width=\linewidth]{figures/36_sources_completeness.png}
 \caption{\textbf{(a)} Fuentes del corpus. \textbf{(b)} Completitud de metadatos por año.}
 \label{fig:sources}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{fotos/37_authorship_collaboration.png}
+\includegraphics[width=\linewidth]{figures/37_authorship_collaboration.png}
 \caption{Coautoría. \textbf{(a)} Distribución del nº de autores por paper. \textbf{(b)} Evolución del tamaño medio de equipo.}
 \label{fig:authors}
 \end{figure}
@@ -277,6 +277,6 @@ Campo \texttt{authors} no separable & \emph{No corregible} con heurísticas simp
 \vfill
 \hrule height 0.3pt
 \medskip
-\small\textit{Reproducible mediante \file{python scripts/aed\_publication\_trends.py}. Figuras en \file{docs/eda/aed/fotos/} (30--37). Datos plot-ready en \file{docs/eda/aed/data\_json/}.}
+\small\textit{Reproducible mediante \file{python scripts/aed\_publication\_trends.py}. Figuras en \file{docs/eda/aed/figures/} (30--37). Datos plot-ready en \file{docs/eda/aed/data\_json/}.}
 
 \end{document}
