@@ -1,5 +1,9 @@
 # UPV-EARTH — Mapping University Research onto the Planetary Boundaries
 
+[![CI](https://github.com/cofrian/upv-earth-planetary-boundaries/actions/workflows/ci.yml/badge.svg)](https://github.com/cofrian/upv-earth-planetary-boundaries/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](pyproject.toml)
+
 Classifying 31,634 scientific abstracts from the Universitat Politècnica de València
 against the nine **Planetary Boundaries**, using lexical baselines, scientific
 transformer embeddings, a locally-hosted LLM, and an auditable agent cascade — with a
